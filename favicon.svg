@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#1A1A1A"/>
+  <path d="M50,8 C50,8 52,32 61,42 C52,52 50,76 50,76 C50,76 48,52 39,42 C48,32 50,8 50,8 Z M14,42 C14,42 38,40 50,31 C62,40 86,42 86,42 C86,42 62,44 50,53 C38,44 14,42 14,42 Z" fill="#FF4F00" transform="translate(0,-4)"/>
+  <text x="50" y="86" text-anchor="middle" font-family="'Dela Gothic One', Impact, 'Arial Black', sans-serif" font-size="22" font-weight="400" fill="#F0EEE9" letter-spacing="-1">CD</text>
+</svg>

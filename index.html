@@ -3010,7 +3010,7 @@ function initStackCarousel(rootId) {
   render();
 }
 
-['carousel-wenda','carousel-bebooth','carousel-lucid','carousel-scout'].forEach(initStackCarousel);
+['carousel-wenda','carousel-bebooth','carousel-lucid'].forEach(initStackCarousel);
 
 /* ========== SECTION PILL NAV (topbar) ========== */
 (function(){
@@ -3051,33 +3051,6 @@ function initStackCarousel(rootId) {
     const active = nav.querySelector('a.active');
     if (active) movePill(active);
   }, {passive:true});
-})();
-
-/* ========== WIDE CAROUSEL — Bebooth ========== */
-(function(){
-  const root = document.getElementById('carousel-bebooth');
-  if (!root) return;
-  const cards = [...root.querySelectorAll('.wide-card')];
-  const dots  = [...root.querySelectorAll('.wide-dot')];
-  const count = root.querySelector('.wide-count');
-  const prev  = root.querySelector('.wide-prev');
-  const next  = root.querySelector('.wide-next');
-  let active = 0;
-  const n = cards.length;
-
-  function render(){
-    cards.forEach((c,i)=>{
-      c.classList.remove('wpos0','wpos1','wpos2');
-      c.classList.add('wpos' + Math.min((i - active + n) % n, 2));
-    });
-    dots.forEach((d,i)=>d.classList.toggle('active', i===active));
-    if (count) count.textContent = String(active+1).padStart(2,'0') + ' / ' + String(n).padStart(2,'0');
-    if (prev) prev.disabled = active === 0;
-    if (next) next.disabled = active === n-1;
-  }
-  if (next) next.addEventListener('click', ()=>{ active = Math.min(active+1,n-1); render(); });
-  if (prev) prev.addEventListener('click', ()=>{ active = Math.max(active-1,0); render(); });
-  render();
 })();
 
 /* ========== MOBILE MENU ========== */

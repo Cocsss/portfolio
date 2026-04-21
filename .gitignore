@@ -1,0 +1,41 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*~
+
+# Claude / outils locaux
+.claude/
+
+# Backups locaux (pas à pousser)
+*copie*.html
+*copy*.html
+portfolio*.html
+
+# Vidéos sources et versions non compressées — JAMAIS dans le repo
+# (elles vivront sur Cloudflare R2, pas ici)
+media/videos/raw/
+media/videos/*.mov
+media/videos/*.MOV
+media/videos/*.mp4
+media/videos/*.MP4
+media/videos/*.webm
+media/videos/*.mkv
+
+# Photos brutes haute-def
+media/photos/raw/
+*.RAF
+*.ARW
+*.CR2
+*.NEF
+
+# Build artifacts / deps (au cas où)
+node_modules/
+dist/
+build/
+.env
+.env.*

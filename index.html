@@ -2287,6 +2287,172 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
   .hs-tags span{font-size:11px;padding:6px 10px}
   .hs-role{font-size:17px}
 }
+
+/* ===== Ticker in hero modifier ===== */
+.ticker-wrap.ticker--in-hero{margin-top:32px;border-bottom:0;}
+
+/* ===== Proof-band (client logos) ===== */
+.proof-band{
+  width:100%;padding:28px 0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  background:var(--bg);overflow:hidden;position:relative;z-index:2;
+}
+.proof-label{
+  position:absolute;left:var(--page-pad,32px);top:50%;transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);background:var(--bg);padding:4px 20px 4px 0;z-index:3;
+  border-right:1px solid var(--rule);
+}
+.proof-track{
+  display:inline-flex;white-space:nowrap;
+  animation:proofScroll 60s linear infinite;
+  font-family:var(--font-display);font-size:clamp(22px,2.4vw,34px);
+  color:var(--muted);opacity:.55;text-transform:uppercase;letter-spacing:-.01em;
+  padding-left:260px;
+}
+.proof-track span{padding:0 40px;display:inline-block}
+@keyframes proofScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ===== Section sub-block (Selected Work Index) ===== */
+.section-sub{margin-top:120px}
+.ss-head{margin-bottom:40px;padding-top:24px;border-top:1px solid var(--rule);position:relative}
+.ss-head::before{content:"";position:absolute;top:-1px;left:0;width:48px;height:2px;background:var(--accent);}
+.ss-idx{font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.ss-title{font-family:var(--font-display);font-size:clamp(32px,3.8vw,56px);line-height:.95;letter-spacing:-.015em;text-transform:uppercase;color:var(--ink);margin:0}
+
+/* ===== Mid-CTA band ===== */
+.midcta-band{
+  background:var(--ink);color:var(--bg);
+  padding:100px var(--page-pad,32px);margin:96px 0 0;
+  position:relative;z-index:2;overflow:hidden;
+}
+.midcta-band::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.08;
+  background-image:
+    linear-gradient(to right,var(--bg) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--bg) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 30%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 30%,transparent 100%);
+}
+.midcta-inner{
+  display:flex;flex-direction:column;gap:18px;align-items:flex-start;
+  max-width:1680px;margin:0 auto;position:relative;z-index:1;
+}
+.midcta-idx{font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,238,233,.5)}
+.midcta-title{font-family:var(--font-display);font-size:clamp(56px,9vw,140px);line-height:.92;letter-spacing:-.02em;color:var(--bg);margin:0}
+.midcta-body{font-family:var(--font-mono);font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,238,233,.7);margin-top:8px}
+.midcta-wa{
+  display:inline-flex;align-items:center;gap:14px;
+  margin-top:24px;padding:18px 28px;background:var(--accent);color:#fff;
+  font-family:var(--font-mono);font-size:14px;letter-spacing:.14em;text-transform:uppercase;
+  text-decoration:none;transition:transform .3s,background .3s;
+}
+.midcta-wa:hover{transform:translateY(-2px);background:color-mix(in srgb,var(--accent) 85%,white)}
+.midcta-wa span{font-family:inherit;text-transform:none;letter-spacing:0;opacity:.9}
+
+@media(max-width:720px){
+  .midcta-band{padding:56px var(--page-pad,24px)}
+  .midcta-title{font-size:clamp(40px,12vw,64px)}
+}
+
+/* ===== Tarifs — editorial row pattern ===== */
+.tariffs-edit{display:flex;flex-direction:column;border-top:1px solid var(--rule)}
+.tr-row{
+  display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  padding:28px 0;border-bottom:1px solid var(--rule);
+}
+.tr-left{display:flex;align-items:baseline;gap:20px}
+.tr-num{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;
+  color:var(--muted);text-transform:uppercase;min-width:40px;
+}
+.tr-name{
+  font-family:var(--font-display);font-size:clamp(20px,2.2vw,30px);
+  letter-spacing:-.01em;color:var(--ink);text-transform:uppercase;line-height:1.1;
+}
+.tr-right{display:flex;align-items:baseline;gap:4px;flex-shrink:0}
+.tr-price{
+  font-family:var(--font-display);font-size:clamp(22px,2.4vw,32px);
+  color:var(--accent);letter-spacing:-.01em;
+}
+.tr-unit{
+  font-family:var(--font-mono);font-size:13px;color:var(--muted);letter-spacing:.1em;
+}
+
+@media(max-width:640px){
+  .tr-row{flex-direction:column;align-items:flex-start;gap:8px;padding:20px 0}
+  .tr-name{font-size:18px}
+}
+
+/* ===== Quote-band (testimonial) ===== */
+.quote-band{
+  padding:120px var(--page-pad,32px);
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  position:relative;z-index:2;
+}
+.qb-inner{max-width:1200px;margin:0 auto;text-align:center}
+.qb-text{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(32px,5vw,72px);line-height:1.15;letter-spacing:-.015em;
+  color:var(--ink);max-width:22ch;margin:0 auto 32px;
+}
+.qb-text::first-letter{color:var(--accent)}
+.qb-attr{font-family:var(--font-mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+
+@media(max-width:720px){.quote-band{padding:64px var(--page-pad,24px)}}
+
+/* ===== À propos — photo + floating ID card ===== */
+.apropos-visual{position:relative;display:flex;justify-content:center;align-items:flex-start}
+.apropos-photo{
+  position:relative;aspect-ratio:3/4;width:100%;max-width:440px;
+  border:1px solid var(--rule);overflow:hidden;background:#1a1a18;
+}
+.apropos-photo img{
+  width:100%;height:100%;object-fit:cover;object-position:center top;
+  display:block;filter:grayscale(.08);
+}
+.apropos-card.apropos-card--float{
+  position:absolute;top:-24px;right:-24px;
+  width:210px;aspect-ratio:3/4;z-index:2;
+  padding:18px;background:var(--bg);
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.35);
+}
+body[data-theme="dark"] .apropos-card.apropos-card--float{
+  background:#0E0D10;
+}
+.apropos-card--float .apropos-card-initials{font-size:clamp(54px,6vw,80px)}
+.apropos-card--float .apropos-card-name{font-size:clamp(13px,1.1vw,16px)}
+.apropos-card--float .apropos-card-foot{font-size:9px;letter-spacing:.14em;padding-top:10px}
+.apropos-card--float .apropos-card-head{font-size:9px;letter-spacing:.16em}
+
+@media(max-width:900px){
+  .apropos-card.apropos-card--float{position:static;margin-top:20px;width:100%;max-width:320px;aspect-ratio:auto}
+}
+
+/* ===== Contact simplified ===== */
+.contact-grid--simple{display:block;max-width:720px;margin:0 auto}
+.contact-grid--simple .contact-col-text{width:100%}
+
+/* ===== Editorial micro-moves ===== */
+/* drop inkbox bg on project metadata spans, keep accent dot */
+.ps-ed-meta span{background:transparent!important;color:var(--ink);padding:0}
+.ps-ed-meta span + span::before{
+  content:"·";color:var(--accent);margin:0 16px;position:static;font-weight:600;
+}
+/* accent line above .ps-ed-header */
+.ps-ed-header{position:relative}
+.ps-ed-header::before{
+  content:"";position:absolute;top:-16px;left:0;
+  width:48px;height:2px;background:var(--accent);
+}
+/* hide ps-divider, use whitespace instead */
+.ps-divider{display:none}
+.ps-block + .ps-block{margin-top:140px}
+/* soften .apropos-card grid (photo now dominates) */
+.apropos-card::before{opacity:.12}
+/* bump ps-idx letter-spacing slightly */
+.ps-idx{letter-spacing:.24em}
 </style>
 </head>
 <body data-mode="classic">
@@ -2314,11 +2480,12 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
 <div class="mob-menu" id="mobMenu">
   <button class="mm-close" id="mmClose">Fermer ×</button>
   <nav>
-    <a href="#top" class="mm-link" data-n="01" data-target="top">Accueil</a>
+    <a href="#projets" class="mm-link" data-n="01" data-target="projets">Projets</a>
     <a href="#services" class="mm-link" data-n="02" data-target="services">Services</a>
-    <a href="#projets" class="mm-link" data-n="03" data-target="projets">Projets</a>
-    <a href="#apropos" class="mm-link" data-n="04" data-target="apropos">À propos</a>
-    <a href="#contact" class="mm-link" data-n="05" data-target="contact">Contact</a>
+    <a href="#processus" class="mm-link" data-n="03" data-target="processus">Méthode</a>
+    <a href="#tarifs" class="mm-link" data-n="04" data-target="tarifs">Tarifs</a>
+    <a href="#apropos" class="mm-link" data-n="05" data-target="apropos">À propos</a>
+    <a href="#contact" class="mm-link" data-n="06" data-target="contact">Contact</a>
   </nav>
   <div class="mm-foot">
     <span>CD Studio</span>
@@ -2395,9 +2562,10 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
   </div>
   <nav class="section-nav" id="sectionNav" aria-label="Sections">
     <span class="nav-pill" id="navPill"></span>
-    <a href="#top" data-target="top">Accueil</a>
-    <a href="#services" data-target="services">Services</a>
     <a href="#projets" data-target="projets">Projets</a>
+    <a href="#services" data-target="services">Services</a>
+    <a href="#processus" data-target="processus">Méthode</a>
+    <a href="#tarifs" data-target="tarifs">Tarifs</a>
     <a href="#apropos" data-target="apropos">À propos</a>
     <a href="#contact" data-target="contact">Contact</a>
   </nav>
@@ -2456,92 +2624,32 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
       </div>
     </div>
     </div>
+
+    <!-- TICKER (moved inside hero) -->
+    <div class="ticker-wrap ticker--in-hero" aria-hidden="true">
+      <div class="ticker-track" id="tickerTrack">
+        <span>Premiere Pro</span><span class="sep">—</span><span>Aftermovies</span><span class="sep">—</span><span>Clips &amp; Reels</span><span class="sep">—</span><span>Tournage</span><span class="sep">—</span><span>Drone</span><span class="sep">—</span><span>Brand Films</span><span class="sep">—</span><span>Montage</span><span class="sep">—</span><span>Bruxelles</span><span class="sep">—</span><span>Formations</span><span class="sep">—</span><span>4K</span><span class="sep">—</span><span>Direction artistique</span><span class="sep">—</span><span>Premiere Pro</span><span class="sep">—</span><span>Aftermovies</span><span class="sep">—</span><span>Clips &amp; Reels</span><span class="sep">—</span><span>Tournage</span><span class="sep">—</span><span>Drone</span><span class="sep">—</span><span>Brand Films</span><span class="sep">—</span><span>Montage</span><span class="sep">—</span><span>Bruxelles</span><span class="sep">—</span><span>Formations</span><span class="sep">—</span><span>4K</span><span class="sep">—</span><span>Direction artistique</span><span class="sep">—</span>
+      </div>
+    </div>
   </section>
 
-  <!-- TICKER -->
-  <div class="ticker-wrap" aria-hidden="true">
-    <div class="ticker-track" id="tickerTrack">
-      <span>Premiere Pro</span><span class="sep">—</span><span>Aftermovies</span><span class="sep">—</span><span>Clips &amp; Reels</span><span class="sep">—</span><span>Tournage</span><span class="sep">—</span><span>Drone</span><span class="sep">—</span><span>Brand Films</span><span class="sep">—</span><span>Montage</span><span class="sep">—</span><span>Bruxelles</span><span class="sep">—</span><span>Formations</span><span class="sep">—</span><span>4K</span><span class="sep">—</span><span>Direction artistique</span><span class="sep">—</span><span>Premiere Pro</span><span class="sep">—</span><span>Aftermovies</span><span class="sep">—</span><span>Clips &amp; Reels</span><span class="sep">—</span><span>Tournage</span><span class="sep">—</span><span>Drone</span><span class="sep">—</span><span>Brand Films</span><span class="sep">—</span><span>Montage</span><span class="sep">—</span><span>Bruxelles</span><span class="sep">—</span><span>Formations</span><span class="sep">—</span><span>4K</span><span class="sep">—</span><span>Direction artistique</span><span class="sep">—</span>
-    </div>
-  </div>
-
-  <!-- SERVICES -->
-  <section class="section wrap" id="services" data-section-label="§ 01 — Services">
-    <div class="section-head reveal">
-      <div class="idx">§ 01 / Ce que je fais</div>
-      <h2>Services</h2>
-      <div class="sub">Production vidéo<br/>&amp; formation Premiere Pro</div>
-    </div>
-    <div class="reveal">
-      <p class="lead">Je crée des vidéos — du tournage au montage final — et je donne des cours de montage sur Premiere Pro à Bruxelles.</p>
-      <div class="hs-grid">
-        <div class="hs-item">
-          <div class="hs-num">01</div>
-          <div class="hs-label">Vidéo</div>
-          <div class="hs-role">Tournage &amp; montage</div>
-          <p class="hs-desc">Reels, clips musicaux, aftermovies et films de marque — du tournage au rendu final, soigné et rythmé.</p>
-          <div class="hs-tags"><span>Reels</span><span>Clips</span><span>Aftermovies</span><span>Drone</span><span>Contenus de marque</span></div>
-        </div>
-        <div class="hs-item">
-          <div class="hs-num">02</div>
-          <div class="hs-label">Formation</div>
-          <div class="hs-role">Cours de montage</div>
-          <p class="hs-desc">Cours particuliers sur Premiere Pro — initiation ou perfectionnement. En ligne ou en face à face à Bruxelles.</p>
-          <div class="hs-tags"><span>Premiere Pro</span><span>Initiation</span><span>Perfectionnement</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MÉTHODE / PROCESSUS -->
-    <div class="sub-block reveal">
-      <div class="block-head">
-        <div class="block-idx">§ 01 · Processus</div>
-        <h3 class="block-title">Comment ça marche</h3>
-        <p class="block-intro">4 étapes claires, du brief à la livraison.</p>
-      </div>
-      <div class="method-grid">
-        <div class="method-cell">
-          <div class="method-num">01</div>
-          <div class="method-title">Briefing</div>
-          <p class="method-desc">On se parle, on cerne ton projet, tes envies, ton budget.</p>
-        </div>
-        <div class="method-cell">
-          <div class="method-num">02</div>
-          <div class="method-title">Tournage</div>
-          <p class="method-desc">Je filme selon ta vision, avec le matériel adapté.</p>
-        </div>
-        <div class="method-cell">
-          <div class="method-num">03</div>
-          <div class="method-title">Montage</div>
-          <p class="method-desc">Construction du rythme, de la narration, de l'image.</p>
-        </div>
-        <div class="method-cell">
-          <div class="method-num">04</div>
-          <div class="method-title">Livraison</div>
-          <p class="method-desc">Fichiers exportés, droits inclus, livrables sur-mesure.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- TARIFS -->
-    <div class="sub-block reveal">
-      <div class="block-head">
-        <div class="block-idx">§ 01 · Tarification</div>
-        <h3 class="block-title">Tarifs</h3>
-        <p class="block-intro">Tarif horaire · Devis gratuit · Printemps 2026</p>
-      </div>
-      <div class="tariffs-list">
-        <div class="tr"><span>01 — Montage (Reels, clips, aftermovies)</span><strong>~ 20€ /h</strong></div>
-        <div class="tr"><span>02 — Tournage &amp; Drone</span><strong>~ 25€ /h</strong></div>
-        <div class="tr"><span>03 — Formation Premiere Pro</span><strong>~ 20€ /h</strong></div>
-      </div>
+  <!-- PROOF-BAND (clients) -->
+  <section class="proof-band" aria-label="Clients">
+    <div class="proof-label">§ Clients — Sélection</div>
+    <div class="proof-track">
+      <span>Wenda</span><span>Bebooth</span><span>Scout Festival</span>
+      <span>Lucid Dreams</span><span>[Client 05]</span><span>[Client 06]</span>
+      <span>[Client 07]</span><span>[Client 08]</span>
+      <span>Wenda</span><span>Bebooth</span><span>Scout Festival</span>
+      <span>Lucid Dreams</span><span>[Client 05]</span><span>[Client 06]</span>
+      <span>[Client 07]</span><span>[Client 08]</span>
     </div>
   </section>
 
   <!-- PROJECTS -->
-  <section class="section wrap" id="projets" data-section-label="§ 02 — Projets">
+  <section class="section wrap" id="projets" data-section-label="§ 01 — Projets">
     <div class="section-head reveal">
-      <div class="idx">§ 02 / Travaux récents</div>
+      <div class="idx">§ 01 / Travaux récents</div>
       <h2>Projets</h2>
       <div class="sub">Social content · Événementiel<br/>&amp; Music</div>
     </div>
@@ -2550,7 +2658,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <div class="ps-block ps-ed reveal" data-ps-id="wenda">
       <div class="ps-bg"></div>
       <div class="ps-ed-header">
-        <div class="ps-idx">§ 02.1 / Mode — Social content</div>
+        <div class="ps-idx">§ 01.1 / Mode — Social content</div>
         <h3 class="ps-ed-title">Les filles de Wenda</h3>
         <div class="ps-ed-meta"><span>Les Filles de Wenda</span><span>Fashion — Social content</span><span>Waterloo / Brussels</span><span>2024 — 2026</span><span>9:16</span></div>
       </div>
@@ -2599,7 +2707,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <div class="ps-block ps-ed reveal" data-ps-id="bebooth">
       <div class="ps-bg"></div>
       <div class="ps-ed-header">
-        <div class="ps-idx">§ 02.2 / Événementiel — Photobooth</div>
+        <div class="ps-idx">§ 01.2 / Événementiel — Photobooth</div>
         <h3 class="ps-ed-title">Bebooth</h3>
         <div class="ps-ed-meta"><span>Bebooth</span><span>Event — Photobooth</span><span>Brussels</span><span>2025</span><span>16:9</span></div>
       </div>
@@ -2648,7 +2756,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <div class="ps-block ps-ed reveal" data-ps-id="lucid">
       <div class="ps-bg"></div>
       <div class="ps-ed-header">
-        <div class="ps-idx">§ 02.3 / [Catégorie — à compléter]</div>
+        <div class="ps-idx">§ 01.3 / [Catégorie — à compléter]</div>
         <h3 class="ps-ed-title">Lucid Dreams</h3>
         <div class="ps-ed-meta"><span>Lucid Dreams</span><span>—</span><span>—</span><span>—</span><span>9:16</span></div>
       </div>
@@ -2697,7 +2805,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <div class="ps-block ps-ed reveal" data-ps-id="scout">
       <div class="ps-bg"></div>
       <div class="ps-ed-header">
-        <div class="ps-idx">§ 02.4 / Événementiel — Aftermovie</div>
+        <div class="ps-idx">§ 01.4 / Événementiel — Aftermovie</div>
         <h3 class="ps-ed-title">Scout Festival</h3>
         <div class="ps-ed-meta"><span>Scout Festival</span><span>Event — Aftermovie</span><span>Belgique</span><span>2026</span><span>16:9</span></div>
       </div>
@@ -2716,20 +2824,138 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
       </div>
     </div>
 
+    <!-- SELECTED WORK INDEX -->
+    <div class="section-sub reveal">
+      <div class="ss-head">
+        <div class="ss-idx">§ 01 · Index</div>
+        <h3 class="ss-title">Autres travaux</h3>
+      </div>
+      <div class="plist">
+        <div class="prow r1"><div class="num">05</div><div class="name">[Projet 05]</div><div class="cat">[Catégorie]</div><div class="preview"></div><span class="arrow">→</span></div>
+        <div class="prow r2"><div class="num">06</div><div class="name">[Projet 06]</div><div class="cat">[Catégorie]</div><div class="preview"></div><span class="arrow">→</span></div>
+        <div class="prow r3"><div class="num">07</div><div class="name">[Projet 07]</div><div class="cat">[Catégorie]</div><div class="preview"></div><span class="arrow">→</span></div>
+        <div class="prow r4"><div class="num">08</div><div class="name">[Projet 08]</div><div class="cat">[Catégorie]</div><div class="preview"></div><span class="arrow">→</span></div>
+        <div class="prow r5"><div class="num">09</div><div class="name">[Projet 09]</div><div class="cat">[Catégorie]</div><div class="preview"></div><span class="arrow">→</span></div>
+        <div class="prow r6"><div class="num">10</div><div class="name">[Projet 10]</div><div class="cat">[Catégorie]</div><div class="preview"></div><span class="arrow">→</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MID-CTA BAND -->
+  <section class="midcta-band" aria-label="Contact rapide">
+    <div class="midcta-inner">
+      <div class="midcta-idx">§ Passons à l'action</div>
+      <h2 class="midcta-title">Un projet en tête ?</h2>
+      <p class="midcta-body">Devis gratuit · Réponse sous 24h · Belgique &amp; Europe</p>
+      <a href="https://wa.me/32495924295" class="midcta-wa" target="_blank">WhatsApp · <span>+32 495 92 42 95</span> →</a>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section wrap" id="services" data-section-label="§ 02 — Services">
+    <div class="section-head reveal">
+      <div class="idx">§ 02 / Ce que je fais</div>
+      <h2>Services</h2>
+      <div class="sub">Production vidéo<br/>&amp; formation Premiere Pro</div>
+    </div>
+    <div class="reveal">
+      <p class="lead">Je crée des vidéos — du tournage au montage final — et je donne des cours de montage sur Premiere Pro à Bruxelles.</p>
+      <div class="hs-grid">
+        <div class="hs-item">
+          <div class="hs-num">01</div>
+          <div class="hs-label">Vidéo</div>
+          <div class="hs-role">Tournage &amp; montage</div>
+          <p class="hs-desc">Reels, clips musicaux, aftermovies et films de marque — du tournage au rendu final, soigné et rythmé.</p>
+          <div class="hs-tags"><span>Reels</span><span>Clips</span><span>Aftermovies</span><span>Drone</span><span>Contenus de marque</span></div>
+        </div>
+        <div class="hs-item">
+          <div class="hs-num">02</div>
+          <div class="hs-label">Formation</div>
+          <div class="hs-role">Cours de montage</div>
+          <p class="hs-desc">Cours particuliers sur Premiere Pro — initiation ou perfectionnement. En ligne ou en face à face à Bruxelles.</p>
+          <div class="hs-tags"><span>Premiere Pro</span><span>Initiation</span><span>Perfectionnement</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉTHODE -->
+  <section class="section wrap" id="processus" data-section-label="§ 03 — Méthode">
+    <div class="section-head reveal">
+      <div class="idx">§ 03 / Comment je travaille</div>
+      <h2>Méthode</h2>
+      <div class="sub">Du brief à la livraison<br/>4 étapes claires</div>
+    </div>
+    <div class="method-grid reveal">
+      <div class="method-cell">
+        <div class="method-num">01</div>
+        <div class="method-title">Briefing</div>
+        <p class="method-desc">On se parle, on cerne ton projet, tes envies, ton budget.</p>
+      </div>
+      <div class="method-cell">
+        <div class="method-num">02</div>
+        <div class="method-title">Tournage</div>
+        <p class="method-desc">Je filme selon ta vision, avec le matériel adapté.</p>
+      </div>
+      <div class="method-cell">
+        <div class="method-num">03</div>
+        <div class="method-title">Montage</div>
+        <p class="method-desc">Construction du rythme, de la narration, de l'image.</p>
+      </div>
+      <div class="method-cell">
+        <div class="method-num">04</div>
+        <div class="method-title">Livraison</div>
+        <p class="method-desc">Fichiers exportés, droits inclus, livrables sur-mesure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TARIFS -->
+  <section class="section wrap" id="tarifs" data-section-label="§ 04 — Tarifs">
+    <div class="section-head reveal">
+      <div class="idx">§ 04 / Tarification</div>
+      <h2>Tarifs</h2>
+      <div class="sub">Tarif horaire · Devis gratuit<br/>Printemps 2026</div>
+    </div>
+    <div class="tariffs-edit reveal">
+      <div class="tr-row">
+        <div class="tr-left"><span class="tr-num">01</span><span class="tr-name">Montage — Reels, Clips, Aftermovies</span></div>
+        <div class="tr-right"><span class="tr-price">~ 20€</span><span class="tr-unit">/h</span></div>
+      </div>
+      <div class="tr-row">
+        <div class="tr-left"><span class="tr-num">02</span><span class="tr-name">Tournage &amp; Drone</span></div>
+        <div class="tr-right"><span class="tr-price">~ 25€</span><span class="tr-unit">/h</span></div>
+      </div>
+      <div class="tr-row">
+        <div class="tr-left"><span class="tr-num">03</span><span class="tr-name">Formation Premiere Pro</span></div>
+        <div class="tr-right"><span class="tr-price">~ 20€</span><span class="tr-unit">/h</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE BAND (testimonial) -->
+  <section class="quote-band" aria-label="Témoignage">
+    <div class="qb-inner">
+      <blockquote class="qb-text">«&nbsp;[Témoignage client — 1 à 2 phrases à compléter par Corentin].&nbsp;»</blockquote>
+      <div class="qb-attr">[Prénom Nom] — [Fonction · Structure]</div>
+    </div>
   </section>
 
   <!-- À PROPOS -->
-  <section class="section wrap" id="apropos" data-section-label="§ 03 — À propos">
+  <section class="section wrap" id="apropos" data-section-label="§ 05 — À propos">
     <div class="section-head reveal">
-      <div class="idx">§ 03 / Qui je suis</div>
+      <div class="idx">§ 05 / Qui je suis</div>
       <h2>À propos</h2>
       <div class="sub">Étudiant · Vidéaste<br/>Belgique, 2026</div>
     </div>
 
     <div class="apropos-grid reveal">
-      <!-- ID card visual -->
+      <!-- Photo + floating ID card -->
       <aside class="apropos-visual" aria-hidden="true">
-        <div class="apropos-card">
+        <div class="apropos-photo">
+          <img src="assets/portrait.png" alt="" />
+        </div>
+        <div class="apropos-card apropos-card--float">
           <div class="apropos-card-head">
             <span class="apropos-card-tag">ID · 001</span>
             <span>BE / 2026</span>
@@ -2759,33 +2985,17 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     </div>
   </section>
 
-  <!-- CONTACT — section en évidence, avec portrait -->
-  <section class="section wrap" id="contact" data-section-label="§ 04 — Contact">
+  <!-- CONTACT — section simplifiée, colonne unique -->
+  <section class="section wrap" id="contact" data-section-label="§ 06 — Contact">
     <div class="section-head reveal">
-      <div class="idx">§ 04 / Prendre contact</div>
+      <div class="idx">§ 06 / Prendre contact</div>
       <h2>Contact</h2>
       <div class="sub">Répond dans la journée<br/>Bruxelles · Remote</div>
     </div>
 
-    <div class="contact-grid reveal">
-      <!-- Portrait column -->
-      <div class="contact-portrait">
-        <div class="cp-frame">
-          <div class="cp-crosshair">
-            <span class="cp-mark">Portrait · 001</span>
-            <span>F / 2.8 — 85mm</span>
-          </div>
-          <img src="assets/portrait.png" alt="Corentin Devillé" width="1400" height="2100" loading="lazy" decoding="async" />
-          <div class="cp-tag"><span>Corentin Devillé</span><span>Bruxelles · 2026</span></div>
-        </div>
-        <div class="cp-avail">
-          <span class="cp-avail-dot"></span>
-          <span>Disponible pour de nouveaux projets</span>
-        </div>
-      </div>
-
+    <div class="contact-grid contact-grid--simple reveal">
       <!-- Contact content column -->
-      <div class="contact-content">
+      <div class="contact-content contact-col-text">
         <p class="contact-lede">Un projet vidéo, une question sur une formation, ou juste une idée — écris-moi, je réponds dans la journée.</p>
 
         <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o." target="_blank" class="contact-wa-btn">

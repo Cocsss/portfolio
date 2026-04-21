@@ -1685,9 +1685,9 @@ body[data-theme="dark"] .contact-drawer .cd-link{border-color:rgba(26,26,26,.08)
 }
 
 /* ===== Section rhythm : subtle alternation on neutral sections only ===== */
-#services, #infos{ background:rgba(0,0,0,.02); }
+#services, #apropos{ background:rgba(0,0,0,.02); }
 body[data-theme="dark"] #services,
-body[data-theme="dark"] #infos{ background:rgba(255,255,255,.025); }
+body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
 
 /* ===== GREEN full-bleed Contact section ===== */
 #contact{ position:relative; color:#F0EEE9; }
@@ -1938,144 +1938,187 @@ body[data-mode="glass"] .cp-frame{
   .contact-link:hover .contact-link-arr{ transform:translate(2px,-2px);background:rgba(240,238,233,.18); }
 }
 
-/* About block inside accordion */
-.info-body .info-quote{
-  font-family:var(--font-display);font-size:clamp(20px,2vw,28px);line-height:1.25;
-  letter-spacing:-.01em;color:var(--ink);max-width:38ch;margin:4px 0 14px;
-}
-.info-body .info-quote em{ font-style:italic;color:var(--accent); }
-.about-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:28px;
-  border-top:1px solid var(--rule);
-}
-.about-stats .as{
-  padding:20px 18px;border-right:1px solid var(--rule);
-}
-.about-stats .as:last-child{ border-right:0; }
-.about-stats .n{
-  font-family:var(--font-display);font-size:clamp(32px,3.4vw,52px);
-  line-height:1;letter-spacing:-.015em;color:var(--ink);
-}
-.about-stats .l{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);margin-top:8px;
-}
-@media(max-width:600px){
-  .about-stats{ grid-template-columns:1fr;border-top:0; }
-  .about-stats .as{ border-right:0;border-top:1px solid var(--rule);padding:16px 0; }
-}
-
-/* ===== INFO ACCORDION — Comment ça marche / Cours / Tarifs ===== */
-.info-acc{
-  max-width:1680px;margin:0 auto;
-  border-top:1px solid var(--rule);
-}
-.info-row{
+/* ===== Sub-blocks inside a section (Méthode / Tarifs) ===== */
+.sub-block{ margin-top:72px; }
+.block-head{
+  display:flex;flex-direction:column;gap:8px;
+  padding-bottom:18px;margin-bottom:28px;
   border-bottom:1px solid var(--rule);
 }
-.info-row summary{
-  list-style:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  padding:28px 0;
-  font-family:var(--font-display);
-  font-size:clamp(22px,3.4vw,48px);
-  line-height:1.05;letter-spacing:-.015em;text-transform:uppercase;
-  transition:color .3s ease, padding .3s ease;
+.block-idx{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);
 }
-.info-row summary::-webkit-details-marker{display:none}
-.info-row summary:hover{ color:var(--accent); padding-left:12px; }
-.info-row .info-idx{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
-  color:var(--muted);flex-shrink:0;min-width:48px;
+.block-title{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(32px,4vw,56px);line-height:.95;letter-spacing:-.02em;
+  color:var(--ink);
 }
-.info-row .info-title{flex:1;min-width:0;word-break:break-word;}
-.info-row .info-arrow{
-  width:48px;height:48px;border-radius:50%;
-  border:1px solid var(--ink);
-  display:inline-flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:transform .45s cubic-bezier(.3,1.2,.4,1), background .3s, color .3s;
-  font-size:20px;
+.block-intro{
+  font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-top:4px;
 }
-.info-row[open] .info-arrow{ transform:rotate(45deg); background:var(--ink); color:var(--bg); }
-.info-row:hover .info-arrow{ background:var(--accent); border-color:var(--accent); color:#fff; }
-.info-row .info-body{
-  overflow:hidden;
-  padding:0 0 28px;
-  animation: infoReveal .5s cubic-bezier(.3,1,.4,1);
+
+/* ===== Method grid (4 steps) ===== */
+.method-grid{
+  display:grid;grid-template-columns:repeat(4, 1fr);gap:0;
+  border-top:1px solid var(--rule);
 }
-@keyframes infoReveal{
-  0%{ opacity:0; transform:translateY(-8px); }
-  100%{ opacity:1; transform:translateY(0); }
+.method-cell{
+  padding:28px 24px 28px 0;
+  border-right:1px solid var(--rule);
+  position:relative;
 }
-.info-body p{ font-size:16px;line-height:1.65;color:var(--muted);max-width:70ch; }
-.info-body .info-intro{ margin-bottom:20px; }
-.info-body .info-cta{ margin-top:24px; }
-.info-row .info-grid{
-  display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;margin-top:8px;
+.method-cell:last-child{ border-right:0; }
+.method-cell + .method-cell{ padding-left:24px; }
+.method-cell::before{
+  content:"";position:absolute;top:-1px;left:0;width:48px;height:2px;background:var(--accent);
 }
-.info-row .info-grid .cell{
-  padding:20px;border:1px solid var(--rule);border-radius:4px;
-  background:rgba(0,0,0,.02);
+.method-num{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:14px;
 }
-body[data-theme="dark"] .info-row .info-grid .cell{ background:rgba(255,255,255,.03); }
-.info-row .info-grid .cell .n{ font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;color:var(--muted);margin-bottom:8px }
-.info-row .info-grid .cell .t{ font-family:var(--font-display);font-size:22px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:6px }
-.info-row .info-grid .cell .d{ font-size:14px;line-height:1.5;color:var(--muted) }
-.info-row .tariffs-list{display:flex;flex-direction:column;gap:0}
-.info-row .tariffs-list .tr{
+.method-title{
+  font-family:var(--font-display);font-size:clamp(22px,2.4vw,32px);line-height:1;
+  letter-spacing:-.015em;text-transform:uppercase;color:var(--ink);margin-bottom:12px;
+}
+.method-desc{
+  font-size:14.5px;line-height:1.55;color:var(--muted);max-width:30ch;
+}
+
+/* ===== Tariffs list (generalised, no longer scoped to .info-body) ===== */
+.tariffs-list{ display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule); }
+.tariffs-list .tr{
   display:flex;justify-content:space-between;align-items:center;gap:20px;
-  padding:18px 0;border-top:1px solid var(--rule);
+  padding:18px 0;border-bottom:1px solid var(--rule);
   font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;
   flex-wrap:wrap;
 }
-.info-row .tariffs-list .tr strong{ font-family:var(--font-mono);font-size:16px;letter-spacing:0;color:var(--accent);text-transform:none;flex-shrink:0; }
-
-/* Tablet */
-@media(max-width:900px){
-  .info-row .info-grid{grid-template-columns:1fr 1fr;gap:12px}
+.tariffs-list .tr strong{
+  font-family:var(--font-mono);font-size:16px;letter-spacing:0;
+  color:var(--accent);text-transform:none;flex-shrink:0;
 }
-/* Phone */
+
+/* ===== À propos section ===== */
+.apropos-grid{
+  display:grid;grid-template-columns:5fr 6fr;gap:72px;align-items:center;
+}
+.apropos-visual{ position:relative; }
+.apropos-card{
+  position:relative;aspect-ratio:4/5;
+  border:1px solid var(--rule);
+  background:linear-gradient(160deg, rgba(26,26,26,.03) 0%, rgba(26,26,26,.08) 100%);
+  padding:26px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  overflow:hidden;isolation:isolate;
+}
+body[data-theme="dark"] .apropos-card{
+  background:linear-gradient(160deg, rgba(255,255,255,.03) 0%, rgba(255,255,255,.06) 100%);
+  border-color:var(--rule);
+}
+.apropos-card::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+  background-size:48px 48px;
+  opacity:.35;
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 40%, transparent 100%);
+}
+.apropos-card-head,
+.apropos-card-body,
+.apropos-card-foot{ position:relative;z-index:1; }
+.apropos-card-head{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);
+}
+.apropos-card-tag{ display:flex;align-items:center;gap:8px; }
+.apropos-card-tag::before{
+  content:"";width:8px;height:8px;border:1px solid currentColor;border-radius:50%;display:inline-block;
+}
+.apropos-card-body{
+  display:flex;flex-direction:column;gap:18px;align-items:flex-start;
+}
+.apropos-card-initials{
+  font-family:var(--font-display);font-size:clamp(96px,14vw,168px);line-height:.85;letter-spacing:-.04em;
+  color:var(--accent);
+}
+.apropos-card-name{
+  font-family:var(--font-display);font-size:clamp(26px,2.6vw,38px);line-height:.9;
+  letter-spacing:-.015em;color:var(--ink);
+}
+.apropos-card-foot{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);
+  padding-top:14px;border-top:1px solid var(--rule);
+}
+.apropos-text{ display:flex;flex-direction:column;gap:22px; }
+.apropos-quote{
+  font-family:var(--font-display);font-size:clamp(26px,2.8vw,40px);line-height:1.15;
+  letter-spacing:-.015em;color:var(--ink);max-width:22ch;
+}
+.apropos-quote em{ font-style:italic;color:var(--accent); }
+.apropos-body{
+  font-size:16px;line-height:1.7;color:var(--muted);max-width:62ch;
+}
+.apropos-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:18px;
+  border-top:1px solid var(--rule);
+}
+.apropos-stats .as{
+  padding:20px 18px 0 0;border-right:1px solid var(--rule);
+}
+.apropos-stats .as:last-child{ border-right:0;padding-right:0; }
+.apropos-stats .n{
+  font-family:var(--font-display);font-size:clamp(32px,3.4vw,52px);
+  line-height:1;letter-spacing:-.015em;color:var(--ink);
+}
+.apropos-stats .l{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);margin-top:8px;
+}
+
+/* Method + À propos — Tablet */
+@media(max-width:900px){
+  .method-grid{ grid-template-columns:1fr 1fr; }
+  .method-cell{ padding:24px 20px 24px 0;border-bottom:1px solid var(--rule); }
+  .method-cell:nth-child(2){ border-right:0; }
+  .method-cell:nth-child(3),
+  .method-cell:nth-child(4){ border-bottom:0; }
+  .method-cell + .method-cell{ padding-left:0; }
+  .method-cell:nth-child(2n){ padding-left:20px;border-left:1px solid var(--rule); }
+  .apropos-grid{ grid-template-columns:1fr;gap:40px; }
+  .apropos-card{ max-width:360px;margin:0 auto; }
+}
+/* Method + À propos — Phone */
 @media(max-width:600px){
-  .info-row{ position:relative; }
-  .info-row::before{
-    content:"";position:absolute;left:-16px;top:20px;bottom:20px;width:2px;
-    background:var(--accent);
-    transform:scaleY(0);transform-origin:top;
-    transition:transform .4s cubic-bezier(.22,1,.36,1);
+  .sub-block{ margin-top:56px; }
+  .block-title{ font-size:clamp(28px,8vw,40px); }
+  .method-grid{ grid-template-columns:1fr;border-top:0; }
+  .method-cell{
+    padding:22px 0;border-right:0;border-bottom:1px solid var(--rule);
   }
-  .info-row[open]::before{ transform:scaleY(1); }
-  .info-row summary{
-    font-size:clamp(22px,6.5vw,30px);padding:24px 0;gap:14px;
-    flex-wrap:nowrap;align-items:center;
-  }
-  .info-row summary:hover{ padding-left:0; }
-  .info-row .info-idx{
-    min-width:auto;font-size:10px;letter-spacing:.2em;
-    padding:5px 9px;background:rgba(26,26,26,.06);border-radius:4px;
-    color:var(--ink);flex-shrink:0;
-  }
-  body[data-theme="dark"] .info-row .info-idx{ background:rgba(255,255,255,.06); }
-  .info-row[open] .info-idx{ background:var(--accent);color:#fff; }
-  .info-row .info-title{
-    font-weight:500;letter-spacing:-.015em;
-  }
-  .info-row[open] .info-title{ color:var(--accent); }
-  .info-row .info-arrow{ width:38px;height:38px;font-size:17px;flex-shrink:0; }
-  .info-body p{ font-size:15.5px;line-height:1.6; }
-  .info-row .info-grid{grid-template-columns:1fr;gap:10px}
-  .info-row .info-grid .cell{
-    padding:16px 18px;border-radius:10px;
-  }
-  .info-row .info-grid .cell .n{ font-size:10px;letter-spacing:.2em;margin-bottom:6px; }
-  .info-row .info-grid .cell .t{ font-size:18px;margin-bottom:4px; }
-  .info-row .info-grid .cell .d{ font-size:13.5px;line-height:1.5; }
-  .info-row .tariffs-list .tr{
+  .method-cell:last-child{ border-bottom:0; }
+  .method-cell + .method-cell,
+  .method-cell:nth-child(2n){ padding-left:0;border-left:0; }
+  .method-cell::before{ width:36px; }
+  .method-title{ font-size:22px;margin-bottom:10px; }
+  .method-desc{ font-size:14px; }
+  .tariffs-list .tr{
     flex-direction:column;align-items:flex-start;gap:6px;font-size:11px;letter-spacing:.1em;
     padding:14px 0;
   }
-  .info-row .tariffs-list .tr strong{ font-size:15px; }
-  .info-body{ padding:0 0 22px; }
-  .info-body p{ font-size:15px; }
+  .tariffs-list .tr strong{ font-size:15px; }
+  .apropos-grid{ gap:32px; }
+  .apropos-quote{ font-size:clamp(22px,6.5vw,28px);max-width:100%; }
+  .apropos-body{ font-size:15px; }
+  .apropos-stats{ grid-template-columns:1fr;border-top:0; }
+  .apropos-stats .as{
+    border-right:0;border-top:1px solid var(--rule);padding:16px 0;
+  }
 }
 
 /* ===== Easter egg ===== */
@@ -2274,7 +2317,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <a href="#top" class="mm-link" data-n="01" data-target="top">Accueil</a>
     <a href="#services" class="mm-link" data-n="02" data-target="services">Services</a>
     <a href="#projets" class="mm-link" data-n="03" data-target="projets">Projets</a>
-    <a href="#infos" class="mm-link" data-n="04" data-target="infos">Infos</a>
+    <a href="#apropos" class="mm-link" data-n="04" data-target="apropos">À propos</a>
     <a href="#contact" class="mm-link" data-n="05" data-target="contact">Contact</a>
   </nav>
   <div class="mm-foot">
@@ -2355,7 +2398,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <a href="#top" data-target="top">Accueil</a>
     <a href="#services" data-target="services">Services</a>
     <a href="#projets" data-target="projets">Projets</a>
-    <a href="#infos" data-target="infos">Infos</a>
+    <a href="#apropos" data-target="apropos">À propos</a>
     <a href="#contact" data-target="contact">Contact</a>
   </nav>
   <div class="topbar-spec">
@@ -2447,17 +2490,66 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
         </div>
       </div>
     </div>
+
+    <!-- MÉTHODE / PROCESSUS -->
+    <div class="sub-block reveal">
+      <div class="block-head">
+        <div class="block-idx">§ 01 · Processus</div>
+        <h3 class="block-title">Comment ça marche</h3>
+        <p class="block-intro">4 étapes claires, du brief à la livraison.</p>
+      </div>
+      <div class="method-grid">
+        <div class="method-cell">
+          <div class="method-num">01</div>
+          <div class="method-title">Briefing</div>
+          <p class="method-desc">On se parle, on cerne ton projet, tes envies, ton budget.</p>
+        </div>
+        <div class="method-cell">
+          <div class="method-num">02</div>
+          <div class="method-title">Tournage</div>
+          <p class="method-desc">Je filme selon ta vision, avec le matériel adapté.</p>
+        </div>
+        <div class="method-cell">
+          <div class="method-num">03</div>
+          <div class="method-title">Montage</div>
+          <p class="method-desc">Construction du rythme, de la narration, de l'image.</p>
+        </div>
+        <div class="method-cell">
+          <div class="method-num">04</div>
+          <div class="method-title">Livraison</div>
+          <p class="method-desc">Fichiers exportés, droits inclus, livrables sur-mesure.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARIFS -->
+    <div class="sub-block reveal">
+      <div class="block-head">
+        <div class="block-idx">§ 01 · Tarification</div>
+        <h3 class="block-title">Tarifs</h3>
+        <p class="block-intro">Tarif horaire · Devis gratuit · Printemps 2026</p>
+      </div>
+      <div class="tariffs-list">
+        <div class="tr"><span>01 — Montage (Reels, clips, aftermovies)</span><strong>~ 20€ /h</strong></div>
+        <div class="tr"><span>02 — Tournage &amp; Drone</span><strong>~ 25€ /h</strong></div>
+        <div class="tr"><span>03 — Formation Premiere Pro</span><strong>~ 20€ /h</strong></div>
+      </div>
+    </div>
   </section>
 
   <!-- PROJECTS -->
   <section class="section wrap" id="projets" data-section-label="§ 02 — Projets">
-    <!-- section head supprimé : l'indicateur de section est dans la topbar -->
+    <div class="section-head reveal">
+      <div class="idx">§ 02 / Travaux récents</div>
+      <h2>Projets</h2>
+      <div class="sub">Social content · Événementiel<br/>&amp; Music</div>
+    </div>
 
     <!-- ==================== WENDA ==================== -->
     <div class="ps-block ps-ed reveal" data-ps-id="wenda">
       <div class="ps-bg"></div>
       <div class="ps-ed-header">
-        <div class="ps-idx">§ 01.1 / Mode — Social content</div>
+        <div class="ps-idx">§ 02.1 / Mode — Social content</div>
         <h3 class="ps-ed-title">Les filles de Wenda</h3>
         <div class="ps-ed-meta"><span>Les Filles de Wenda</span><span>Fashion — Social content</span><span>Waterloo / Brussels</span><span>2024 — 2026</span><span>9:16</span></div>
       </div>
@@ -2506,7 +2598,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <div class="ps-block ps-ed reveal" data-ps-id="bebooth">
       <div class="ps-bg"></div>
       <div class="ps-ed-header">
-        <div class="ps-idx">§ 01.2 / Événementiel — Photobooth</div>
+        <div class="ps-idx">§ 02.2 / Événementiel — Photobooth</div>
         <h3 class="ps-ed-title">Bebooth</h3>
         <div class="ps-ed-meta"><span>Bebooth</span><span>Event — Photobooth</span><span>Brussels</span><span>2025</span><span>16:9</span></div>
       </div>
@@ -2555,7 +2647,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <div class="ps-block ps-ed reveal" data-ps-id="lucid">
       <div class="ps-bg"></div>
       <div class="ps-ed-header">
-        <div class="ps-idx">§ 01.3 / [Catégorie — à compléter]</div>
+        <div class="ps-idx">§ 02.3 / [Catégorie — à compléter]</div>
         <h3 class="ps-ed-title">Lucid Dreams</h3>
         <div class="ps-ed-meta"><span>Lucid Dreams</span><span>—</span><span>—</span><span>—</span><span>9:16</span></div>
       </div>
@@ -2604,7 +2696,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     <div class="ps-block ps-ed reveal" data-ps-id="scout">
       <div class="ps-bg"></div>
       <div class="ps-ed-header">
-        <div class="ps-idx">§ 01.4 / Événementiel — Aftermovie</div>
+        <div class="ps-idx">§ 02.4 / Événementiel — Aftermovie</div>
         <h3 class="ps-ed-title">Scout Festival</h3>
         <div class="ps-ed-meta"><span>Scout Festival</span><span>Event — Aftermovie</span><span>Belgique</span><span>2026</span><span>16:9</span></div>
       </div>
@@ -2625,76 +2717,44 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
 
   </section>
 
-  <!-- INFOS : accordéon Process / Cours / Tarifs -->
-  <section class="section wrap" id="infos" data-section-label="§ 03 — Infos">
+  <!-- À PROPOS -->
+  <section class="section wrap" id="apropos" data-section-label="§ 03 — À propos">
     <div class="section-head reveal">
-      <div class="idx">§ 03 / Infos pratiques</div>
-      <h2>Infos</h2>
-      <div class="sub">Méthode · Cours · Tarifs<br/>Clique pour déplier</div>
+      <div class="idx">§ 03 / Qui je suis</div>
+      <h2>À propos</h2>
+      <div class="sub">Étudiant · Vidéaste<br/>Belgique, 2026</div>
     </div>
-    <div class="info-acc reveal">
-      <details class="info-row">
-        <summary>
-          <span class="info-idx">01</span>
-          <span class="info-title">Comment ça marche</span>
-          <span class="info-arrow" aria-hidden="true">+</span>
-        </summary>
-        <div class="info-body">
-          <p class="info-intro">4 étapes claires, du brief à la livraison.</p>
-          <div class="info-grid">
-            <div class="cell"><div class="n">01</div><div class="t">Briefing</div><div class="d">On se parle, on cerne ton projet, tes envies, ton budget.</div></div>
-            <div class="cell"><div class="n">02</div><div class="t">Tournage</div><div class="d">Je filme selon ta vision, avec le matériel adapté.</div></div>
-            <div class="cell"><div class="n">03</div><div class="t">Montage</div><div class="d">Construction du rythme, de la narration, de l'image.</div></div>
-            <div class="cell"><div class="n">04</div><div class="t">Livraison</div><div class="d">Fichiers exportés, droits inclus, livrables sur-mesure.</div></div>
+
+    <div class="apropos-grid reveal">
+      <!-- ID card visual -->
+      <aside class="apropos-visual" aria-hidden="true">
+        <div class="apropos-card">
+          <div class="apropos-card-head">
+            <span class="apropos-card-tag">ID · 001</span>
+            <span>BE / 2026</span>
+          </div>
+          <div class="apropos-card-body">
+            <div class="apropos-card-initials">CD</div>
+            <div class="apropos-card-name">Corentin<br/>Devillé</div>
+          </div>
+          <div class="apropos-card-foot">
+            <span>Vidéaste</span>
+            <span>Formateur</span>
+            <span>Bruxelles</span>
           </div>
         </div>
-      </details>
+      </aside>
 
-      <details class="info-row">
-        <summary>
-          <span class="info-idx">02</span>
-          <span class="info-title">Cours Premiere Pro</span>
-          <span class="info-arrow" aria-hidden="true">+</span>
-        </summary>
-        <div class="info-body">
-          <p>Cours individuels de montage vidéo sous Premiere Pro — des bases jusqu'aux techniques avancées : multi-caméras, proxies, étalonnage, workflow professionnel. En ligne ou à Bruxelles.</p>
-          <a class="cta info-cta" href="#contact"><span class="ln"></span>Prendre contact →</a>
+      <!-- Bio content -->
+      <div class="apropos-text">
+        <p class="apropos-quote">Étudiant passionné et créatif, je donne vie à vos projets visuels — <em>brand design</em>, contenus digitaux, aftermovies et bien plus.</p>
+        <p class="apropos-body">De l'écriture au montage, je m'attache à trouver le bon rythme, la bonne lumière, le détail qui fait basculer une image en souvenir. Je travaille aussi bien avec des marques qu'avec des collectifs, pour des formats courts ou des films longs, toujours avec la même exigence : une narration honnête et une image soignée.</p>
+        <div class="apropos-stats">
+          <div class="as"><div class="n">40+</div><div class="l">Projets livrés</div></div>
+          <div class="as"><div class="n">04</div><div class="l">Ans d'expérience</div></div>
+          <div class="as"><div class="n">BE</div><div class="l">Base · disponible EU</div></div>
         </div>
-      </details>
-
-      <details class="info-row">
-        <summary>
-          <span class="info-idx">03</span>
-          <span class="info-title">Tarifs</span>
-          <span class="info-arrow" aria-hidden="true">+</span>
-        </summary>
-        <div class="info-body">
-          <p class="info-intro">Tarif horaire · Devis gratuit · Printemps 2026</p>
-          <div class="tariffs-list">
-            <div class="tr"><span>01 — Montage (Reels, clips, aftermovies)</span><strong>~ 20€ /h</strong></div>
-            <div class="tr"><span>02 — Tournage &amp; Drone</span><strong>~ 25€ /h</strong></div>
-            <div class="tr"><span>03 — Formation Premiere Pro</span><strong>~ 20€ /h</strong></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="info-row" id="apropos">
-        <summary>
-          <span class="info-idx">04</span>
-          <span class="info-title">À propos</span>
-          <span class="info-arrow" aria-hidden="true">+</span>
-        </summary>
-        <div class="info-body">
-          <p class="info-intro">Étudiant · Vidéaste · Belgique, 2026</p>
-          <p class="info-quote">Étudiant passionné et créatif, je donne vie à vos projets visuels — <em>brand design</em>, contenus digitaux, aftermovies et bien plus.</p>
-          <p>De l'écriture au montage, je m'attache à trouver le bon rythme, la bonne lumière, le détail qui fait basculer une image en souvenir. Je travaille aussi bien avec des marques qu'avec des collectifs, pour des formats courts ou des films longs, toujours avec la même exigence : une narration honnête et une image soignée.</p>
-          <div class="about-stats">
-            <div class="as"><div class="n">40+</div><div class="l">Projets livrés</div></div>
-            <div class="as"><div class="n">04</div><div class="l">Ans d'expérience</div></div>
-            <div class="as"><div class="n">BE</div><div class="l">Base · disponible EU</div></div>
-          </div>
-        </div>
-      </details>
+      </div>
     </div>
   </section>
 
@@ -3001,7 +3061,7 @@ function initStackCarousel(rootId) {
 /* ========== ANIMATED COUNTERS ========== */
 (function(){
   // Store original values in data attrs first
-  document.querySelectorAll('.stats .n').forEach(el=>{
+  document.querySelectorAll('.stats .n, .apropos-stats .n').forEach(el=>{
     el.dataset.target = el.textContent.trim();
     el.textContent = el.textContent.includes('+') ? '0+' : '00';
   });
@@ -3025,7 +3085,7 @@ function initStackCarousel(rootId) {
       obs.unobserve(e.target);
     });
   },{threshold:.3});
-  document.querySelectorAll('.stats .n').forEach(n=>obs.observe(n));
+  document.querySelectorAll('.stats .n, .apropos-stats .n').forEach(n=>obs.observe(n));
 })();
 
 /* ========== SCROLL PROGRESS BAR + scrolled state for topbar border ========== */

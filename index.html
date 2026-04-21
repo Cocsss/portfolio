@@ -2451,10 +2451,16 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
   display:block;filter:grayscale(.08);
 }
 .apropos-card.apropos-card--float{
-  position:absolute;top:-24px;right:-24px;
+  position:absolute;bottom:-28px;right:-28px;
   width:210px;aspect-ratio:3/4;z-index:2;
   padding:18px;background:var(--bg);
   box-shadow:0 30px 60px -20px rgba(0,0,0,.35);
+  transform:rotate(2.5deg);
+  transform-origin:center center;
+  transition:transform .5s cubic-bezier(.3,1.2,.4,1);
+}
+.apropos-visual:hover .apropos-card.apropos-card--float{
+  transform:rotate(0deg) translateY(-4px);
 }
 body[data-theme="dark"] .apropos-card.apropos-card--float{
   background:#0E0D10;
@@ -2967,11 +2973,21 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
 
     <div class="apropos-grid reveal">
       <!-- Photo + floating ID card -->
-      <aside class="apropos-visual" aria-hidden="true">
+      <aside class="apropos-visual">
         <div class="apropos-photo">
-          <img src="assets/portrait.png" alt="" />
+          <picture>
+            <source type="image/avif"
+                    srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w, assets/portrait-1200.avif 1200w"
+                    sizes="(max-width: 700px) 80vw, (max-width: 1200px) 40vw, 440px">
+            <img src="assets/portrait-800.jpg"
+                 srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w, assets/portrait-1200.jpg 1200w"
+                 sizes="(max-width: 700px) 80vw, (max-width: 1200px) 40vw, 440px"
+                 width="800" height="1200"
+                 loading="lazy" decoding="async"
+                 alt="Corentin Devillé, vidéaste, portrait en lumière naturelle chaude, regard tourné vers hors-champ." />
+          </picture>
         </div>
-        <div class="apropos-card apropos-card--float">
+        <div class="apropos-card apropos-card--float" aria-hidden="true">
           <div class="apropos-card-head">
             <span class="apropos-card-tag">ID · 001</span>
             <span>BE / 2026</span>

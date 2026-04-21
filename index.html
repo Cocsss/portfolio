@@ -1752,8 +1752,31 @@ body[data-theme="dark"] #infos{ background:rgba(255,255,255,.025); }
   transition:transform .8s cubic-bezier(.22,1,.36,1);
 }
 .contact-portrait:hover .cp-frame img{ transform:scale(1.03); }
+/* Technical grid overlay — blueprint style, sits over the photo */
+.cp-grid-ovl{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><g fill='none' stroke='%23ffffff'><path d='M0 0.5 L80 0.5 M0.5 0 L0.5 80' stroke-width='1' opacity='0.18'/><path d='M40 35 L40 45 M35 40 L45 40' stroke-width='1.2' opacity='0.55'/></g></svg>");
+  background-size:80px 80px;
+  mix-blend-mode:overlay;
+}
+/* Corner brackets — top-left + bottom-right */
+.cp-grid-ovl::before,
+.cp-grid-ovl::after{
+  content:"";position:absolute;width:34px;height:34px;pointer-events:none;
+}
+.cp-grid-ovl::before{
+  top:14px;left:14px;
+  border-top:1.5px solid rgba(255,255,255,.8);
+  border-left:1.5px solid rgba(255,255,255,.8);
+}
+.cp-grid-ovl::after{
+  bottom:14px;right:14px;
+  border-bottom:1.5px solid rgba(255,255,255,.8);
+  border-right:1.5px solid rgba(255,255,255,.8);
+}
 .cp-crosshair{
-  position:absolute;top:16px;left:16px;right:16px;z-index:3;
+  position:absolute;top:16px;left:16px;right:16px;z-index:4;
   display:flex;justify-content:space-between;
   font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;
   color:#1A1A1A;opacity:.7;
@@ -1765,7 +1788,7 @@ body[data-theme="dark"] #infos{ background:rgba(255,255,255,.025); }
   display:inline-block;flex-shrink:0;
 }
 .cp-tag{
-  position:absolute;bottom:18px;left:18px;right:18px;z-index:3;
+  position:absolute;bottom:18px;left:18px;right:18px;z-index:4;
   display:flex;justify-content:space-between;
   font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
   color:#F0EEE9;
@@ -1866,6 +1889,9 @@ body[data-mode="glass"] .cp-frame{
     top:12px;left:12px;right:12px;font-size:9px;letter-spacing:.18em;
   }
   .cp-tag{ font-size:10px;bottom:14px;left:14px;right:14px;letter-spacing:.14em; }
+  .cp-grid-ovl{ background-size:56px 56px; }
+  .cp-grid-ovl::before{ top:10px;left:10px;width:24px;height:24px; }
+  .cp-grid-ovl::after{ bottom:10px;right:10px;width:24px;height:24px; }
   .cp-avail{
     margin-top:14px;padding:10px 14px;
     background:rgba(240,238,233,.06);border:1px solid rgba(240,238,233,.12);
@@ -2699,6 +2725,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
             <span>F / 2.8 — 85mm</span>
           </div>
           <img src="assets/portrait.png" alt="Corentin Devillé" width="1600" height="2400" loading="lazy" decoding="async" />
+          <div class="cp-grid-ovl" aria-hidden="true"></div>
           <div class="cp-tag"><span>Corentin Devillé</span><span>Bruxelles · 2026</span></div>
         </div>
         <div class="cp-avail">

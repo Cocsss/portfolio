@@ -14,7 +14,11 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://videos.corentindeville.com">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Preload LCP candidate : showreel poster -->
+<link rel="preload" as="image" href="media/thumbnails/showreel-poster-1600.jpg" fetchpriority="high">
 
 <style>
 :root{
@@ -2667,7 +2671,10 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
       <div class="hero-reel">
         <video class="hero-reel-video"
                src="https://videos.corentindeville.com/showreel-2026.mp4"
+               poster="media/thumbnails/showreel-poster-1600.jpg"
+               width="1600" height="685"
                autoplay muted loop playsinline preload="metadata"
+               aria-label="Showreel 2026 — extraits de projets vidéo récents"
                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:block"></video>
         <div class="stripes"></div>
         <div class="reel-overlay"></div>

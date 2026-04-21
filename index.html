@@ -1723,43 +1723,47 @@ body[data-theme="dark"] #infos{ background:rgba(255,255,255,.025); }
 .cp-frame{
   position:relative;aspect-ratio:4/5;overflow:hidden;
   border-left:6px solid var(--accent);
-  background:#18171A;
+  background:#0E0D10;
   isolation:isolate;
   box-shadow:
-    0 40px 80px -30px rgba(0,0,0,.6),
+    0 50px 100px -30px rgba(0,0,0,.75),
+    0 20px 40px -20px rgba(0,0,0,.55),
     inset 0 1px 0 rgba(255,255,255,.05);
 }
-/* Modern architectural grid — neutral, no color */
+/* Modern architectural grid — neutral, fills the frame, visible through cutout */
 .cp-frame::before{
   content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background-image:
     /* Plus markers at major intersections */
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><g fill='none' stroke='%23ffffff' opacity='0.3'><path d='M60 54 L60 66 M54 60 L66 60' stroke-width='1.1'/></g></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><g fill='none' stroke='%23ffffff' opacity='0.42'><path d='M60 52 L60 68 M52 60 L68 60' stroke-width='1.2'/></g></svg>"),
     /* Major grid 120px */
-    linear-gradient(to right, rgba(255,255,255,.09) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,.09) 1px, transparent 1px),
-    /* Minor grid 20px — fine depth */
-    linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255,255,255,.13) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.13) 1px, transparent 1px),
+    /* Minor grid 20px */
+    linear-gradient(to right, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
   background-size: 120px 120px, 120px 120px, 120px 120px, 20px 20px, 20px 20px;
-  mask-image: radial-gradient(ellipse 115% 95% at 50% 42%, #000 52%, rgba(0,0,0,.4) 92%, transparent 110%);
-  -webkit-mask-image: radial-gradient(ellipse 115% 95% at 50% 42%, #000 52%, rgba(0,0,0,.4) 92%, transparent 110%);
+  mask-image: radial-gradient(ellipse 120% 100% at 50% 45%, #000 55%, rgba(0,0,0,.4) 95%, transparent 115%);
+  -webkit-mask-image: radial-gradient(ellipse 120% 100% at 50% 45%, #000 55%, rgba(0,0,0,.4) 95%, transparent 115%);
 }
-/* Ambient vignette — soft shadow around edges + toward the bottom */
+/* Deep vignette + ground glow under subject */
 .cp-frame::after{
   content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
-    radial-gradient(ellipse 100% 75% at 50% 50%, transparent 55%, rgba(0,0,0,.4) 100%),
-    linear-gradient(to top, rgba(0,0,0,.28) 0%, transparent 35%);
+    radial-gradient(ellipse 55% 15% at 50% 96%, rgba(255,255,255,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 65% at 50% 50%, transparent 42%, rgba(0,0,0,.55) 100%),
+    linear-gradient(to top, rgba(0,0,0,.35) 0%, transparent 35%);
 }
-/* Photo inset — reveals the grid mat around it */
+/* Cutout photo — fills the frame, subject floats above the grid */
 .cp-frame img{
-  position:absolute;
-  top:32px;left:32px;right:32px;bottom:68px;
-  width:auto;height:auto;
-  object-fit:cover;object-position:center 5%;
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:contain;
+  object-position:center bottom;
   display:block;z-index:2;
-  filter:drop-shadow(0 30px 50px rgba(0,0,0,.55)) drop-shadow(0 10px 20px rgba(0,0,0,.4));
+  filter:
+    drop-shadow(0 40px 60px rgba(0,0,0,.7))
+    drop-shadow(0 15px 30px rgba(0,0,0,.5));
   transition:transform .8s cubic-bezier(.22,1,.36,1);
 }
 .contact-portrait:hover .cp-frame img{ transform:scale(1.02); }
@@ -1878,7 +1882,6 @@ body[data-mode="glass"] .cp-frame{
   }
   .cp-tag{ font-size:10px;bottom:16px;left:14px;right:14px;letter-spacing:.14em; }
   .cp-frame::before{ background-size: 80px 80px, 80px 80px, 80px 80px, 16px 16px, 16px 16px; }
-  .cp-frame img{ top:22px;left:22px;right:22px;bottom:52px; }
   .cp-avail{
     margin-top:14px;padding:10px 14px;
     background:rgba(240,238,233,.06);border:1px solid rgba(240,238,233,.12);
@@ -2711,7 +2714,7 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
             <span class="cp-mark">Portrait · 001</span>
             <span>F / 2.8 — 85mm</span>
           </div>
-          <img src="assets/portrait.png" alt="Corentin Devillé" width="1600" height="2400" loading="lazy" decoding="async" />
+          <img src="assets/portrait.png" alt="Corentin Devillé" width="1400" height="2100" loading="lazy" decoding="async" />
           <div class="cp-tag"><span>Corentin Devillé</span><span>Bruxelles · 2026</span></div>
         </div>
         <div class="cp-avail">

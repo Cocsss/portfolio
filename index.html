@@ -715,6 +715,31 @@ body[data-mode="glass"] .pcard:hover{border-color:rgba(255,79,0,.5); box-shadow:
 .ps-ed-media .ps-carousel--big{padding:10px 60px 60px}
 .ps-ed-media .ps-carousel--big .reel-stage{max-width:1400px}
 .ps-ed-media .reel-card{border-radius:8px}
+
+/* Scout Festival — layout horizontal + vertical côte à côte */
+.scout-dual{
+  display:grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.42fr);
+  gap:24px;
+  max-width:1400px;
+  margin:0 auto;
+  padding:20px 60px 60px;
+  align-items:stretch;
+}
+.scout-horiz{
+  position:relative;aspect-ratio:16/9;
+  border-radius:8px;overflow:hidden;
+  background:#0e0d0b;
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.scout-vert{
+  position:relative;aspect-ratio:9/16;
+  border-radius:8px;overflow:hidden;
+  background:#0e0d0b;
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+  max-height:100%;
+}
+.scout-horiz video, .scout-vert video{border-radius:8px}
 .ps-ed-desc{max-width:820px;margin:0 auto;padding:0 8px;position:relative}
 .ps-ed-desc .ps-p{font-size:clamp(20px,1.5vw,26px);line-height:1.55;max-width:none;margin-bottom:22px;color:#222}
 /* Divider between projects */
@@ -737,6 +762,12 @@ body[data-mode="glass"] .pcard:hover{border-color:rgba(255,79,0,.5); box-shadow:
   .ps-ed-media{margin-bottom:40px}
   .ps-ed-media .ps-carousel{padding:10px 20px 50px}
   .ps-ed-media .ps-carousel--big{padding:10px 20px 50px}
+  .scout-dual{
+    grid-template-columns: 1fr;
+    gap:16px;
+    padding:10px 20px 40px;
+  }
+  .scout-vert{max-width:280px;margin:0 auto}
   .ps-ed-desc{padding:0 8px}
   .ps-ed-desc .ps-p{font-size:18px}
   .ps-divider{margin:60px auto;font-size:13px}
@@ -2543,7 +2574,36 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
       </div>
     </div>
 
-    
+    <div class="ps-divider"><span>— 04 —</span></div>
+
+    <!-- ==================== SCOUT FESTIVAL ==================== -->
+    <div class="ps-block ps-ed reveal" data-ps-id="scout">
+      <div class="ps-bg"></div>
+      <div class="ps-ed-header">
+        <div class="ps-idx">§ 01.4 / Événementiel — Aftermovie &amp; reel</div>
+        <h3 class="ps-ed-title">Scout Festival</h3>
+        <div class="ps-ed-meta"><span>Scout Festival</span><span>Event — Aftermovie</span><span>Belgique</span><span>2026</span><span>16:9 &amp; 9:16</span></div>
+      </div>
+      <div class="ps-ed-media">
+        <div class="scout-dual">
+          <div class="scout-horiz">
+            <video src="https://videos.corentindeville.com/aftermovie-scout.mp4"
+                   autoplay muted loop playsinline preload="metadata"
+                   style="width:100%;height:100%;object-fit:cover;display:block;background:#0e0d0b"></video>
+          </div>
+          <div class="scout-vert">
+            <video src="https://videos.corentindeville.com/scout-reel.mp4"
+                   autoplay muted loop playsinline preload="metadata"
+                   style="width:100%;height:100%;object-fit:cover;display:block;background:#0e0d0b"></video>
+          </div>
+        </div>
+      </div>
+      <div class="ps-ed-desc">
+        <p class="ps-p">[Description Scout Festival — à compléter]</p>
+        <p class="ps-p">[Angle créatif, type de contenu produit — à compléter]</p>
+      </div>
+    </div>
+
   </section>
 
   <!-- INFOS : accordéon Process / Cours / Tarifs -->

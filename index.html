@@ -82,7 +82,8 @@
   /* Charcoal + Cloud Dancer */
   --bg: #F0EEE9;
   --ink: #1A1A1A;
-  --accent: #FF4F00;
+  --accent: #FF4F00;         /* display usage only (large text 18pt+, borders, icons) — AA on --bg for 18pt+ */
+  --accent-text: #C43C00;    /* body-text usage — darker shade, WCAG AA ≥4.5:1 on --bg */
   --grid: #E8E4DD;
   --rule: #D4CFC7;
   --muted: #6E6A63;
@@ -99,6 +100,7 @@
 body[data-theme="dark"]{
   --bg: #0F0F0E;
   --ink: #F0EEE9;
+  --accent-text: #FF6B2B;   /* dark-theme body-text usage — lighter shade, AA ≥4.5:1 on --bg:#0F0F0E */
   --grid: #1E1D1A;
   --rule: #2A2925;
   --muted: #888580;
@@ -556,7 +558,7 @@ body[data-mode="glass"] .topbar{
 }
 .hero-pitch strong{
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-text);  /* body-text context : AA ≥4.5:1 on --bg */
   letter-spacing: 0;
 }
 
@@ -2678,7 +2680,7 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
     <span class="spec-badge">4K</span>
     <span class="spec-badge">60fps</span>
   </div>
-  <button class="menu-btn" aria-label="Menu"><span></span><span></span></button>
+  <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobMenu"><span></span><span></span></button>
 </header>
 
 <main class="page">
@@ -2688,8 +2690,8 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
     <div>
       <div class="hero-eyebrow">Portfolio / 2026 — Éd. 01</div>
       <h1 class="hero-name" id="heroName" aria-label="Corentin Devillé">
-        <span class="word" data-word="Corentin"></span>
-        <span class="word" data-word="Devillé"></span><span class="hero-star" aria-hidden="true"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,0 C50,0 53,35 64,50 C53,65 50,100 50,100 C50,100 47,65 36,50 C47,35 50,0 50,0 Z M0,50 C0,50 35,47 50,36 C65,47 100,50 100,50 C100,50 65,53 50,64 C35,53 0,50 0,50 Z" fill="var(--accent)"/></svg></span>
+        <span class="word" data-word="Corentin">Corentin</span>
+        <span class="word" data-word="Devillé">Devillé</span><span class="hero-star" aria-hidden="true"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,0 C50,0 53,35 64,50 C53,65 50,100 50,100 C50,100 47,65 36,50 C47,35 50,0 50,0 Z M0,50 C0,50 35,47 50,36 C65,47 100,50 100,50 C100,50 65,53 50,64 C35,53 0,50 0,50 Z" fill="var(--accent)"/></svg></span>
       </h1>
       <div class="hero-morph"><span>Je suis —</span><span class="morph-word" id="morphWord">Vidéaste</span></div>
 
@@ -3188,11 +3190,13 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
 /* ========== HERO NAME REVEAL ========== */
 (function buildHero(){
   const nameEl = document.getElementById('heroName');
+  if(!nameEl) return;
   const words = nameEl.querySelectorAll('.word');
   /* Start just after the curtain begins lifting (filmReveal @ 3.4s) */
   let delay = 3500;
   words.forEach((w, wi) => {
     const text = w.dataset.word;
+    w.textContent = ''; /* clear the static fallback text before injecting animated chars */
     [...text].forEach((ch, i) => {
       const s = document.createElement('span');
       s.className = 'char';
@@ -3358,10 +3362,19 @@ function initStackCarousel(rootId) {
   const btn = document.querySelector('.menu-btn');
   const close = document.getElementById('mmClose');
   if(!menu||!btn) return;
-  btn.addEventListener('click',()=>menu.classList.add('open'));
-  close.addEventListener('click',()=>menu.classList.remove('open'));
+  const setOpen = (open)=>{
+    menu.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  };
+  btn.addEventListener('click',()=>setOpen(!menu.classList.contains('open')));
+  if(close) close.addEventListener('click',()=>setOpen(false));
   document.querySelectorAll('.mm-link').forEach(a=>{
-    a.addEventListener('click',()=>menu.classList.remove('open'));
+    a.addEventListener('click',()=>setOpen(false));
+  });
+  /* Escape key closes the menu */
+  document.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape' && menu.classList.contains('open')) setOpen(false);
   });
 })();
 

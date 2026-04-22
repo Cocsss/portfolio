@@ -658,12 +658,12 @@ body[data-mode="glass"] .topbar{
 .hero-cta--ghost:hover .hero-cta-arrow{ transform: translateY(3px); }
 .hero-cta:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
 
-/* ===== Hero epigraph — signature "focus-pull" (objectif qui fait le point) ===== */
+/* ===== Hero epigraph — signature vivante (rotation + marquee derrière) ===== */
 .hero-epigraph{
   margin:32px 0 0;padding:18px 0 0;
   border-top:1px solid var(--rule);
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  display:flex;align-items:center;gap:14px;
+  font-family:var(--font-mono);font-size:11px;
   color:var(--muted);
   opacity:0;
   animation: epiFocusIn .9s cubic-bezier(.2,.85,.2,1) 4.2s forwards;
@@ -674,64 +674,89 @@ body[data-mode="glass"] .topbar{
   flex:0 0 auto;
   animation: epiDotPulse 2.4s cubic-bezier(.4,0,.2,1) 4.9s infinite;
 }
-.epi-text{
+/* Viewport — masque les lignes hors-champ et accueille le marquee en fond */
+.epi-viewport{
+  position:relative;
   flex:1 1 auto;min-width:0;
+  height:20px;
+  overflow:hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+}
+/* Marquee de mots-clés qui glisse lentement derrière les phrases */
+.epi-marquee{
+  position:absolute;top:50%;left:0;transform:translateY(-50%);
+  display:flex;gap:0;
+  white-space:nowrap;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;
+  color:color-mix(in srgb,var(--ink) 14%,transparent);
+  pointer-events:none;
+  z-index:0;
+  animation: epiMarquee 38s linear infinite;
+  will-change:transform;
+}
+.epi-marquee > span{padding-right:0}
+/* Rotator — pile de phrases, une seule visible à la fois (slide vertical) */
+.epi-rotator{
+  position:relative;
+  height:100%;
+  z-index:1;
+  display:block;
+}
+.epi-line{
+  position:absolute;top:0;left:0;right:0;
   font-family:var(--font-body);font-size:13px;font-style:italic;letter-spacing:.01em;
   color:var(--ink);
-  filter:blur(10px);
-  transform:translateY(3px);
-  animation: epiFocusPull 1.2s cubic-bezier(.2,.85,.2,1) 4.35s forwards;
-  position:relative;
-}
-.epi-text::before,
-.epi-text::after{
-  content:attr(data-text);
-  position:absolute;top:0;left:0;width:100%;
-  pointer-events:none;
-  font-style:italic;
+  line-height:20px;
+  transform:translateY(120%);
   opacity:0;
+  transition:
+    transform .55s cubic-bezier(.3,.9,.2,1),
+    opacity  .45s cubic-bezier(.3,.9,.2,1),
+    filter   .55s cubic-bezier(.3,.9,.2,1);
+  filter:blur(6px);
 }
-.epi-text::before{ color:#FF2E2E; transform:translateX(-3px); mix-blend-mode:multiply; animation: epiChroma 1.2s cubic-bezier(.2,.85,.2,1) 4.35s forwards; }
-.epi-text::after { color:#00E0C0; transform:translateX(3px);  mix-blend-mode:multiply; animation: epiChroma 1.2s cubic-bezier(.2,.85,.2,1) 4.35s forwards; }
+.epi-line.is-active{
+  transform:translateY(0);
+  opacity:1;
+  filter:blur(0);
+}
+.epi-line.is-out{
+  transform:translateY(-120%);
+  opacity:0;
+  filter:blur(6px);
+}
 .epi-sign{
   flex:0 0 auto;
   font-family:var(--font-mono);font-size:10.5px;letter-spacing:.22em;
   color:var(--accent);font-weight:500;text-transform:uppercase;
 }
 @keyframes epiFocusIn{
-  from{ opacity:0; }
-  to  { opacity:1; }
+  from{ opacity:0; transform:translateY(4px); }
+  to  { opacity:1; transform:translateY(0); }
 }
-@keyframes epiFocusPull{
-  0%   { filter:blur(10px); transform:translateY(3px); letter-spacing:.12em; }
-  60%  { filter:blur(2px);  transform:translateY(0);   letter-spacing:.03em; }
-  100% { filter:blur(0);    transform:translateY(0);   letter-spacing:.01em; }
-}
-@keyframes epiChroma{
-  0%   { opacity:.55; }
-  55%  { opacity:.3; }
-  100% { opacity:0; }
+@keyframes epiMarquee{
+  from{ transform:translate(0,-50%); }
+  to  { transform:translate(-50%,-50%); }
 }
 @keyframes epiDotPulse{
-  0%,100%{ box-shadow: 0 0 0 0 rgba(255,79,0,.5); opacity:1; }
-  50%    { box-shadow: 0 0 0 6px rgba(255,79,0,0);  opacity:.7; }
+  0%,100%{ box-shadow: 0 0 0 0 rgba(255,79,0,.5); opacity:1; transform:scale(1); }
+  50%    { box-shadow: 0 0 0 6px rgba(255,79,0,0); opacity:.7; transform:scale(.85); }
 }
-/* Hover : refait le focus-pull comme si on zoomait à nouveau */
-.hero-epigraph:hover .epi-text{
-  animation: epiFocusPull .7s cubic-bezier(.2,.85,.2,1);
-}
-.hero-epigraph:hover .epi-text::before,
-.hero-epigraph:hover .epi-text::after{
-  animation: epiChroma .7s cubic-bezier(.2,.85,.2,1);
-}
+/* Hover : accélère le marquee comme si on scrollait plus vite */
+.hero-epigraph:hover .epi-marquee{ animation-duration: 14s; }
+.hero-epigraph:hover .epi-marquee{ color:color-mix(in srgb,var(--accent) 45%,transparent); }
 @media(max-width:700px){
   .hero-epigraph{margin-top:24px;padding-top:14px;gap:10px}
-  .epi-text{font-size:12px}
+  .epi-line{font-size:12px;line-height:20px}
   .epi-sign{font-size:9.5px;letter-spacing:.18em}
+  .epi-marquee{font-size:9px;letter-spacing:.18em}
 }
 @media(prefers-reduced-motion:reduce){
-  .hero-epigraph,.epi-text{animation:none !important;opacity:1 !important;filter:none !important;transform:none !important}
-  .epi-text::before,.epi-text::after{display:none !important}
+  .hero-epigraph{animation:none !important;opacity:1 !important}
+  .epi-marquee{animation:none !important}
+  .epi-line{transition:none !important;filter:none !important}
+  .epi-line.is-out{display:none}
 }
 
 /* ===== Section header ===== */
@@ -4215,11 +4240,22 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </a>
       </div>
 
-      <!-- SIGNATURE FOCUS-PULL — petit texte qui fait "le point" comme un objectif caméra.
-           Flou + aberration chromatique qui se résout en net. Apparaît après le reveal du hero. -->
+      <!-- SIGNATURE VIVANTE — reveal focus-pull + rotation de 4 phrases (slide vertical) +
+           marquee de mots-clés métier qui glisse en arrière-plan pour donner de la profondeur. -->
       <p class="hero-epigraph" aria-hidden="true">
         <span class="epi-dot" aria-hidden="true"></span>
-        <span class="epi-text" data-text="Un cadre, un tempo, une intention.">Un cadre, un tempo, une intention.</span>
+        <span class="epi-viewport">
+          <span class="epi-marquee" aria-hidden="true">
+            <span>CADRE&nbsp;·&nbsp;TEMPO&nbsp;·&nbsp;INTENTION&nbsp;·&nbsp;LUMIÈRE&nbsp;·&nbsp;COUPE&nbsp;·&nbsp;RACCORD&nbsp;·&nbsp;SILENCE&nbsp;·&nbsp;PROFONDEUR&nbsp;·&nbsp;24&nbsp;IMAGES/S&nbsp;·&nbsp;</span>
+            <span>CADRE&nbsp;·&nbsp;TEMPO&nbsp;·&nbsp;INTENTION&nbsp;·&nbsp;LUMIÈRE&nbsp;·&nbsp;COUPE&nbsp;·&nbsp;RACCORD&nbsp;·&nbsp;SILENCE&nbsp;·&nbsp;PROFONDEUR&nbsp;·&nbsp;24&nbsp;IMAGES/S&nbsp;·&nbsp;</span>
+          </span>
+          <span class="epi-rotator" id="epiRotator">
+            <span class="epi-line is-active">Un cadre, un tempo, une intention.</span>
+            <span class="epi-line">Filmer ce qu'on voit, monter ce qu'on veut dire.</span>
+            <span class="epi-line">La bonne image arrive deux prises trop tard.</span>
+            <span class="epi-line">24 fois par seconde, la vérité.</span>
+          </span>
+        </span>
         <span class="epi-sign">— C.D.</span>
       </p>
 
@@ -5716,6 +5752,29 @@ try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e)
   document.addEventListener('mouseup',()=>ring.classList.remove('click'));
   document.addEventListener('mouseleave',()=>{dot.style.opacity='0';ring.style.opacity='0';});
   document.addEventListener('mouseenter',()=>{dot.style.opacity='1';ring.style.opacity='1';});
+})();
+
+/* ========== HERO EPIGRAPH — rotation de phrases (slide vertical) ========== */
+(function(){
+  const rot = document.getElementById('epiRotator');
+  if(!rot) return;
+  const lines = rot.querySelectorAll('.epi-line');
+  if(lines.length < 2) return;
+  let i = 0;
+  /* Démarre la rotation 3.2s après le focus-in initial (let users read 1st line) */
+  setTimeout(()=>{
+    setInterval(()=>{
+      const cur = lines[i];
+      cur.classList.remove('is-active');
+      cur.classList.add('is-out');
+      i = (i + 1) % lines.length;
+      const next = lines[i];
+      next.classList.remove('is-out');
+      next.classList.add('is-active');
+      /* nettoie la classe is-out après transition */
+      setTimeout(()=>{ cur.classList.remove('is-out'); }, 700);
+    }, 4200);
+  }, 7600);
 })();
 
 /* ========== MORPHING TEXT ========== */

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Block preview / backup artifacts if ever accidentally deployed
+Disallow: /*copie*.html
+Disallow: /*copy*.html
+Disallow: /portfolio*.html
+Disallow: /AUDIT/
+
+Sitemap: https://corentindeville.com/sitemap.xml

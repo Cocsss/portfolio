@@ -1469,16 +1469,28 @@ body[data-mode="glass"] .topbar{
     0 14px 40px -18px rgba(0,0,0,.35),
     0 6px 16px -10px rgba(0,0,0,.22);
   margin: 0 auto;
+  /* Skeleton : scan line pendant le load */
+  background-image: linear-gradient(90deg,
+    #0b0b0b 0%,
+    color-mix(in srgb, var(--accent) 10%, #0b0b0b) 50%,
+    #0b0b0b 100%);
+  background-size: 200% 100%;
+  animation: prjSwipeSkeleton 1.8s linear infinite;
 }
 .prj-swipe-media[data-ratio="9x16"]{
   aspect-ratio: 9 / 16;
-  max-height: 62vh;
-  width: auto;
+  max-width: 320px;
+  width: 100%;
 }
 .prj-swipe-media[data-ratio="16x9"]{
   aspect-ratio: 16 / 9;
   width: 100%;
 }
+@keyframes prjSwipeSkeleton{
+  from{ background-position: 200% 0; }
+  to  { background-position: -200% 0; }
+}
+.prj-swipe-media.is-loaded{ animation: none; }
 .prj-swipe-video{
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -1698,9 +1710,19 @@ body[data-mode="glass"] .topbar{
   .prj-swipe-hint{ display: none; }
 }
 
+/* Mobile (≤700px) : frame plus compacte, layout resserré */
+@media(max-width:700px){
+  .prj-swipe-slide{ padding: 12px; gap: 12px; }
+  .prj-swipe-media[data-ratio="9x16"]{ max-width: 260px; }
+  .prj-swipe-media[data-ratio="16x9"]{ max-width: 100%; }
+  .prj-swipe-title{ font-size: 22px; }
+  .prj-swipe-sub{ font-size: 13px; }
+}
+
 @media (prefers-reduced-motion: reduce){
   .prj-swipe-rail{ scroll-behavior: auto; }
   .prj-swipe-hint{ animation: none; }
+  .prj-swipe-media{ animation: none; background-image: none; }
 }
 .more-card{
   display:flex;flex-direction:column;gap:12px;
@@ -5472,31 +5494,47 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     const total   = slides.length;
     if(totEl) totEl.textContent = String(total).padStart(2,'0');
 
-    // Lazy-load vidéos via IntersectionObserver
+    // Lazy-load vidéos : marque le media comme loaded (retire le skeleton)
     const loadVideo = (v) => {
       if(!v || v.dataset.loaded === '1') return;
       const src = v.getAttribute('data-src');
       if(!src) return;
       v.src = src;
       v.dataset.loaded = '1';
+      v.addEventListener('loadeddata', () => {
+        const media = v.closest('.prj-swipe-media');
+        if(media) media.classList.add('is-loaded');
+      }, { once: true });
       const p = v.play();
       if(p && typeof p.catch === 'function') p.catch(()=>{});
     };
     const pauseVideo = (v) => { if(v && !v.paused) try{ v.pause(); }catch(_){} };
+
+    // Hydrate IMMÉDIATEMENT les 2 premières slides (pas attendre IO)
+    slides.slice(0, 2).forEach(s => {
+      const v = s.querySelector('video.prj-swipe-video');
+      if(v) loadVideo(v);
+    });
 
     if('IntersectionObserver' in window){
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const v = entry.target.querySelector('video.prj-swipe-video');
           if(!v) return;
-          if(entry.isIntersecting && entry.intersectionRatio > 0.5){
+          if(entry.isIntersecting && entry.intersectionRatio > 0.4){
             loadVideo(v);
           } else {
             pauseVideo(v);
           }
         });
-      }, { root: null, threshold: [0, 0.5, 1] });
+      }, { root: null, threshold: [0, 0.4, 1] });
       slides.forEach(s => io.observe(s));
+    } else {
+      // Fallback : hydrate tout
+      slides.forEach(s => {
+        const v = s.querySelector('video.prj-swipe-video');
+        if(v) loadVideo(v);
+      });
     }
 
     // Indicator : compteur + barre (suit le slide le plus centré)

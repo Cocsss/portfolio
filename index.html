@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 <meta name="description" content="Corentin Devillé — vidéaste et formateur Premiere Pro basé à Bruxelles. Aftermovies, clips & brand films. Disponible pour vos projets." />
 <meta name="theme-color" content="#F0EEE9" />
 <meta name="author" content="Corentin Devillé" />
@@ -1498,17 +1498,17 @@ body[data-mode="glass"] .topbar{
     transform .5s cubic-bezier(.22,1,.36,1),
     opacity .35s cubic-bezier(.22,1,.36,1);
 }
-/* Carousel nested dans folders-stage : toujours centré, max-width safe
-   Utilise container-query pour éviter l'overflow sans compter sur media queries. */
+/* Carousel nested dans folders-stage : toujours centré, pos0 seule visible */
 .folders-stage .chap-carousel{
   width: 100%;
   max-width: min(440px, 100%);
   margin: 0 auto !important;
   box-sizing: border-box;
-  padding: 24px clamp(12px, 2vw, 32px) 40px !important;
+  padding: 24px clamp(12px, 2vw, 32px) 48px !important;
   perspective: 1000px;
   transform: none !important;
   opacity: 1 !important;
+  position: relative;
 }
 .folders-stage .chap-carousel[data-format="16x9"]{
   max-width: min(720px, 100%);
@@ -1518,7 +1518,7 @@ body[data-mode="glass"] .topbar{
   width: 100% !important;
   margin: 0 auto !important;
 }
-/* Cacher les peek cards pos1/pos2 dans le folders-stage — trop étroit pour 3D */
+/* Cacher les peek cards pos1/pos2 dans le folders-stage */
 .folders-stage .reel-card.pos1,
 .folders-stage .reel-card.pos2{
   opacity: 0 !important;
@@ -1652,47 +1652,53 @@ body[data-mode="glass"] .topbar{
     display: block;
     padding: 0;
   }
-  /* Carousel mobile : strict centrage flex, padding symétrique */
-  .folders-stage .chap-carousel{
-    max-width: 100% !important;
-    width: 100% !important;
-    padding: 18px 48px 34px !important; /* padding left/right pour les arrows overlay */
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  /* Structure mobile — simple et fiable :
+     [folder] block, padding-x pour accueillir les arrows
+       [chap-carousel] max-width 240, margin auto, padding 0
+         [reel-stage] 100% de carousel = 240 → card pos0 = 240 wide
+       [reel-prev] absolute, -48px left de carousel
+       [reel-next] absolute, -48px right de carousel */
+  .folder{
+    padding: 0 52px;
     box-sizing: border-box;
   }
+  .folders-stage .chap-carousel{
+    max-width: 240px !important;
+    width: 100% !important;
+    padding: 18px 0 44px !important;
+    margin: 0 auto !important;
+    display: block !important;
+    box-sizing: border-box;
+    overflow: visible !important;
+  }
   .folders-stage .chap-carousel[data-format="16x9"]{
-    padding: 18px 48px 34px !important;
+    max-width: 100% !important;
   }
   .folders-stage .reel-stage{
     width: 100% !important;
-    max-width: 240px !important;
-    margin: 0 auto !important;
-  }
-  .folders-stage .chap-carousel[data-format="16x9"] .reel-stage{
     max-width: 100% !important;
+    margin: 0 !important;
   }
-  /* Nav arrows mobile : positionnés AU BORD de la carte visible (pos0),
-     pas des bords de la chap-carousel. Plus petits, hauts en z-index. */
+  /* Arrows : collées aux bords externes de la carousel (dans le padding du folder) */
   .folders-stage .reel-nav{
-    width: 40px !important;
-    height: 40px !important;
+    width: 42px !important;
+    height: 42px !important;
     font-size: 20px !important;
     z-index: 10 !important;
-    background: rgba(26,26,26,.85) !important;
+    background: #1A1A1A !important;
     color: #F0EEE9 !important;
     border: none !important;
-    box-shadow: 0 4px 14px -2px rgba(0,0,0,.45) !important;
+    box-shadow: 0 4px 14px -2px rgba(0,0,0,.35) !important;
+    opacity: 1 !important;
   }
-  .folders-stage .reel-prev{ left: 4px !important; }
-  .folders-stage .reel-next{ right: 4px !important; }
-  /* Dots mobile : plus bas, bien visibles */
+  .folders-stage .reel-prev{ left: -50px !important; }
+  .folders-stage .reel-next{ right: -50px !important; }
   .folders-stage .reel-dots{
-    bottom: 10px !important;
+    bottom: 14px !important;
   }
+  /* Permet aux arrows de dépasser la carousel sans être clippées par folders-stage */
+  .folders-stage{ overflow: visible !important; }
+  .folders{ overflow: visible !important; }
 
   /* FOLDER GHOST (placeholder) compact */
   .folder-ghost{

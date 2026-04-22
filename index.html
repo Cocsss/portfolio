@@ -551,30 +551,46 @@ body[data-mode="glass"] .topbar{
   font-weight:400;
   color:var(--ink);
   line-height:.88;
-  letter-spacing:-.015em;
+  letter-spacing:-.02em;
   text-transform:uppercase;
-  font-size: clamp(52px, 14vw, 180px);
+  font-size: clamp(44px, 11.5vw, 160px);
   margin-top: 4vh;
   display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .04em;
+  max-width: 100%;
 }
 .hero-name .word{display:inline-flex;overflow:hidden;padding: .02em 0}
-/* Hero star */
+/* Hero star — signature, reveal petit→grand après le titre puis spin */
 .hero-star{
   display:inline-flex;align-items:center;justify-content:center;
-  width:.7em;height:.7em;
-  vertical-align:top;margin-left:.06em;
-  position:relative;top:.22em;
-  animation: starSpin 8s linear infinite;
+  width: 1em; height: 1em;
+  vertical-align:top;margin-left:.08em;
+  position:relative;top:.12em;
   transform-origin: center center;
   flex-shrink:0;
+  filter: drop-shadow(0 2px 0 color-mix(in srgb, var(--accent) 20%, transparent));
+  opacity: 0;
+  transform: scale(0) rotate(-90deg);
+  /* 1) pop-in après le reveal du titre (~4.9s), puis 2) spin infini chaîné */
+  animation:
+    starPopIn 1.1s cubic-bezier(.3,1.4,.4,1) 4.9s forwards,
+    starSpin 7s linear 6s infinite;
 }
 .hero-star svg{width:100%;height:100%;overflow:visible}
+@keyframes starPopIn{
+  0%   { opacity: 0; transform: scale(0)    rotate(-90deg); }
+  60%  { opacity: 1; transform: scale(1.18) rotate(12deg);  }
+  80%  { transform: scale(.94) rotate(-4deg); }
+  100% { opacity: 1; transform: scale(1)    rotate(0deg);   }
+}
 @keyframes starSpin{
   0%{transform:rotate(0deg) scale(1)}
   25%{transform:rotate(90deg) scale(1.07)}
   50%{transform:rotate(180deg) scale(1)}
   75%{transform:rotate(270deg) scale(1.07)}
   100%{transform:rotate(360deg) scale(1)}
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-star{ opacity:1; transform:scale(1) rotate(0); animation:none; }
 }
 .hero-name .char{
   display:inline-block;
@@ -950,6 +966,57 @@ body[data-mode="glass"] .topbar{
   padding: 16px 0 18px;
   border-top: 1px dashed var(--rule);
   border-bottom: 3px solid var(--ink);
+}
+
+/* =====================================================================
+   SECTION OUTRO — lien typographique "Next section" en bas de section.
+   Remplace le sceau de fermeture : plus actif, plus navigationnel.
+   ===================================================================== */
+.section-outro{
+  display:flex;align-items:center;gap: clamp(14px, 2vw, 28px);
+  margin-top: clamp(48px, 6vw, 88px);
+  padding: 26px 0 22px;
+  border-top: 1px dashed var(--rule);
+  border-bottom: 3px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  position:relative;
+  transition: padding .3s ease, border-color .3s ease;
+}
+.section-outro:hover{ padding-left: 10px; border-bottom-color: var(--accent); }
+.section-outro-k{
+  font-family: var(--font-mono);font-size: 11px;
+  letter-spacing:.22em;text-transform:uppercase;
+  color: var(--muted);
+  padding: 5px 10px;border:1px solid var(--rule);
+  white-space:nowrap;
+  transition: color .3s ease, border-color .3s ease;
+}
+.section-outro:hover .section-outro-k{ color: var(--accent-text);border-color: var(--accent); }
+.section-outro-v{
+  flex:1;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4.4vw, 56px);
+  line-height: 1;letter-spacing:-.01em;
+  color: var(--ink);
+}
+.section-outro-arr{
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.6vw, 44px);
+  color: var(--accent);
+  transition: transform .35s cubic-bezier(.3,.9,.2,1);
+}
+.section-outro:hover .section-outro-arr{ transform: translateY(6px); }
+@media(max-width:700px){
+  .section-outro{
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    padding: 20px 0 18px;
+    margin-top: 40px;
+  }
+  .section-outro-k{ font-size: 10px;letter-spacing:.16em;padding: 4px 8px; }
+  .section-outro-v{ flex: 1 1 100%;font-size: 28px;order:3; }
+  .section-outro-arr{ font-size: 26px; }
 }
 .seal-mark{
   display:inline-flex;align-items:center;gap:10px;
@@ -1347,6 +1414,268 @@ body[data-mode="glass"] .topbar{
   margin-top: clamp(20px,2.5vw,32px);
   font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;
   color:var(--muted);font-style:italic;
+}
+
+/* =====================================================================
+   FOLDERS SWITCHER — tabs horizontaux dans "Autres dossiers".
+   Sélecteur en haut (clavier + scroll-x mobile), stage en bas qui slide :
+   panel sortant → gauche, nouveau panel entre par la droite.
+   ===================================================================== */
+.folders{
+  margin-top: 4px;
+  display:flex;flex-direction:column;gap: clamp(18px, 2.4vw, 28px);
+  border: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--ink) 2%, var(--bg));
+  padding: clamp(14px, 2vw, 22px);
+  border-radius: 4px;
+}
+.folders-tabs{
+  display:flex;gap: 6px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.folders-tabs::-webkit-scrollbar{ display:none; }
+.folders-tab{
+  position:relative;
+  display:flex;flex-direction:column;gap: 3px;
+  padding: 10px 14px 12px;
+  background: transparent;
+  border: none;border-radius: 4px 4px 0 0;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: left;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  font-family: inherit;
+  transition: color .3s ease, background .3s ease;
+}
+.folders-tab::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-1px;
+  height: 2px;background: var(--accent);
+  transform: scaleX(0);transform-origin: left;
+  transition: transform .4s cubic-bezier(.3,.9,.2,1);
+}
+.folders-tab:hover{ color: var(--ink);background: color-mix(in srgb, var(--ink) 4%, transparent); }
+.folders-tab.is-active{ color: var(--ink); }
+.folders-tab.is-active::after{ transform: scaleX(1); }
+.folders-tab-num{
+  font-family: var(--font-mono);font-size: 9.5px;letter-spacing:.18em;
+  text-transform:uppercase;font-weight:600;
+  color: var(--accent-text);
+}
+.folders-tab-name{
+  font-family: var(--font-display);font-size: 14px;
+  letter-spacing:-.005em;line-height:1;white-space:nowrap;
+}
+.folders-tab-cat{
+  font-family: var(--font-mono);font-size: 9.5px;letter-spacing:.1em;
+  text-transform:uppercase;color: var(--muted);white-space:nowrap;
+}
+.folders-tab--ghost .folders-tab-name{ color: color-mix(in srgb, var(--ink) 55%, var(--bg)); }
+.folders-tab--ghost .folders-tab-num{ color: var(--muted); }
+
+.folders-stage{
+  position:relative;
+  overflow:hidden;
+  min-height: 360px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.folder{
+  position:relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  transition:
+    transform .5s cubic-bezier(.22,1,.36,1),
+    opacity .35s cubic-bezier(.22,1,.36,1);
+}
+/* Carousel nested dans folders-stage : toujours centré, max-width safe
+   Utilise container-query pour éviter l'overflow sans compter sur media queries. */
+.folders-stage .chap-carousel{
+  width: 100%;
+  max-width: min(440px, 100%);
+  margin: 0 auto !important;
+  box-sizing: border-box;
+  padding: 24px clamp(12px, 2vw, 32px) 40px !important;
+  perspective: 1000px;
+  transform: none !important;
+  opacity: 1 !important;
+}
+.folders-stage .chap-carousel[data-format="16x9"]{
+  max-width: min(720px, 100%);
+}
+.folders-stage .reel-stage{
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+/* Cacher les peek cards pos1/pos2 dans le folders-stage — trop étroit pour 3D */
+.folders-stage .reel-card.pos1,
+.folders-stage .reel-card.pos2{
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: none !important;
+}
+.folders-stage .reel-card.pos0{
+  transform: translate3d(0,0,0) !important;
+  opacity: 1 !important;
+}
+.folder[hidden]{ display: none; }
+.folder.is-active{
+  transform: translateX(0);
+  opacity: 1;
+}
+.folder.is-leaving-left{
+  transform: translateX(-30%);
+  opacity: 0;
+  pointer-events: none;
+}
+.folder.is-entering-right{
+  transform: translateX(30%);
+  opacity: 0;
+}
+.folder-ghost{
+  display:flex;flex-direction:column;align-items:flex-start;
+  gap: 14px;
+  padding: clamp(28px, 4vw, 48px) clamp(20px, 3vw, 36px);
+  min-height: 280px;justify-content:center;
+  background:
+    repeating-linear-gradient(135deg,
+      color-mix(in srgb, var(--ink) 2%, transparent) 0 8px,
+      transparent 8px 16px);
+  border: 1px dashed var(--rule);
+  border-radius: 4px;
+}
+.folder-ghost-k{
+  font-family: var(--font-mono);font-size: 11px;letter-spacing:.22em;
+  text-transform:uppercase;color: var(--accent-text);font-weight:600;
+}
+.folder-ghost-lede{
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.3;letter-spacing:-.01em;
+  max-width: 44ch;
+  color: var(--ink);
+}
+.folder-ghost-cta{
+  display:inline-flex;align-items:center;gap: 10px;
+  padding: 10px 16px;
+  background: var(--ink);color: var(--bg);
+  text-decoration: none;
+  font-family: var(--font-mono);font-size: 11px;letter-spacing:.2em;
+  text-transform:uppercase;
+  transition: background .3s ease, transform .3s ease;
+}
+.folder-ghost-cta:hover{ background: var(--accent);transform: translateY(-1px); }
+.folder-ghost-cta span{ font-family: inherit; }
+
+/* =====================================================================
+   FOLDERS SWITCHER — refonte mobile (≤700px)
+   - Tabs : chips arrondis compacts, scroll-snap horizontal, 6 rentrent
+   - Stage : carousel centré plein-largeur, pas d'overflow des cartes peek
+   - Panel ghost : carte plus compacte
+   ===================================================================== */
+@media(max-width:700px){
+  .folders{
+    padding: 14px 12px 16px;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    border-radius: 4px;
+    gap: 16px;
+    overflow: hidden;
+  }
+  /* TABS : rail horizontal, chaque chip compact, scroll-snap, sans underline */
+  .folders-tabs{
+    gap: 6px;
+    padding: 2px 0 12px;
+    border-bottom: 1px solid var(--rule);
+    scroll-snap-type: x mandatory;
+    /* edge fade */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+            mask-image: linear-gradient(to right, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  }
+  .folders-tab{
+    padding: 8px 12px 9px;
+    min-height: 40px;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: transparent;
+    scroll-snap-align: start;
+  }
+  .folders-tab::after{ display:none; }
+  .folders-tab.is-active{
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .folders-tab.is-active .folders-tab-num{ color: var(--accent); }
+  .folders-tab-num{
+    font-size: 9px;letter-spacing:.14em;
+    color: var(--accent-text);
+  }
+  .folders-tab-name{
+    font-size: 13px;
+    line-height: 1;
+  }
+  /* Mobile : catégorie cachée pour gagner de la place */
+  .folders-tab-cat{ display: none; }
+
+  /* STAGE : padding minimal, overflow hidden */
+  .folders-stage{
+    padding: 0;
+    min-height: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: block;
+  }
+  .folder{
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: block;
+    padding: 0;
+  }
+  /* Carousel mobile : max-width encore plus réduite pour éviter tout risque */
+  .folders-stage .chap-carousel{
+    max-width: 260px !important;
+    padding: 16px 0 28px !important;
+  }
+  .folders-stage .chap-carousel[data-format="16x9"]{
+    max-width: 100% !important;
+  }
+  /* Nav arrows dans folders-stage mobile : toujours visibles */
+  .folders-stage .reel-nav{ z-index: 5; }
+
+  /* FOLDER GHOST (placeholder) compact */
+  .folder-ghost{
+    padding: 22px 18px;
+    min-height: 180px;
+    gap: 12px;
+  }
+  .folder-ghost-k{ font-size: 10px;letter-spacing:.16em; }
+  .folder-ghost-lede{ font-size: 16px;line-height: 1.35; }
+  .folder-ghost-cta{ padding: 9px 14px;font-size: 10px; }
+}
+@media(prefers-reduced-motion:reduce){
+  .folder{ transition: none !important; }
+  .folders-tab::after{ transition: none !important; }
 }
 .more-card{
   display:flex;flex-direction:column;gap:12px;
@@ -1801,9 +2130,9 @@ body.drawer-open{overflow:hidden}
 
   /* Hero */
   .hero{padding-top:68px;padding-bottom:20px;min-height:0}
-  .hero-name{line-height:.88;letter-spacing:-.02em;margin-top:16px}
+  .hero-name{line-height:.86;letter-spacing:-.025em;margin-top:16px;font-size:clamp(38px, 13vw, 78px)}
   .hero-name .word{display:inline-flex;overflow:visible;white-space:nowrap}
-  .hero-star{display:inline-flex;width:.45em;height:.45em;flex-shrink:0;align-self:flex-start;margin-top:.14em}
+  .hero-star{display:inline-flex;width:.72em;height:.72em;flex-shrink:0;align-self:flex-start;margin-top:.08em}
   .hero-morph{margin-top:16px;font-size:15px;gap:8px}
   .morph-word{font-size:17px;min-width:8ch}
   /* Hero pitch + CTAs mobile : pleine largeur, CTAs empilés */
@@ -1896,44 +2225,58 @@ body.drawer-open{overflow:hidden}
   font-size:clamp(17px,1.6vw,22px);line-height:1.55;color:var(--muted);
   max-width:52ch;margin-bottom:48px;
 }
-/* ===== Section pill-nav (segmented control) ===== */
+/* =====================================================================
+   SECTION NAV — éditoriale DA 2026.
+   Inline typo mono, pas de pill sombre. Active = souligné vermillon
+   + § numéro apparaît en accent. Transparent sur le cream.
+   ===================================================================== */
 .section-nav{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  display:inline-flex;align-items:center;gap:2px;
-  padding:4px;
-  background:var(--ink);
-  border-radius:999px;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  box-shadow:0 6px 20px -10px rgba(26,26,26,.4);
-}
-body[data-mode="glass"] .section-nav{
-  background:rgba(26,26,26,.82);
-  backdrop-filter:blur(14px) saturate(1.2);
-  -webkit-backdrop-filter:blur(14px) saturate(1.2);
-  border:1px solid rgba(255,255,255,.1);
+  display:inline-flex;align-items:baseline;gap: clamp(14px, 2vw, 28px);
+  font-family:var(--font-mono);font-size:11.5px;
+  letter-spacing:.18em;text-transform:uppercase;
+  background: transparent;
+  padding: 0;
 }
 .section-nav a{
   position:relative;
-  padding:8px 14px;
-  color:rgba(240,238,233,.5);
-  border-radius:999px;
-  font-weight:500;
-  transition:color .25s;
+  padding: 8px 2px;
+  color: var(--muted);
+  font-weight: 500;
+  transition: color .3s cubic-bezier(.3,.9,.2,1);
   white-space:nowrap;
+  display:inline-flex;align-items:baseline;gap:6px;
 }
-.section-nav a:hover{color:var(--bg)}
+.section-nav a::before{
+  /* § numéro de section, discret, apparaît au hover/active */
+  content: attr(data-num);
+  font-family: var(--font-mono);
+  font-size: 9.5px;letter-spacing:.15em;
+  color: var(--accent-text);
+  opacity: 0;
+  transform: translateY(1px);
+  transition: opacity .3s ease, transform .3s cubic-bezier(.3,.9,.2,1);
+}
+.section-nav a::after{
+  content:"";
+  position:absolute;left:0;right:0;bottom:2px;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .45s cubic-bezier(.3,.9,.2,1);
+}
+.section-nav a:hover{ color: var(--ink); }
+.section-nav a:hover::before{ opacity: 1;transform: translateY(0); }
+.section-nav a:hover::after{ transform: scaleX(.35); }
 .section-nav a.active{
-  color:var(--bg);
+  color: var(--ink);
+  font-weight: 600;
 }
-.section-nav .nav-pill{
-  position:absolute;top:4px;left:0;height:calc(100% - 8px);
-  background:var(--accent);
-  border-radius:999px;
-  transition:transform .5s cubic-bezier(.22,1,.36,1), width .5s cubic-bezier(.22,1,.36,1);
-  z-index:0;
-  pointer-events:none;
-}
-.section-nav a{z-index:1}
+.section-nav a.active::before{ opacity: 1;transform: translateY(0); }
+.section-nav a.active::after{ transform: scaleX(1); }
+/* Le nav-pill legacy n'est plus visuel */
+.section-nav .nav-pill{ display: none; }
 @media (max-width:1100px){.section-nav{display:none}}
 
 /* Eye blink — smooth modern */
@@ -1999,6 +2342,10 @@ body[data-theme="dark"] .eye-label::after{border-left-color:var(--bg)}
   display:flex;align-items:center;justify-content:center;
   cursor:none;overflow:hidden;
   transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s;
+}
+/* Mobile : masqué (le FAB WhatsApp mobile .mwa-fab prend le relais) */
+@media(max-width:700px){
+  .eye-bubble, .eye-label{ display: none !important; }
 }
 .eye-bubble:hover{transform:scale(1.1);box-shadow:0 14px 44px -8px rgba(26,26,26,.55)}
 .eye-bubble:active{transform:scale(.93)}
@@ -3600,7 +3947,7 @@ body[data-mode="glass"] .ticker-wrap{background:transparent;backdrop-filter:blur
 @media(max-width:600px){
   .hero-name{flex-wrap:wrap;align-items:baseline}
   .hero-name .word{display:inline-flex;overflow:visible;white-space:nowrap}
-  .hero-star{display:inline-flex;width:.45em;height:.45em;flex-shrink:0;align-self:flex-start;margin-top:.14em}
+  .hero-star{display:inline-flex;width:.72em;height:.72em;flex-shrink:0;align-self:flex-start;margin-top:.08em}
 }
 /* Hide tweaks panel on mobile */
 @media(max-width:900px){
@@ -3718,9 +4065,19 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
   display:inline-flex;align-items:center;gap:12px;
   text-decoration:none;color:var(--ink);
   padding:2px 4px 2px 0;
-  transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .25s;
+  transition: transform .3s cubic-bezier(.22,1,.36,1),
+              opacity .25s,
+              color .4s cubic-bezier(.3,.9,.2,1);
 }
 .brand-logo:hover{color:var(--ink)}
+/* Logo + wordmark passent en cream quand le menu hamburger est ouvert */
+body:has(.mob-menu.open) .brand-logo,
+body:has(.mob-menu.open) .brand-logo .cd-mono,
+body:has(.mob-menu.open) .brand-wordmark-top,
+body:has(.mob-menu.open) .brand-wordmark-sub{
+  color: var(--bg);
+  transition: color .4s cubic-bezier(.3,.9,.2,1);
+}
 .brand-logo:hover .cd-mono{transform:scale(1.03)}
 .topbar a.brand-logo:hover{color:var(--ink)} /* override .topbar a:hover qui passe en accent */
 .cd-mono{
@@ -3769,73 +4126,24 @@ body[data-theme="dark"] .brand-wordmark-top{color:var(--cream)}
   .cd-mono{height:24px}
 }
 
-/* SMPTE bars passent devant la topbar */
-.smpte-bars{z-index:60}
-
-/* ---------- SMPTE color bars + halo diffus (unifie avec la topbar) ---------- */
-.smpte-bars{
+/* ---------- Topline éditoriale DA 2026 — fin trait vermillon ---------- */
+.topline{
   position:fixed;top:0;left:0;right:0;
-  height:8px;display:flex;z-index:101;
+  height: 3px;
+  background: var(--accent);
+  z-index: 101;
   pointer-events:none;
-  opacity:.92;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: toplineDraw 1.1s cubic-bezier(.3,.9,.2,1) 4.0s forwards;
 }
-.smpte-bars span{flex:1;display:block;height:100%}
-body[data-theme="dark"] .smpte-bars{opacity:.82}
-@media(max-width:900px){.smpte-bars{height:6px}}
-
-/* Halo SMPTE — diffuse discrètement la couleur sous la barre.
-   Volontairement contenu : fine bande (~70px), opacité modérée,
-   les 7 secteurs SMPTE restent identifiables sans envahir la page. */
-.smpte-mist{
-  position:fixed;top:8px;left:0;right:0;
-  height:70px;z-index:38;
-  background:linear-gradient(90deg,
-    #c0c0c0 0%, #c0c0c0 14.28%,
-    #c0c000 14.28%, #c0c000 28.57%,
-    #00c0c0 28.57%, #00c0c0 42.86%,
-    #00c000 42.86%, #00c000 57.14%,
-    #c000c0 57.14%, #c000c0 71.43%,
-    #c00000 71.43%, #c00000 85.71%,
-    #0000c0 85.71%, #0000c0 100%);
-  opacity:0;          /* fade-in synchronisé avec l'arrivée de la barre */
-  filter:blur(14px) saturate(1.45);
-  /* Fade rapide vers transparent pour rester discret */
-  -webkit-mask-image:linear-gradient(to bottom,
-    #000 0%,
-    rgba(0,0,0,.75) 30%,
-    rgba(0,0,0,.3) 65%,
-    transparent 100%);
-          mask-image:linear-gradient(to bottom,
-    #000 0%,
-    rgba(0,0,0,.75) 30%,
-    rgba(0,0,0,.3) 65%,
-    transparent 100%);
-  pointer-events:none;
-  transform:translateZ(0);
-  animation: mistFadeIn .55s cubic-bezier(.25,.8,.3,1) 4.0s forwards;
+@keyframes toplineDraw{
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
 }
-@keyframes mistFadeIn{
-  from { opacity:0; }
-  to   { opacity:.32; }
-}
-body[data-theme="dark"] .smpte-mist{
-  filter:blur(18px) saturate(1.3);
-  animation: mistFadeInDark .55s cubic-bezier(.25,.8,.3,1) 4.0s forwards;
-}
-@keyframes mistFadeInDark{
-  from { opacity:0; }
-  to   { opacity:.42; }
-}
-@media(max-width:900px){
-  .smpte-mist{top:6px;height:52px;filter:blur(10px) saturate(1.35)}
-  @keyframes mistFadeIn{
-    from { opacity:0; }
-    to   { opacity:.28; }
-  }
-}
+@media(max-width:900px){ .topline{ display: none; } }
 @media (prefers-reduced-motion: reduce){
-  .smpte-mist{opacity:.32}
-  body[data-theme="dark"] .smpte-mist{opacity:.42}
+  .topline{ transform: scaleX(1);animation: none; }
 }
 
 /* ---------- Live timecode in topbar-spec ---------- */
@@ -4172,17 +4480,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 <div class="caustics"></div>
 <div class="grain"></div>
 
-<!-- SMPTE COLOR BARS — ruban net + halo diffusé en dessous pour unifier avec la topbar -->
-<div class="smpte-bars" aria-hidden="true">
-  <span style="background:#c0c0c0"></span>
-  <span style="background:#c0c000"></span>
-  <span style="background:#00c0c0"></span>
-  <span style="background:#00c000"></span>
-  <span style="background:#c000c0"></span>
-  <span style="background:#c00000"></span>
-  <span style="background:#0000c0"></span>
-</div>
-<div class="smpte-mist" aria-hidden="true"></div>
 
 <!-- TOP BAR -->
 <header class="topbar">
@@ -4202,12 +4499,11 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     </span>
   </a>
   <nav class="section-nav" id="sectionNav" aria-label="Sections">
-    <span class="nav-pill" id="navPill"></span>
-    <a href="#projets" data-target="projets">Projets</a>
-    <a href="#services" data-target="services">Services</a>
-    <a href="#tarifs" data-target="tarifs">Tarifs</a>
-    <a href="#apropos" data-target="apropos">À propos</a>
-    <a href="#contact" data-target="contact">Contact</a>
+    <a href="#projets" data-target="projets" data-num="§ 01">Projets</a>
+    <a href="#services" data-target="services" data-num="§ 02">Services</a>
+    <a href="#tarifs" data-target="tarifs" data-num="§ 03">Tarifs</a>
+    <a href="#apropos" data-target="apropos" data-num="§ 04">À propos</a>
+    <a href="#contact" data-target="contact" data-num="§ 05">Contact</a>
   </nav>
   <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobMenu"><span></span><span></span></button>
 </header>
@@ -4225,8 +4521,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       <div class="hero-morph"><span>Je suis —</span><span class="morph-word" id="morphWord">Vidéaste</span></div>
 
       <p class="hero-pitch">
-        Je conçois, filme et monte des histoires — <strong>aftermovies, clips &amp; brand films</strong> —
-        pour artistes, festivals et marques qui cherchent une image qui leur ressemble vraiment.
+        Vidéaste à Bruxelles. Je fabrique des <strong>aftermovies, clips &amp; brand films</strong>
+        — des images qui racontent vraiment quelque chose.
       </p>
 
       <div class="hero-ctas">
@@ -4274,13 +4570,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
          un sceau d'ouverture et un sceau de fermeture pour dire "ici commence /
          ici s'arrête la section Projets". -->
     <div class="section-body">
-
-      <!-- Sceau d'ouverture -->
-      <div class="section-seal section-seal--open reveal" aria-hidden="true">
-        <span class="seal-mark">§ 01 · Dossier ouvert</span>
-        <span class="seal-rule"></span>
-        <span class="seal-meta">5 cahiers · 2024 — 2026</span>
-      </div>
 
       <!-- PREVIEW STRIP — les 2 dernières vidéos visibles immédiatement -->
       <!-- Click sur une carte → scroll vers le cahier correspondant + l'ouvre -->
@@ -4400,165 +4689,154 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </div>
       </article>
 
-      <!-- ============ 03 — REEL SCOUT (vertical 9:16) ============ -->
-      <article class="chap" data-num="03" data-slug="scout-reel">
+      <!-- ============ 03 — AUTRES DOSSIERS (Lucid + Scouts + archives) ============
+           Folders switcher : tabs en haut, un seul panel visible, slide gauche
+           au changement. Lucid Dreams par défaut. ========================= -->
+      <article class="chap chap--autres" data-num="03" data-slug="autres">
         <span class="chap-tab" aria-hidden="true">
           <span class="chap-tab-num">N°03</span>
-          <span class="chap-tab-cat">Reel · 9:16</span>
+          <span class="chap-tab-cat">Autres dossiers</span>
         </span>
         <button class="chap-head" aria-expanded="false" aria-controls="chap-body-03" type="button">
           <span class="chap-num" aria-hidden="true">03</span>
           <span class="chap-titlewrap">
-            <span class="chap-title">Reel Scout</span>
-            <span class="chap-meta">Événementiel · Teaser · 2026 · 9:16</span>
+            <span class="chap-title">Autres dossiers</span>
+            <span class="chap-meta">Music · Aftermovies · Mariage · Corporate · Documentaire</span>
           </span>
           <span class="chap-chevron" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </button>
-        <div class="chap-body" id="chap-body-03" role="region" aria-label="Reel Scout — médias">
+        <div class="chap-body" id="chap-body-03" role="region" aria-label="Autres dossiers — sélecteur de projets">
           <div class="chap-body-inner">
             <span class="chap-ghost" aria-hidden="true">03</span>
-            <div class="chap-carousel chap-carousel--single" id="carousel-scout-reel" data-format="9x16">
-              <div class="reel-stage">
-                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/scout-reel-1.mp4" muted loop playsinline preload="none"></video></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
 
-      <!-- ============ 04 — LUCID DREAMS ============ -->
-      <article class="chap" data-num="04" data-slug="lucid">
-        <span class="chap-tab" aria-hidden="true">
-          <span class="chap-tab-num">N°04</span>
-          <span class="chap-tab-cat">Music</span>
-        </span>
-        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-04" type="button">
-          <span class="chap-num" aria-hidden="true">04</span>
-          <span class="chap-titlewrap">
-            <span class="chap-title">Lucid Dreams</span>
-            <span class="chap-meta">Music · Clip · 9:16</span>
-          </span>
-          <span class="chap-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </button>
-        <div class="chap-body" id="chap-body-04" role="region" aria-label="Lucid Dreams — médias">
-          <div class="chap-body-inner">
-            <span class="chap-ghost" aria-hidden="true">04</span>
-            <div class="chap-carousel" id="carousel-lucid" data-format="9x16">
-              <div class="reel-stage">
-                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/lucid-clip-1.mp4" muted loop playsinline preload="none"></video></div>
-                <div class="reel-card pos1"><span class="reel-idx">02</span><video data-src="https://videos.corentindeville.com/lucid-clip-2.mp4" muted loop playsinline preload="none"></video></div>
-                <div class="reel-card pos2"><span class="reel-idx">03</span><video data-src="https://videos.corentindeville.com/lucid-clip-3.mp4" muted loop playsinline preload="none"></video></div>
-              </div>
-              <button class="reel-nav reel-prev" type="button" aria-label="Extrait précédent">‹</button>
-              <button class="reel-nav reel-next" type="button" aria-label="Extrait suivant">›</button>
-              <div class="reel-dots" role="tablist" aria-label="Extraits Lucid Dreams">
-                <button class="reel-dot active" type="button" aria-label="Extrait 1" aria-selected="true"></button>
-                <button class="reel-dot" type="button" aria-label="Extrait 2" aria-selected="false"></button>
-                <button class="reel-dot" type="button" aria-label="Extrait 3" aria-selected="false"></button>
-              </div>
-            </div>
-            <button class="chap-more-btn" type="button" data-open-drawer="lucid">
-              <span class="chap-more-lbl">Voir le dossier complet</span>
-              <span class="chap-more-arr" aria-hidden="true">↗</span>
-            </button>
-          </div>
-        </div>
-      </article>
+            <div class="folders" data-active="lucid">
 
-      <!-- ============ 05 — SCOUT FESTIVAL ============ -->
-      <article class="chap" data-num="05" data-slug="scout">
-        <span class="chap-tab" aria-hidden="true">
-          <span class="chap-tab-num">N°05</span>
-          <span class="chap-tab-cat">Aftermovie</span>
-        </span>
-        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-05" type="button">
-          <span class="chap-num" aria-hidden="true">05</span>
-          <span class="chap-titlewrap">
-            <span class="chap-title">Scout Festival</span>
-            <span class="chap-meta">Événementiel · Aftermovie · 2026 · 16:9</span>
-          </span>
-          <span class="chap-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </button>
-        <div class="chap-body" id="chap-body-05" role="region" aria-label="Scout Festival — médias">
-          <div class="chap-body-inner">
-            <span class="chap-ghost" aria-hidden="true">05</span>
-            <div class="chap-carousel chap-carousel--single" id="carousel-scout" data-format="16x9">
-              <div class="reel-stage">
-                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/aftermovie-scout.mp4" muted loop playsinline preload="none"></video></div>
+              <!-- Tabs : sélecteur de dossier -->
+              <div class="folders-tabs" role="tablist" aria-label="Choisir un dossier">
+                <button class="folders-tab is-active" role="tab" aria-selected="true" data-slug="lucid" type="button">
+                  <span class="folders-tab-num">#01</span>
+                  <span class="folders-tab-name">Lucid Dreams</span>
+                  <span class="folders-tab-cat">Music · Clip</span>
+                </button>
+                <button class="folders-tab" role="tab" aria-selected="false" data-slug="scout-reel" type="button">
+                  <span class="folders-tab-num">#02</span>
+                  <span class="folders-tab-name">Reel Scout</span>
+                  <span class="folders-tab-cat">Teaser · 9:16</span>
+                </button>
+                <button class="folders-tab" role="tab" aria-selected="false" data-slug="scout" type="button">
+                  <span class="folders-tab-num">#03</span>
+                  <span class="folders-tab-name">Scout Festival</span>
+                  <span class="folders-tab-cat">Aftermovie</span>
+                </button>
+                <button class="folders-tab folders-tab--ghost" role="tab" aria-selected="false" data-slug="mariage" type="button">
+                  <span class="folders-tab-num">#04</span>
+                  <span class="folders-tab-name">Mariage</span>
+                  <span class="folders-tab-cat">À&nbsp;venir</span>
+                </button>
+                <button class="folders-tab folders-tab--ghost" role="tab" aria-selected="false" data-slug="corporate" type="button">
+                  <span class="folders-tab-num">#05</span>
+                  <span class="folders-tab-name">Corporate</span>
+                  <span class="folders-tab-cat">À&nbsp;venir</span>
+                </button>
+                <button class="folders-tab folders-tab--ghost" role="tab" aria-selected="false" data-slug="doc" type="button">
+                  <span class="folders-tab-num">#06</span>
+                  <span class="folders-tab-name">Documentaire</span>
+                  <span class="folders-tab-cat">À&nbsp;venir</span>
+                </button>
+              </div>
+
+              <!-- Stage : 1 seul panel visible, slide horizontal au switch -->
+              <div class="folders-stage">
+
+                <article class="folder is-active" data-slug="lucid" role="tabpanel" aria-label="Lucid Dreams">
+                  <div class="chap-carousel" id="carousel-lucid" data-format="9x16">
+                    <div class="reel-stage">
+                      <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/lucid-clip-1.mp4" muted loop playsinline preload="none"></video></div>
+                      <div class="reel-card pos1"><span class="reel-idx">02</span><video data-src="https://videos.corentindeville.com/lucid-clip-2.mp4" muted loop playsinline preload="none"></video></div>
+                      <div class="reel-card pos2"><span class="reel-idx">03</span><video data-src="https://videos.corentindeville.com/lucid-clip-3.mp4" muted loop playsinline preload="none"></video></div>
+                    </div>
+                    <button class="reel-nav reel-prev" type="button" aria-label="Extrait précédent">‹</button>
+                    <button class="reel-nav reel-next" type="button" aria-label="Extrait suivant">›</button>
+                    <div class="reel-dots" role="tablist" aria-label="Extraits Lucid Dreams">
+                      <button class="reel-dot active" type="button" aria-label="Extrait 1" aria-selected="true"></button>
+                      <button class="reel-dot" type="button" aria-label="Extrait 2" aria-selected="false"></button>
+                      <button class="reel-dot" type="button" aria-label="Extrait 3" aria-selected="false"></button>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="folder" data-slug="scout-reel" role="tabpanel" aria-label="Reel Scout" hidden>
+                  <div class="chap-carousel chap-carousel--single" id="carousel-scout-reel" data-format="9x16">
+                    <div class="reel-stage">
+                      <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/scout-reel-1.mp4" muted loop playsinline preload="none"></video></div>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="folder" data-slug="scout" role="tabpanel" aria-label="Scout Festival" hidden>
+                  <div class="chap-carousel chap-carousel--single" id="carousel-scout" data-format="16x9">
+                    <div class="reel-stage">
+                      <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/aftermovie-scout.mp4" muted loop playsinline preload="none"></video></div>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="folder folder--ghost" data-slug="mariage" role="tabpanel" aria-label="Mariage" hidden>
+                  <div class="folder-ghost">
+                    <span class="folder-ghost-k">#04 · Mariage</span>
+                    <p class="folder-ghost-lede">Dossier en préparation — un aperçu sur demande, adapté à ton projet.</p>
+                    <a class="folder-ghost-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
+                  </div>
+                </article>
+                <article class="folder folder--ghost" data-slug="corporate" role="tabpanel" aria-label="Corporate" hidden>
+                  <div class="folder-ghost">
+                    <span class="folder-ghost-k">#05 · Corporate</span>
+                    <p class="folder-ghost-lede">Dossier en préparation — un aperçu sur demande, adapté à ton projet.</p>
+                    <a class="folder-ghost-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
+                  </div>
+                </article>
+                <article class="folder folder--ghost" data-slug="doc" role="tabpanel" aria-label="Documentaire" hidden>
+                  <div class="folder-ghost">
+                    <span class="folder-ghost-k">#06 · Documentaire</span>
+                    <p class="folder-ghost-lede">Dossier en préparation — un aperçu sur demande, adapté à ton projet.</p>
+                    <a class="folder-ghost-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
+                  </div>
+                </article>
+
               </div>
             </div>
-            <button class="chap-more-btn" type="button" data-open-drawer="scout">
-              <span class="chap-more-lbl">Voir le dossier complet</span>
-              <span class="chap-more-arr" aria-hidden="true">↗</span>
-            </button>
-          </div>
-        </div>
-      </article>
 
-      <!-- ============ 06 — AUTRES TRAVAUX (archives) ============ -->
-      <!-- TODO Corentin : remplace les data-ghost par tes vraies vidéos quand tu les as.
-           Dupliquer un <a class="more-card">…</a> pour ajouter un slot. Le lien par défaut
-           renvoie vers #contact. Ajoute data-open-drawer="slug" si tu veux un drawer. -->
-      <article class="chap chap--autres" data-num="06" data-slug="autres">
-        <span class="chap-tab" aria-hidden="true">
-          <span class="chap-tab-num">N°06</span>
-          <span class="chap-tab-cat">Archives</span>
-        </span>
-        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-06" type="button">
-          <span class="chap-num" aria-hidden="true">06</span>
-          <span class="chap-titlewrap">
-            <span class="chap-title">Autres travaux</span>
-            <span class="chap-meta">Mariage · Corporate · Documentaire · sur demande</span>
-          </span>
-          <span class="chap-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </button>
-        <div class="chap-body" id="chap-body-06" role="region" aria-label="Autres travaux — archives">
-          <div class="chap-body-inner">
-            <span class="chap-ghost" aria-hidden="true">06</span>
-            <div class="chap-autres-grid">
-              <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Mariage">
-                <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
-                <div class="more-card-foot">
-                  <span class="more-num">#05</span>
-                  <span class="more-cat">Mariage</span>
-                </div>
-              </a>
-              <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Corporate">
-                <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
-                <div class="more-card-foot">
-                  <span class="more-num">#06</span>
-                  <span class="more-cat">Corporate</span>
-                </div>
-              </a>
-              <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Documentaire">
-                <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
-                <div class="more-card-foot">
-                  <span class="more-num">#07</span>
-                  <span class="more-cat">Documentaire</span>
-                </div>
-              </a>
-            </div>
             <p class="chap-autres-note">Un aperçu — d'autres vidéos sur demande, adaptées à ton projet.</p>
           </div>
         </div>
       </article>
     </div>
 
-      <!-- ============================================================
-           PLANCHE CONTACT — référence 35mm / contact sheet argentique.
-           12 vignettes 16:9 (3 lignes × 4 colonnes) avec une case
-           entourée au "crayon gras rouge" (cercle SVG main levée) —
-           comme un monteur/directeur photo qui marque la sélection.
-           Hyper cinéphile, tatoue l'identité vidéo sans alourdir.
-           ============================================================ -->
+      <!-- Outro Next section — § 01 → § 01·5 Planche contact -->
+      <a class="section-outro reveal" href="#planche" aria-label="Section suivante — Planche contact">
+        <span class="section-outro-k">Suivant</span>
+        <span class="section-outro-v">§ 01·5 — Planche contact</span>
+        <span class="section-outro-arr" aria-hidden="true">↓</span>
+      </a>
+
+    </div><!-- /.section-body -->
+  </section>
+
+  <!-- ============================================================
+       § 01·5 — PLANCHE CONTACT — section autonome, respiration
+       éditoriale entre Projets et Services. Référence 35mm /
+       contact sheet argentique avec marquage "crayon gras rouge".
+       ============================================================ -->
+  <section class="section wrap section--planche" id="planche" data-section-label="§ 01·5 — Planche contact">
+    <div class="section-head reveal">
+      <div class="idx">§ 01·5 / Sélection</div>
+      <h2>Planche<br/>contact</h2>
+      <div class="sub">Réf. 35mm · marquage<br/>crayon gras rouge</div>
+    </div>
+
+    <div class="section-body">
       <div class="planche reveal" aria-label="Planche contact — marquage de sélection">
         <div class="planche-header">
           <span class="planche-k">Planche contact</span>
@@ -4591,14 +4869,13 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </div>
       </div>
 
-      <!-- Sceau de fermeture -->
-      <div class="section-seal section-seal--close reveal" aria-hidden="true">
-        <span class="seal-meta">Fin du dossier · retour aux services ↓</span>
-        <span class="seal-rule"></span>
-        <span class="seal-mark seal-mark--close">§ 01 · Archivé</span>
-      </div>
-
-    </div><!-- /.section-body -->
+      <!-- Outro Next section — § 01·5 → § 02 Services -->
+      <a class="section-outro reveal" href="#services" aria-label="Section suivante — Services">
+        <span class="section-outro-k">Suivant</span>
+        <span class="section-outro-v">§ 02 — Services</span>
+        <span class="section-outro-arr" aria-hidden="true">↓</span>
+      </a>
+    </div>
   </section>
 
   <!-- SERVICES — Timeline Premiere Pro (+ Tarifs / A propos en Inspector tabs)
@@ -4613,13 +4890,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     </div>
 
     <div class="section-body">
-
-      <!-- Sceau d'ouverture -->
-      <div class="section-seal section-seal--open reveal" aria-hidden="true">
-        <span class="seal-mark">§ 02 · Sommaire</span>
-        <span class="seal-rule"></span>
-        <span class="seal-meta">5 services · accordéon · cliquer pour ouvrir</span>
-      </div>
 
       <!-- Manifeste bref au-dessus du sommaire -->
       <p class="services-lead reveal">
@@ -4717,12 +4987,12 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 
       </ul>
 
-      <!-- Sceau de fermeture -->
-      <div class="section-seal section-seal--close reveal" aria-hidden="true">
-        <span class="seal-meta">Fin du sommaire · tarifs ↓</span>
-        <span class="seal-rule"></span>
-        <span class="seal-mark seal-mark--close">§ 02 · Fin</span>
-      </div>
+      <!-- Outro Next section — § 02 → § 03 Tarifs -->
+      <a class="section-outro reveal" href="#tarifs" aria-label="Section suivante — Tarifs">
+        <span class="section-outro-k">Suivant</span>
+        <span class="section-outro-v">§ 03 — Tarifs</span>
+        <span class="section-outro-arr" aria-hidden="true">↓</span>
+      </a>
 
     </div><!-- /.section-body -->
   </section>
@@ -5147,6 +5417,80 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
       if(chap.classList.contains('is-open')) closeChap(chap);
       else openChap(chap);
     });
+  });
+
+  /* ─── FOLDERS SWITCHER (nested dans "Autres dossiers") ──────────────
+     Tabs en haut sélectionnent un folder. Panel sortant slide à gauche,
+     nouveau entre par la droite. Hydrate le nouveau, déhydrate l'ancien. */
+  document.querySelectorAll('.folders').forEach(foldersRoot => {
+    const tabs    = [...foldersRoot.querySelectorAll('.folders-tab')];
+    const folders = [...foldersRoot.querySelectorAll('.folder')];
+    if(!tabs.length || !folders.length) return;
+
+    function bySlug(slug){
+      return {
+        tab:    tabs.find(t => t.dataset.slug === slug),
+        folder: folders.find(f => f.dataset.slug === slug),
+      };
+    }
+
+    function activate(slug){
+      const next = bySlug(slug);
+      if(!next.tab || !next.folder) return;
+      if(next.tab.classList.contains('is-active')) return;
+
+      const current = folders.find(f => f.classList.contains('is-active'));
+
+      tabs.forEach(t => {
+        const on = t === next.tab;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+
+      next.folder.hidden = false;
+      next.folder.classList.remove('is-leaving-left');
+      next.folder.classList.add('is-entering-right');
+      void next.folder.offsetWidth;
+
+      if(current && current !== next.folder){
+        current.classList.remove('is-active');
+        current.classList.add('is-leaving-left');
+      }
+      next.folder.classList.remove('is-entering-right');
+      next.folder.classList.add('is-active');
+
+      hydrateChap(next.folder);
+      if(current && current !== next.folder){
+        setTimeout(() => {
+          current.classList.remove('is-leaving-left');
+          current.hidden = true;
+          dehydrateChap(current);
+        }, 520);
+      }
+
+      foldersRoot.dataset.active = slug;
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => activate(tab.dataset.slug));
+      tab.addEventListener('keydown', (e) => {
+        const i = tabs.indexOf(tab);
+        if(e.key === 'ArrowRight'){ e.preventDefault(); const t = tabs[i+1]||tabs[0]; t.focus(); t.click(); }
+        if(e.key === 'ArrowLeft') { e.preventDefault(); const t = tabs[i-1]||tabs[tabs.length-1]; t.focus(); t.click(); }
+      });
+    });
+
+    // Hydrate le folder actif initial quand le parent chap s'ouvre
+    const parentChap = foldersRoot.closest('.chap');
+    if(parentChap){
+      const initObs = new MutationObserver(() => {
+        if(parentChap.classList.contains('is-open')){
+          const active = folders.find(f => f.classList.contains('is-active'));
+          if(active) hydrateChap(active);
+        }
+      });
+      initObs.observe(parentChap, { attributes:true, attributeFilter:['class'] });
+    }
   });
 
   /* ─── Pile → Deploy : entrée en scène quand la section entre en viewport ───

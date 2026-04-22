@@ -74,9 +74,6 @@
 <link rel="preconnect" href="https://videos.corentindeville.com">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<!-- Preload LCP candidate : showreel poster -->
-<link rel="preload" as="image" href="media/thumbnails/showreel-poster-1600.jpg" fetchpriority="high">
-
 <style>
 :root{
   /* Charcoal + Cloud Dancer */
@@ -106,7 +103,6 @@ body[data-theme="dark"]{
   --muted: #888580;
 }
 body[data-theme="dark"] .crow:hover{background:rgba(255,255,255,.04)}
-body[data-theme="dark"] .hero-reel{background:#1a1a18}
 body[data-theme="dark"] .mob-menu{background:#0a0a09}
 body[data-theme="dark"] .tweaks{background:rgba(15,15,14,.92);border-color:var(--rule)}
 
@@ -597,51 +593,6 @@ body[data-mode="glass"] .topbar{
 .hero-cta--ghost:hover .hero-cta-arrow{ transform: translateY(3px); }
 .hero-cta:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
 
-/* Hero reel */
-.hero-reel{
-  margin-top: 40px;
-  position:relative;
-  aspect-ratio: 21/9;
-  background: linear-gradient(135deg, #0a0a09 0%, #1a1816 40%, #252220 70%, #0f0e0c 100%);
-  overflow:hidden;
-  border-left: 0;
-  border-bottom: 4px solid var(--accent);
-}
-body[data-mode="glass"] .hero-reel{
-  background: rgba(255,255,255,.35);
-  backdrop-filter: blur(20px) saturate(1.3);
-  -webkit-backdrop-filter: blur(20px) saturate(1.3);
-  border: 1px solid rgba(255,255,255,.6);
-  border-left: 0;
-  border-bottom: 4px solid var(--accent);
-  box-shadow: 0 20px 60px -20px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.7);
-}
-.hero-reel .ph-label{
-  position:absolute;inset:auto 0 0 0;padding:20px 24px;
-  display:flex;justify-content:space-between;align-items:flex-end;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#2a2a2a;
-}
-.hero-reel .ph-label{color:#F0EEE9}
-.hero-reel .ph-label .big{font-family:var(--font-display);font-size:clamp(28px,4vw,56px);color:#F0EEE9;letter-spacing:.01em;line-height:1}
-.hero-reel .reel-overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.05) 50%, rgba(0,0,0,.3) 100%);z-index:1}
-.hero-reel .playtag,.hero-reel .rc,.hero-reel .ph-label{z-index:2;color:#F0EEE9}
-.hero-reel .ph-label .big{color:#F0EEE9}
-.hero-reel .stripes{display:none;
-  position:absolute;inset:0;
-  background: repeating-linear-gradient(135deg, rgba(26,26,26,.06) 0 2px, transparent 2px 28px);
-}
-.hero-reel .playtag{
-  position:absolute;top:20px;left:24px;display:flex;gap:10px;align-items:center;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-}
-.hero-reel .playtag .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent);animation:pulse 2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,79,0,.5)}70%{box-shadow:0 0 0 12px rgba(255,79,0,0)}100%{box-shadow:0 0 0 0 rgba(255,79,0,0)}}
-
-.hero-reel .rc{
-  position:absolute;top:20px;right:24px;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-}
-
 /* ===== Section header ===== */
 .section{padding: 96px var(--page-pad) 80px;position:relative}
 .section.wrap{padding: 96px var(--page-pad) 80px}
@@ -658,7 +609,8 @@ body[data-mode="glass"] .hero-reel{
 .section-head .idx::before{content:"▶";color:var(--accent);font-size:14px}
 .section-head h2{
   font-family:var(--font-display);font-weight:400;text-transform:none;
-  font-size:clamp(96px, 16vw, 240px);line-height:.85;letter-spacing:-.035em;
+  /* Reduit : le titre ne doit plus devorer la section sur ordi */
+  font-size:clamp(68px, 11.5vw, 168px);line-height:.88;letter-spacing:-.03em;
   color:var(--ink);
 }
 .section-head .sub{
@@ -776,6 +728,88 @@ body[data-mode="glass"] .hero-reel{
 }
 
 
+/* ── SECTION BODY — DOSSIER UNIFIÉ ────────────────────────────────────
+   Ceinture tout le bloc Projets (preview + pile) :
+   – rail vermillon plein sur le flanc gauche (avec badge "§ 01")
+   – sceau d'ouverture bordé d'un trait ink épais en haut
+   – sceau de fermeture bordé d'un trait ink épais en bas
+   → section sans ambiguïté, on voit où elle commence / finit. */
+.section-body{
+  position:relative;
+  padding: clamp(28px,3.5vw,44px) 0 clamp(32px,4vw,56px);
+  padding-left: clamp(28px, 3.4vw, 52px);  /* place pour rail + badge */
+}
+/* Rail vermillon plein */
+.section-body::before{
+  content:"";
+  position:absolute;
+  left: clamp(8px, 1.2vw, 18px);
+  top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent);
+}
+/* Badge "§ XX" qui coiffe le rail en haut — contenu specifique par section */
+.section-body::after{
+  content:"§ 01";
+  position:absolute;
+  left: clamp(-1px, -0.1vw, 2px);
+  top: clamp(8px,1vw,14px);
+  padding: 6px 10px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .22em;
+  line-height: 1;
+  text-transform: uppercase;
+  z-index: 2;
+}
+#services .section-body::after{ content:"§ 02"; }
+
+.section-seal{
+  display:flex;align-items:center;gap:clamp(14px,2vw,24px);
+  font-family:var(--font-mono);
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);
+}
+.section-seal--open{
+  margin-bottom: clamp(32px,4vw,56px);
+  padding: 18px 0 16px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px dashed var(--rule);
+}
+.section-seal--close{
+  margin-top: clamp(40px,5vw,72px);
+  padding: 16px 0 18px;
+  border-top: 1px dashed var(--rule);
+  border-bottom: 3px solid var(--ink);
+}
+.seal-mark{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:9px 15px;
+  background:var(--ink);color:var(--bg);
+  font-weight:500;letter-spacing:.22em;font-size:11px;
+  white-space:nowrap;
+}
+.seal-mark::before{
+  content:"▸";color:var(--accent);font-size:12px;line-height:1;
+}
+.seal-mark--close::before{
+  content:"■";color:var(--accent);font-size:10px;
+}
+.seal-rule{
+  flex:1;height:1px;min-width:20px;
+  background: repeating-linear-gradient(to right,
+    var(--rule) 0 6px, transparent 6px 12px);
+}
+.seal-meta{
+  color:var(--muted);
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  text-transform:none;font-style:italic;
+  white-space:nowrap;
+}
+
 /* ── STACK ACCORDION — cahier qui s'ouvre ─────────────────────────────
    Fermé : couverture anthracite quadrillée (vraie "farde").
    Ouvert : intérieur crème quadrillé ink (la page qu'on découvre).
@@ -788,9 +822,9 @@ body[data-mode="glass"] .hero-reel{
 }
 
 /* ── PILE → DEPLOY — entrée en scène ───────────────────────────────────
-   .is-piling  : les 4 cahiers compressés en haut, micro-rotation + scale dégressif
-                 (cards 2/3/4 translatées vers le haut pour se poser sur card 1).
-   .is-deploying : positions naturelles avec stagger par :nth-child (0/140/280/420ms).
+   .is-piling  : les 5 cahiers compressés en haut, micro-rotation + scale dégressif
+                 (cards 2→5 translatées vers le haut pour se poser sur card 1).
+   .is-deploying : positions naturelles avec stagger par :nth-child (0/130/260/390/520ms).
    JS enlève les deux classes après le déploiement → retour au base style. */
 .chap-stack.is-piling > .chap,
 .chap-stack.is-deploying > .chap{
@@ -799,17 +833,19 @@ body[data-mode="glass"] .hero-reel{
     opacity .55s cubic-bezier(.22,1,.36,1);
   will-change:transform,opacity;
 }
-.chap-stack.is-piling > .chap:nth-child(1){ transform:translateY(0)      rotate(-.8deg) scale(1);    opacity:1;   z-index:4 }
-.chap-stack.is-piling > .chap:nth-child(2){ transform:translateY(-72px)  rotate(.6deg)  scale(.985); opacity:.92; z-index:3 }
-.chap-stack.is-piling > .chap:nth-child(3){ transform:translateY(-140px) rotate(-.5deg) scale(.97);  opacity:.82; z-index:2 }
-.chap-stack.is-piling > .chap:nth-child(4){ transform:translateY(-206px) rotate(.7deg)  scale(.955); opacity:.72; z-index:1 }
+.chap-stack.is-piling > .chap:nth-child(1){ transform:translateY(0)      rotate(-.8deg) scale(1);    opacity:1;   z-index:5 }
+.chap-stack.is-piling > .chap:nth-child(2){ transform:translateY(-72px)  rotate(.6deg)  scale(.985); opacity:.92; z-index:4 }
+.chap-stack.is-piling > .chap:nth-child(3){ transform:translateY(-140px) rotate(-.5deg) scale(.97);  opacity:.82; z-index:3 }
+.chap-stack.is-piling > .chap:nth-child(4){ transform:translateY(-206px) rotate(.7deg)  scale(.955); opacity:.72; z-index:2 }
+.chap-stack.is-piling > .chap:nth-child(5){ transform:translateY(-268px) rotate(-.4deg) scale(.94);  opacity:.62; z-index:1 }
 .chap-stack.is-deploying > .chap{
   transform:translateY(0) rotate(0) scale(1); opacity:1;
 }
 .chap-stack.is-deploying > .chap:nth-child(1){ transition-delay:0ms }
-.chap-stack.is-deploying > .chap:nth-child(2){ transition-delay:140ms }
-.chap-stack.is-deploying > .chap:nth-child(3){ transition-delay:280ms }
-.chap-stack.is-deploying > .chap:nth-child(4){ transition-delay:420ms }
+.chap-stack.is-deploying > .chap:nth-child(2){ transition-delay:130ms }
+.chap-stack.is-deploying > .chap:nth-child(3){ transition-delay:260ms }
+.chap-stack.is-deploying > .chap:nth-child(4){ transition-delay:390ms }
+.chap-stack.is-deploying > .chap:nth-child(5){ transition-delay:520ms }
 
 .chap{
   position:relative;
@@ -1136,29 +1172,21 @@ body[data-mode="glass"] .hero-reel{
 .chap-more-arr{font-family:var(--font-display);font-size:16px;line-height:1;transition:transform .3s}
 .chap-more-btn:hover .chap-more-arr{transform:translate(3px,-3px)}
 
-/* ── SECTION AUTRES PROJETS ── */
-.proj-more{
-  margin:0 0 40px;padding:0 8px;
-}
-.proj-more-head{
-  display:grid;grid-template-columns:auto auto 1fr auto;gap:20px;align-items:center;
-  margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--ink);
-  font-family:var(--font-mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;
-}
-.proj-more-idx{color:var(--muted)}
-.proj-more-lbl{color:var(--ink);font-weight:500}
-.proj-more-rule{height:1px;background:var(--rule);display:block;min-width:20px}
-.proj-more-note{
-  color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:none;font-style:italic;
-}
-.proj-more-grid{
+/* ── CHAP AUTRES — grille compact des archives (dans le 5ᵉ cahier) ── */
+.chap-autres-grid{
   display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px);
+  margin-top: 8px;
+}
+.chap-autres-note{
+  margin-top: clamp(20px,2.5vw,32px);
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;
+  color:var(--muted);font-style:italic;
 }
 .more-card{
   display:flex;flex-direction:column;gap:12px;
   text-decoration:none;color:var(--ink);
-  padding:14px;border:1px solid var(--rule);border-radius:8px;
-  background:rgba(245,239,227,.5);
+  padding:14px;border:1px solid rgba(26,26,26,.18);border-radius:8px;
+  background:rgba(26,26,26,.04);
   transition:transform .4s cubic-bezier(.22,1,.36,1), border-color .3s, background .3s, box-shadow .4s;
 }
 .more-card:hover{
@@ -1310,9 +1338,44 @@ body.drawer-open{overflow:hidden}
 @media (max-width:960px){
   .reel-stage{width:min(100%, 320px)}
   .chap-carousel[data-format="16x9"] .reel-stage{width:min(100%, 640px)}
-  .proj-more-grid{grid-template-columns:repeat(2,1fr)}
+  .chap-autres-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:720px){
+  /* ── Section Projets : structure visible aussi sur mobile ─────────
+     Rail vermillon plein à gauche + sceaux bornés par des traits ink épais
+     en haut/bas. Le seal-mark (badge noir) du sceau d'ouverture porte le
+     "§ 01" — pas besoin du badge ::after du rail sur mobile. */
+  .section-body{
+    padding: clamp(10px,1.6vw,16px) 0 clamp(28px,4vw,40px);
+    padding-left: 18px;  /* place pour le rail sans chevauchement */
+  }
+  /* Rail vermillon — pleine hauteur, bien visible */
+  .section-body::before{left:0;top:0;bottom:0;width:3px}
+  /* Badge § 01 du rail caché sur mobile (le seal-mark du sceau d'ouverture
+     joue déjà ce rôle — évite la redondance et le chevauchement). */
+  .section-body::after{display:none}
+  /* Sceaux : gardent les bordures ink fortes en haut/bas, rule masquée */
+  .section-seal{
+    gap:12px;flex-wrap:wrap;
+    font-size:10px;letter-spacing:.18em;
+  }
+  .section-seal .seal-rule{display:none}
+  .section-seal .seal-meta{font-size:10px;letter-spacing:.06em}
+  .section-seal--open{
+    padding:16px 0 14px;
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px dashed var(--rule);
+    margin-bottom: clamp(24px,4vw,36px);
+  }
+  .section-seal--close{
+    padding:14px 0 16px;
+    border-top: 1px dashed var(--rule);
+    border-bottom: 3px solid var(--ink);
+    margin-top: clamp(28px,4.5vw,48px);
+  }
+  .seal-mark{
+    padding:7px 12px;font-size:10px;letter-spacing:.2em;
+  }
   /* Preview strip : empile verticalement (Wenda au-dessus de Bebooth) */
   .proj-preview{grid-template-columns:1fr;gap:clamp(28px,5vw,40px);margin-bottom:48px}
   .proj-preview-vert .proj-preview-media,
@@ -1332,6 +1395,7 @@ body.drawer-open{overflow:hidden}
   .chap-stack.is-piling > .chap:nth-child(2){ transform:translateY(-48px)  rotate(.6deg)  scale(.985) }
   .chap-stack.is-piling > .chap:nth-child(3){ transform:translateY(-94px)  rotate(-.5deg) scale(.97) }
   .chap-stack.is-piling > .chap:nth-child(4){ transform:translateY(-138px) rotate(.7deg)  scale(.955) }
+  .chap-stack.is-piling > .chap:nth-child(5){ transform:translateY(-178px) rotate(-.4deg) scale(.94) }
   .chap-carousel{padding:28px 12px 52px}
   .reel-stage{width:min(100%, 280px)}
   .reel-card.pos1{transform:translate3d(14%,3%,-110px) rotateY(-10deg) scale(.86);opacity:.78}
@@ -1339,9 +1403,7 @@ body.drawer-open{overflow:hidden}
   .reel-nav{width:38px;height:38px;font-size:18px}
   .reel-prev{left:-6px}
   .reel-next{right:-6px}
-  .proj-more-grid{grid-template-columns:1fr;gap:14px}
-  .proj-more-head{grid-template-columns:auto auto 1fr;gap:12px}
-  .proj-more-note{grid-column:1/-1;text-align:left;margin-top:4px}
+  .chap-autres-grid{grid-template-columns:1fr;gap:14px}
   .proj-drawer{width:100vw;max-width:100vw}
   .drawer-close{width:40px;height:40px}
   .drawer-meta{grid-template-columns:1fr 1fr;gap:14px 20px}
@@ -1612,8 +1674,6 @@ body.drawer-open{overflow:hidden}
   }
   .hero-meta .col.right a::after{display:none}
   .hero-meta .col.right a::before{content:"↗";color:var(--accent);font-size:9px}
-  .hero-reel{aspect-ratio:16/9;margin-top:24px}
-  .hero-reel .ph-label .big{font-size:clamp(18px,5vw,28px)}
   /* scroll hint — mobile only */
   .hero-scroll-hint{
     display:flex;flex-direction:column;align-items:center;gap:6px;
@@ -1665,68 +1725,10 @@ body.drawer-open{overflow:hidden}
   /* Tweaks panel */
   .tweaks{right:8px;bottom:8px;width:calc(100vw - 16px);max-width:320px}
 }
-/* Section indicator in topbar */
-.hero-services{
-  margin-top:56px;
-  max-width:1080px;
-}
-.hs-head{
-  display:flex;align-items:center;gap:18px;margin-bottom:40px;
-  padding-bottom:18px;border-bottom:2px solid var(--ink);
-}
-.hs-kicker{
-  font-family:var(--font-mono);font-size:14px;letter-spacing:.3em;text-transform:uppercase;
-  color:var(--bg);background:var(--ink);padding:8px 18px;display:inline-flex;align-items:center;gap:10px;
-  border-radius:2px;font-weight:500;
-}
-.hs-kicker::before{content:"▶";color:var(--accent);font-size:11px}
-.hs-line{flex:1;height:1px;background:var(--ink);opacity:.15}
-.hs-count{font-family:var(--font-mono);font-size:14px;letter-spacing:.22em;color:var(--muted)}
-.hs-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:0;
-}
-.hs-item{
-  position:relative;padding:32px 48px 32px 0;
-  display:flex;flex-direction:column;gap:18px;
-}
-.hs-item + .hs-item{padding-left:48px;border-left:1px solid var(--rule)}
-.hs-num{
-  font-family:var(--font-mono);font-size:14px;letter-spacing:.25em;text-transform:uppercase;
-  color:var(--accent);font-weight:600;
-  display:inline-flex;align-items:center;gap:12px;
-}
-.hs-num::after{content:"";flex:0 0 48px;height:2px;background:var(--accent)}
-.hs-label{
-  font-family:var(--font-display);font-size:clamp(44px,7vw,96px);line-height:.88;letter-spacing:-.03em;
-}
-.hs-role{
-  font-family:var(--font-body);font-size:clamp(22px,1.6vw,28px);line-height:1.3;
-  color:var(--ink);font-weight:500;letter-spacing:-.005em;
-}
-.hs-desc{
-  font-size:15px;line-height:1.6;color:var(--muted);margin-top:12px;max-width:28ch;
-}
 /* Generic lead paragraph for section intros */
 .lead{
   font-size:clamp(17px,1.6vw,22px);line-height:1.55;color:var(--muted);
   max-width:52ch;margin-bottom:48px;
-}
-.hs-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;overflow:visible}
-.hs-tags span{
-  font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;
-  padding:8px 14px;background:rgba(26,26,26,.06);color:var(--ink);
-  border-radius:999px;font-weight:500;
-  transition:background .25s,color .25s,transform .25s;
-}
-.hs-tags span:hover{background:var(--ink);color:var(--bg);transform:translateY(-2px)}
-@media (max-width:768px){
-  .hero-services{margin-top:40px}
-  .hs-head{margin-bottom:28px}
-  .hs-grid{grid-template-columns:1fr}
-  .hs-item{padding:22px 0;border-bottom:1px solid var(--rule)}
-  .hs-item + .hs-item{padding-left:0;border-left:0}
-  .hs-label{font-size:clamp(48px,13vw,72px)}
-  .hs-role{font-size:19px}
 }
 /* ===== Section pill-nav (segmented control) ===== */
 .section-nav{
@@ -2122,187 +2124,468 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
   .contact-link:hover .contact-link-arr{ transform:translate(2px,-2px);background:rgba(240,238,233,.18); }
 }
 
-/* ===== Sub-blocks inside a section (Méthode / Tarifs) ===== */
-.sub-block{ margin-top:72px; }
-.block-head{
-  display:flex;flex-direction:column;gap:8px;
-  padding-bottom:18px;margin-bottom:28px;
-  border-bottom:1px solid var(--rule);
-}
-.block-idx{
-  font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--muted);
-}
-.block-title{
+/* ═══════════════════════════════════════════════════════════════ */
+/*  SERVICES — manifeste court + item feature (montage au top)      */
+/* ═══════════════════════════════════════════════════════════════ */
+.services-lead{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(32px,4vw,56px);line-height:.95;letter-spacing:-.02em;
-  color:var(--ink);
+  font-size:clamp(22px,2.4vw,34px);line-height:1.25;letter-spacing:-.015em;
+  color:var(--ink);max-width:42ch;
+  margin:0 0 clamp(28px,3.5vw,48px);
 }
-.block-intro{
-  font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted);margin-top:4px;
+.services-lead em{ font-style:italic;color:var(--accent); }
+.menu-item--feature{
+  /* Premier item marque : bord accent plus epais, rail permanent visible */
+  border-top:2px solid var(--ink);
+}
+.menu-item--feature::before{ opacity:.25; }
+.menu-item--feature.is-open::before{ opacity:1; }
+.menu-item--feature .menu-title{
+  /* legerement plus gros pour signaler que c'est le coeur du metier */
+  font-size:clamp(36px,5vw,76px);
 }
 
-/* ===== Method grid (4 steps) ===== */
-.method-grid{
-  display:grid;grid-template-columns:repeat(4, 1fr);gap:0;
-  border-top:1px solid var(--rule);
+/* ═══════════════════════════════════════════════════════════════ */
+/*  MENU-LIST — pattern éditorial partagé (Services · À propos)     */
+/*  Non-dossier : items typographiques dépliables, accordéon        */
+/*  exclusif. Codes visuels alignés sur § 01 (rail vermillon,       */
+/*  numéros mono, typo display) pour unifier la page.               */
+/* ═══════════════════════════════════════════════════════════════ */
+.menu-list{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;
+  border-top:1px solid var(--ink);
 }
-.method-cell{
-  padding:28px 24px 28px 0;
-  border-right:1px solid var(--rule);
+.menu-item{
+  border-bottom:1px solid var(--rule);
   position:relative;
 }
-.method-cell:last-child{ border-right:0; }
-.method-cell + .method-cell{ padding-left:24px; }
-.method-cell::before{
-  content:"";position:absolute;top:-1px;left:0;width:48px;height:2px;background:var(--accent);
+.menu-item:last-child{ border-bottom:1px solid var(--ink); }
+.menu-item::before{
+  /* micro-rail vermillon qui répond à la grande rail section-body */
+  content:"";position:absolute;left:-14px;top:0;bottom:0;
+  width:2px;background:var(--accent);
+  opacity:0;transition:opacity .35s ease;
 }
-.method-num{
-  font-family:var(--font-mono);font-size:12px;letter-spacing:.25em;text-transform:uppercase;
-  color:var(--accent);font-weight:600;margin-bottom:14px;
+.menu-item.is-open::before{ opacity:1; }
+
+.menu-head{
+  all:unset;cursor:pointer;
+  display:grid;
+  grid-template-columns:auto 1fr auto auto;
+  align-items:baseline;
+  gap:clamp(16px,2vw,28px);
+  width:100%;
+  padding:clamp(22px,2.5vw,32px) 4px;
+  transition:padding-left .35s cubic-bezier(.22,1,.36,1);
 }
-.method-title{
-  font-family:var(--font-display);font-size:clamp(22px,2.4vw,32px);line-height:1;
-  letter-spacing:-.015em;text-transform:uppercase;color:var(--ink);margin-bottom:12px;
+.menu-head:hover{ padding-left:10px; }
+.menu-item.is-open > .menu-head{ padding-left:14px; }
+
+.menu-num{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;
+  min-width:28px;
 }
-.method-desc{
-  font-size:14.5px;line-height:1.55;color:var(--muted);max-width:30ch;
+.menu-title{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(32px,4.5vw,64px);line-height:.95;letter-spacing:-.025em;
+  color:var(--ink);
+  text-transform:none;
+}
+.menu-meta{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);
+  justify-self:end;
+  text-align:right;
+  max-width:24ch;
+}
+.menu-chev{
+  font-family:var(--font-mono);font-size:22px;line-height:1;
+  color:var(--ink);
+  width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--rule);border-radius:50%;
+  transition:transform .4s cubic-bezier(.22,1,.36,1),background .25s,color .25s,border-color .25s;
+}
+.menu-head:hover .menu-chev{
+  background:var(--ink);color:var(--bg);border-color:var(--ink);
+}
+.menu-item.is-open .menu-chev{
+  transform:rotate(45deg);
+  background:var(--accent);color:#fff;border-color:var(--accent);
 }
 
-/* ===== Tariffs list (generalised, no longer scoped to .info-body) ===== */
-.tariffs-list{ display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule); }
-.tariffs-list .tr{
-  display:flex;justify-content:space-between;align-items:center;gap:20px;
-  padding:18px 0;border-bottom:1px solid var(--rule);
-  font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;
-  flex-wrap:wrap;
+.menu-body{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .5s cubic-bezier(.22,1,.36,1);
 }
-.tariffs-list .tr strong{
-  font-family:var(--font-mono);font-size:16px;letter-spacing:0;
-  color:var(--accent);text-transform:none;flex-shrink:0;
+.menu-body-inner{
+  overflow:hidden;min-height:0;
 }
+.menu-item.is-open > .menu-body{ grid-template-rows:1fr; }
+.menu-body-inner > *{
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .1s, transform .4s ease .1s;
+}
+.menu-item.is-open .menu-body-inner > *{
+  opacity:1;transform:translateY(0);
+}
+.menu-body-inner{
+  padding:0 4px clamp(24px,3vw,32px) clamp(48px,5vw,72px);
+  display:flex;flex-direction:column;gap:18px;
+}
+.menu-desc{
+  font-size:clamp(16px,1.3vw,18px);line-height:1.6;color:var(--ink);
+  max-width:56ch;margin:0;
+}
+.menu-tags{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+.menu-tags li{
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  padding:7px 12px;background:rgba(26,26,26,.06);color:var(--ink);
+  border-radius:999px;font-weight:500;
+  transition:background .25s,color .25s;
+}
+body[data-theme="dark"] .menu-tags li{ background:rgba(240,238,233,.08); }
+.menu-tags li:hover{ background:var(--ink);color:var(--bg); }
 
-/* ===== À propos section ===== */
-.apropos-grid{
-  display:grid;grid-template-columns:5fr 6fr;gap:72px;align-items:center;
+/* ═══════════════════════════════════════════════════════════════ */
+/*  PRICE-BLOCK — sous-bloc discret dans Services (Tarifs fusionnés)*/
+/* ═══════════════════════════════════════════════════════════════ */
+.price-block{
+  margin-top:clamp(40px,5vw,64px);
+  padding-top:clamp(28px,3vw,36px);
+  border-top:1px dashed var(--rule);
 }
-.apropos-visual{ position:relative; }
-.apropos-card{
-  position:relative;aspect-ratio:4/5;
-  border:1px solid var(--rule);
-  background:linear-gradient(160deg, rgba(26,26,26,.03) 0%, rgba(26,26,26,.08) 100%);
-  padding:26px;
-  display:flex;flex-direction:column;justify-content:space-between;
-  overflow:hidden;isolation:isolate;
-}
-body[data-theme="dark"] .apropos-card{
-  background:linear-gradient(160deg, rgba(255,255,255,.03) 0%, rgba(255,255,255,.06) 100%);
-  border-color:var(--rule);
-}
-.apropos-card::before{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    linear-gradient(to right, var(--rule) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
-  background-size:48px 48px;
-  opacity:.35;
-  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 40%, transparent 100%);
-}
-.apropos-card-head,
-.apropos-card-body,
-.apropos-card-foot{ position:relative;z-index:1; }
-.apropos-card-head{
-  display:flex;justify-content:space-between;align-items:center;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+.price-head{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  margin-bottom:clamp(18px,2vw,24px);
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
   color:var(--muted);
 }
-.apropos-card-tag{ display:flex;align-items:center;gap:8px; }
-.apropos-card-tag::before{
-  content:"";width:8px;height:8px;border:1px solid currentColor;border-radius:50%;display:inline-block;
+.price-idx{
+  padding:5px 10px;background:var(--ink);color:var(--bg);
+  font-weight:500;letter-spacing:.22em;
 }
-.apropos-card-body{
-  display:flex;flex-direction:column;gap:18px;align-items:flex-start;
+.price-lbl{
+  color:var(--ink);font-weight:500;
 }
-.apropos-card-initials{
-  font-family:var(--font-display);font-size:clamp(96px,14vw,168px);line-height:.85;letter-spacing:-.04em;
-  color:var(--accent);
+.price-rule{
+  flex:1;min-width:20px;height:1px;
+  background:repeating-linear-gradient(to right,
+    var(--rule) 0 5px, transparent 5px 10px);
 }
-.apropos-card-name{
-  font-family:var(--font-display);font-size:clamp(26px,2.6vw,38px);line-height:.9;
-  letter-spacing:-.015em;color:var(--ink);
+.price-note{
+  color:var(--muted);font-family:var(--font-mono);font-size:11px;
+  letter-spacing:.1em;font-style:italic;text-transform:none;
+  white-space:nowrap;
 }
-.apropos-card-foot{
-  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ink);
-  padding-top:14px;border-top:1px solid var(--rule);
+.price-list{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;
 }
-.apropos-text{ display:flex;flex-direction:column;gap:22px; }
+.price-row{
+  display:grid;grid-template-columns:auto 1fr auto;
+  align-items:baseline;gap:clamp(14px,2vw,22px);
+  padding:16px 0;
+  border-bottom:1px solid var(--rule);
+}
+.price-row:last-child{ border-bottom:0; }
+.price-num{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
+  color:var(--muted);
+}
+.price-name{
+  font-family:var(--font-body);font-size:clamp(14px,1.2vw,16px);
+  line-height:1.4;color:var(--ink);font-weight:500;
+}
+.price-val{
+  display:inline-flex;align-items:baseline;gap:4px;
+  font-family:var(--font-mono);
+}
+.price-val em{
+  font-style:normal;font-family:var(--font-display);
+  font-size:clamp(18px,1.8vw,24px);color:var(--accent);letter-spacing:-.01em;
+}
+.price-val span{
+  font-size:11px;color:var(--muted);letter-spacing:.1em;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/*  À PROPOS — intro photo + texte (pas de card flottante)          */
+/* ═══════════════════════════════════════════════════════════════ */
+.apropos-intro{
+  display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+  gap:clamp(32px,4vw,64px);
+  align-items:start;
+  margin-bottom:clamp(40px,5vw,72px);
+}
+.apropos-photo{
+  position:relative;
+  aspect-ratio:3/4;
+  width:100%;
+  max-width:440px;
+  border:1px solid var(--rule);
+  overflow:hidden;
+  background:#1a1a18;
+}
+.apropos-photo::after{
+  content:"§ CDV — Portrait";
+  position:absolute;left:0;bottom:0;
+  padding:7px 12px;
+  background:var(--ink);color:var(--bg);
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;
+  z-index:2;
+}
+.apropos-photo img{
+  width:100%;height:100%;object-fit:cover;object-position:center top;
+  display:block;filter:grayscale(.08);
+}
+.apropos-text{
+  display:flex;flex-direction:column;gap:22px;
+  padding-top:clamp(0px,1vw,8px);
+}
 .apropos-quote{
-  font-family:var(--font-display);font-size:clamp(26px,2.8vw,40px);line-height:1.15;
-  letter-spacing:-.015em;color:var(--ink);max-width:22ch;
+  font-family:var(--font-display);font-size:clamp(28px,3vw,44px);line-height:1.12;
+  letter-spacing:-.02em;color:var(--ink);max-width:22ch;
+  margin:0;
 }
 .apropos-quote em{ font-style:italic;color:var(--accent); }
 .apropos-body{
-  font-size:16px;line-height:1.7;color:var(--muted);max-width:62ch;
+  font-size:clamp(15px,1.2vw,17px);line-height:1.7;color:var(--muted);max-width:62ch;
+  margin:0;
 }
-.apropos-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:18px;
-  border-top:1px solid var(--rule);
+.apropos-facts{
+  list-style:none;margin:clamp(8px,1vw,16px) 0 0;padding:0;
+  display:flex;flex-direction:column;gap:10px;
+  border-top:1px solid var(--rule);padding-top:16px;
 }
-.apropos-stats .as{
-  padding:20px 18px 0 0;border-right:1px solid var(--rule);
+.apropos-facts li{
+  font-family:var(--font-mono);font-size:12.5px;letter-spacing:.1em;
+  color:var(--muted);line-height:1.4;
+  padding-left:18px;position:relative;
 }
-.apropos-stats .as:last-child{ border-right:0;padding-right:0; }
-.apropos-stats .n{
-  font-family:var(--font-display);font-size:clamp(32px,3.4vw,52px);
-  line-height:1;letter-spacing:-.015em;color:var(--ink);
+.apropos-facts li::before{
+  content:"§";position:absolute;left:0;top:0;
+  color:var(--accent);font-weight:600;
 }
-.apropos-stats .l{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);margin-top:8px;
+.apropos-facts li strong{
+  color:var(--ink);font-weight:600;letter-spacing:.04em;
+  text-transform:none;
 }
 
-/* Method + À propos — Tablet */
-@media(max-width:900px){
-  .method-grid{ grid-template-columns:1fr 1fr; }
-  .method-cell{ padding:24px 20px 24px 0;border-bottom:1px solid var(--rule); }
-  .method-cell:nth-child(2){ border-right:0; }
-  .method-cell:nth-child(3),
-  .method-cell:nth-child(4){ border-bottom:0; }
-  .method-cell + .method-cell{ padding-left:0; }
-  .method-cell:nth-child(2n){ padding-left:20px;border-left:1px solid var(--rule); }
-  .apropos-grid{ grid-template-columns:1fr;gap:40px; }
-  .apropos-card{ max-width:360px;margin:0 auto; }
+/* ═══════════════════════════════════════════════════════════════ */
+/*  INFOS — § 03 · bande discrete pour Tarifs + A propos            */
+/*  Zone fermee par defaut : chaque fold-card s'ouvre au clic.      */
+/* ═══════════════════════════════════════════════════════════════ */
+.section--infos{
+  margin-top:clamp(40px,5vw,72px);
+  margin-bottom:clamp(48px,6vw,96px);
 }
-/* Method + À propos — Phone */
+.infos-head{
+  display:flex;align-items:center;gap:clamp(14px,2vw,22px);
+  padding:16px 0 14px;
+  border-top:3px solid var(--ink);
+  border-bottom:1px dashed var(--rule);
+  margin-bottom:clamp(24px,3vw,36px);
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--muted);
+}
+.infos-kicker{
+  padding:7px 12px;background:var(--ink);color:var(--bg);
+  font-weight:500;letter-spacing:.22em;
+}
+.infos-rule{
+  flex:1;min-width:20px;height:1px;
+  background:repeating-linear-gradient(to right,
+    var(--rule) 0 6px, transparent 6px 12px);
+}
+.infos-meta{
+  color:var(--muted);font-style:italic;text-transform:none;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;
+  white-space:nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/*  FOLD-CARD — bloc fermé par défaut, s'ouvre au clic              */
+/* ═══════════════════════════════════════════════════════════════ */
+.fold-group{
+  display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);
+}
+.fold-card{
+  position:relative;
+  border:1px solid var(--rule);
+  background:transparent;
+  transition:border-color .35s ease, background .35s ease;
+  scroll-margin-top:80px;
+}
+.fold-card:hover{ border-color:var(--ink); }
+.fold-card.is-open{
+  border-color:var(--ink);
+  background:color-mix(in srgb, var(--ink) 3%, transparent);
+}
+body[data-theme="dark"] .fold-card.is-open{
+  background:color-mix(in srgb, var(--bg) 12%, transparent);
+}
+
+.fold-head{
+  all:unset;cursor:pointer;
+  display:grid;grid-template-columns:auto 1fr auto auto;
+  align-items:center;gap:clamp(14px,2vw,24px);
+  width:100%;
+  padding:clamp(22px,2.6vw,30px) clamp(18px,2vw,28px);
+  transition:padding .35s ease;
+}
+.fold-card.is-open > .fold-head{
+  padding-bottom:clamp(18px,2vw,22px);
+  border-bottom:1px dashed var(--rule);
+}
+.fold-num{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;
+  padding:6px 9px;border:1px solid var(--accent);
+}
+.fold-title{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(26px,3.2vw,44px);line-height:1;letter-spacing:-.02em;
+  color:var(--ink);
+}
+.fold-meta{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+  justify-self:end;text-align:right;max-width:28ch;
+}
+.fold-chev{
+  font-family:var(--font-mono);font-size:20px;line-height:1;
+  width:34px;height:34px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--rule);border-radius:50%;
+  color:var(--ink);
+  transition:transform .4s cubic-bezier(.22,1,.36,1), background .3s, color .3s, border-color .3s;
+}
+.fold-head:hover .fold-chev{
+  background:var(--ink);color:var(--bg);border-color:var(--ink);
+}
+.fold-card.is-open .fold-chev{
+  transform:rotate(45deg);
+  background:var(--accent);color:#fff;border-color:var(--accent);
+}
+
+.fold-body{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .5s cubic-bezier(.22,1,.36,1);
+}
+.fold-body-inner{ overflow:hidden;min-height:0; }
+.fold-card.is-open .fold-body{ grid-template-rows:1fr; }
+.fold-body-inner > *{
+  opacity:0;transform:translateY(8px);
+  transition:opacity .45s ease .1s, transform .45s ease .1s;
+}
+.fold-card.is-open .fold-body-inner > *{
+  opacity:1;transform:translateY(0);
+}
+.fold-body-inner{
+  padding:clamp(22px,2.6vw,32px) clamp(18px,2vw,28px) clamp(26px,3vw,36px);
+  display:flex;flex-direction:column;gap:clamp(18px,2vw,24px);
+}
+.fold-lead{
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+  margin:0;
+}
+.fold-note{
+  font-family:var(--font-body);font-size:13px;line-height:1.55;
+  color:var(--muted);font-style:italic;
+  margin:0;padding-top:14px;border-top:1px dashed var(--rule);
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/*  Responsive — menu-list · price-block · apropos-intro            */
+/* ═══════════════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .apropos-intro{ grid-template-columns:1fr;gap:32px; }
+  .apropos-photo{ max-width:360px;margin:0 auto; }
+  .menu-head{ grid-template-columns:auto 1fr auto;gap:14px; }
+  .menu-meta{
+    grid-column:2; /* passe sous le titre, aligné à gauche */
+    justify-self:start;text-align:left;max-width:100%;
+    font-size:11px;margin-top:4px;
+  }
+  .menu-head{
+    grid-template-areas:
+      "num title chev"
+      ".   meta  .";
+  }
+  .menu-num{ grid-area:num; }
+  .menu-title{ grid-area:title; }
+  .menu-chev{ grid-area:chev;align-self:center; }
+  .menu-meta{ grid-area:meta; }
+
+  /* Fold-card : meme reshuffle que menu-head */
+  .fold-head{
+    grid-template-columns:auto 1fr auto;
+    grid-template-areas:
+      "num title chev"
+      ".   meta  .";
+    gap:10px 14px;
+  }
+  .fold-num{ grid-area:num; }
+  .fold-title{ grid-area:title; }
+  .fold-chev{ grid-area:chev;align-self:center; }
+  .fold-meta{
+    grid-area:meta;justify-self:start;text-align:left;
+    max-width:100%;font-size:11px;
+  }
+}
 @media(max-width:600px){
-  .sub-block{ margin-top:56px; }
-  .block-title{ font-size:clamp(28px,8vw,40px); }
-  .method-grid{ grid-template-columns:1fr;border-top:0; }
-  .method-cell{
-    padding:22px 0;border-right:0;border-bottom:1px solid var(--rule);
+  .menu-list{ border-top-color:var(--ink); }
+  .menu-head{ padding:20px 4px;gap:12px; }
+  .menu-title{ font-size:clamp(26px,8vw,38px); }
+  .menu-item--feature .menu-title{ font-size:clamp(30px,9vw,44px); }
+  .menu-num{ font-size:11px;letter-spacing:.22em;min-width:22px; }
+  .menu-chev{ width:26px;height:26px;font-size:18px; }
+  .menu-body-inner{ padding:0 4px 22px 32px; }
+  .menu-desc{ font-size:14.5px;line-height:1.55; }
+  .menu-tags li{ font-size:10.5px;padding:6px 10px; }
+  .services-lead{ font-size:clamp(20px,6.5vw,26px); }
+
+  .price-block{ margin-top:40px;padding-top:24px; }
+  .price-head{ gap:10px;font-size:10px; }
+  .price-rule{ display:none; }
+  .price-note{ font-size:10px;white-space:normal; }
+  .price-row{
+    grid-template-columns:auto 1fr;
+    grid-template-areas:
+      "num name"
+      ".   val";
+    gap:4px 12px;padding:14px 0;
   }
-  .method-cell:last-child{ border-bottom:0; }
-  .method-cell + .method-cell,
-  .method-cell:nth-child(2n){ padding-left:0;border-left:0; }
-  .method-cell::before{ width:36px; }
-  .method-title{ font-size:22px;margin-bottom:10px; }
-  .method-desc{ font-size:14px; }
-  .tariffs-list .tr{
-    flex-direction:column;align-items:flex-start;gap:6px;font-size:11px;letter-spacing:.1em;
-    padding:14px 0;
-  }
-  .tariffs-list .tr strong{ font-size:15px; }
-  .apropos-grid{ gap:32px; }
-  .apropos-quote{ font-size:clamp(22px,6.5vw,28px);max-width:100%; }
+  .price-num{ grid-area:num; }
+  .price-name{ grid-area:name;font-size:14px; }
+  .price-val{ grid-area:val;justify-self:start; }
+
+  .apropos-intro{ gap:28px;margin-bottom:40px; }
+  .apropos-quote{ font-size:clamp(22px,6.8vw,30px);max-width:100%; }
   .apropos-body{ font-size:15px; }
-  .apropos-stats{ grid-template-columns:1fr;border-top:0; }
-  .apropos-stats .as{
-    border-right:0;border-top:1px solid var(--rule);padding:16px 0;
-  }
+  .apropos-photo{ max-width:100%; }
+  .apropos-facts{ padding-top:14px;gap:8px; }
+  .apropos-facts li{ font-size:11.5px;padding-left:16px; }
+
+  /* Infos + fold-card : versions mobiles sobres */
+  .section--infos{ margin-top:32px;margin-bottom:48px; }
+  .infos-head{ gap:10px;font-size:10px;padding:14px 0 12px; }
+  .infos-rule{ display:none; }
+  .infos-meta{ font-size:10px; }
+  .fold-head{ padding:18px 14px;gap:10px 12px; }
+  .fold-title{ font-size:clamp(22px,6.2vw,30px); }
+  .fold-num{ font-size:10px;padding:5px 8px; }
+  .fold-chev{ width:28px;height:28px;font-size:18px; }
+  .fold-body-inner{ padding:18px 14px 22px; }
+  .fold-lead{ font-size:10.5px; }
+  .fold-note{ font-size:12.5px; }
 }
 
 /* ===== Easter egg ===== */
@@ -2465,36 +2748,8 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
   .contact-drawer{bottom:82px;right:12px;width:calc(100vw - 24px);max-width:340px}
 }
 
-/* hero-services tags: smaller on phone */
-@media(max-width:600px){
-  .hs-tags span{font-size:11px;padding:6px 10px}
-  .hs-role{font-size:17px}
-}
-
 /* ===== Ticker in hero modifier ===== */
 .ticker-wrap.ticker--in-hero{margin-top:32px;border-bottom:0;}
-
-/* ===== Proof-band (client logos) ===== */
-.proof-band{
-  width:100%;padding:28px 0;
-  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
-  background:var(--bg);overflow:hidden;position:relative;z-index:2;
-}
-.proof-label{
-  position:absolute;left:var(--page-pad,32px);top:50%;transform:translateY(-50%);
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--muted);background:var(--bg);padding:4px 20px 4px 0;z-index:3;
-  border-right:1px solid var(--rule);
-}
-.proof-track{
-  display:inline-flex;white-space:nowrap;
-  animation:proofScroll 60s linear infinite;
-  font-family:var(--font-display);font-size:clamp(22px,2.4vw,34px);
-  color:var(--muted);opacity:.55;text-transform:uppercase;letter-spacing:-.01em;
-  padding-left:260px;
-}
-.proof-track span{padding:0 40px;display:inline-block}
-@keyframes proofScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* ===== Section sub-block (Selected Work Index) ===== */
 .section-sub{margin-top:120px}
@@ -2539,76 +2794,9 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
   .midcta-title{font-size:clamp(40px,12vw,64px)}
 }
 
-/* ===== Tarifs — editorial row pattern ===== */
-.tariffs-edit{display:flex;flex-direction:column;border-top:1px solid var(--rule)}
-.tr-row{
-  display:flex;justify-content:space-between;align-items:baseline;gap:24px;
-  padding:28px 0;border-bottom:1px solid var(--rule);
-}
-.tr-left{display:flex;align-items:baseline;gap:20px}
-.tr-num{
-  font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;
-  color:var(--muted);text-transform:uppercase;min-width:40px;
-}
-.tr-name{
-  font-family:var(--font-display);font-size:clamp(20px,2.2vw,30px);
-  letter-spacing:-.01em;color:var(--ink);text-transform:uppercase;line-height:1.1;
-}
-.tr-right{display:flex;align-items:baseline;gap:4px;flex-shrink:0}
-.tr-price{
-  font-family:var(--font-display);font-size:clamp(22px,2.4vw,32px);
-  color:var(--accent);letter-spacing:-.01em;
-}
-.tr-unit{
-  font-family:var(--font-mono);font-size:13px;color:var(--muted);letter-spacing:.1em;
-}
-
-@media(max-width:640px){
-  .tr-row{flex-direction:column;align-items:flex-start;gap:8px;padding:20px 0}
-  .tr-name{font-size:18px}
-}
-
-/* ===== À propos — photo + floating ID card ===== */
-.apropos-visual{position:relative;display:flex;justify-content:center;align-items:flex-start}
-.apropos-photo{
-  position:relative;aspect-ratio:3/4;width:100%;max-width:440px;
-  border:1px solid var(--rule);overflow:hidden;background:#1a1a18;
-}
-.apropos-photo img{
-  width:100%;height:100%;object-fit:cover;object-position:center top;
-  display:block;filter:grayscale(.08);
-}
-.apropos-card.apropos-card--float{
-  position:absolute;bottom:-28px;right:-28px;
-  width:210px;aspect-ratio:3/4;z-index:2;
-  padding:18px;background:var(--bg);
-  box-shadow:0 30px 60px -20px rgba(0,0,0,.35);
-  transform:rotate(2.5deg);
-  transform-origin:center center;
-  transition:transform .5s cubic-bezier(.3,1.2,.4,1);
-}
-.apropos-visual:hover .apropos-card.apropos-card--float{
-  transform:rotate(0deg) translateY(-4px);
-}
-body[data-theme="dark"] .apropos-card.apropos-card--float{
-  background:#0E0D10;
-}
-.apropos-card--float .apropos-card-initials{font-size:clamp(54px,6vw,80px)}
-.apropos-card--float .apropos-card-name{font-size:clamp(13px,1.1vw,16px)}
-.apropos-card--float .apropos-card-foot{font-size:9px;letter-spacing:.14em;padding-top:10px}
-.apropos-card--float .apropos-card-head{font-size:9px;letter-spacing:.16em}
-
-@media(max-width:900px){
-  .apropos-card.apropos-card--float{position:static;margin-top:20px;width:100%;max-width:320px;aspect-ratio:auto}
-}
-
 /* ===== Contact simplified ===== */
 .contact-grid--simple{display:block;max-width:720px;margin:0 auto}
 .contact-grid--simple .contact-col-text{width:100%}
-
-/* ===== Editorial micro-moves ===== */
-/* soften .apropos-card grid (photo now dominates) */
-.apropos-card::before{opacity:.12}
 </style>
 </head>
 <body data-mode="classic">
@@ -2638,10 +2826,9 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
   <nav>
     <a href="#projets" class="mm-link" data-n="01" data-target="projets">Projets</a>
     <a href="#services" class="mm-link" data-n="02" data-target="services">Services</a>
-    <a href="#processus" class="mm-link" data-n="03" data-target="processus">Méthode</a>
-    <a href="#tarifs" class="mm-link" data-n="04" data-target="tarifs">Tarifs</a>
-    <a href="#apropos" class="mm-link" data-n="05" data-target="apropos">À propos</a>
-    <a href="#contact" class="mm-link" data-n="06" data-target="contact">Contact</a>
+    <a href="#tarifs" class="mm-link" data-n="03" data-target="tarifs">Tarifs</a>
+    <a href="#apropos" class="mm-link" data-n="04" data-target="apropos">À propos</a>
+    <a href="#contact" class="mm-link" data-n="05" data-target="contact">Contact</a>
   </nav>
   <div class="mm-foot">
     <span>CD Studio</span>
@@ -2720,8 +2907,6 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
     <span class="nav-pill" id="navPill"></span>
     <a href="#projets" data-target="projets">Projets</a>
     <a href="#services" data-target="services">Services</a>
-    <a href="#processus" data-target="processus">Méthode</a>
-    <a href="#tarifs" data-target="tarifs">Tarifs</a>
     <a href="#apropos" data-target="apropos">À propos</a>
     <a href="#contact" data-target="contact">Contact</a>
   </nav>
@@ -2760,60 +2945,6 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
         </a>
       </div>
 
-    <div>
-      <div class="hero-meta">
-        <div class="col left">
-          <span class="meta-num">01 —</span>
-          <span>Vidéaste &amp; Formateur</span>
-        </div>
-        <div class="col center">
-          <span class="meta-num">02 —</span>
-          <span>Basé en Belgique</span>
-        </div>
-        <div class="col right">
-          <a href="#projets">Projets</a>
-          <a href="#apropos">À propos</a>
-        </div>
-      </div>
-
-      <div class="hero-reel">
-        <video class="hero-reel-video"
-               src="https://videos.corentindeville.com/showreel-2026.mp4"
-               poster="media/thumbnails/showreel-poster-1600.jpg"
-               width="1600" height="685"
-               autoplay muted loop playsinline preload="metadata"
-               aria-label="Showreel 2026 — extraits de projets vidéo récents"
-               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;display:block"></video>
-        <div class="stripes"></div>
-        <div class="reel-overlay"></div>
-        <div class="playtag"><span class="dot"></span><span>Showreel 2026</span></div>
-        <div class="rc">LIVE — 4K</div>
-        <div class="ph-label">
-          <div>Scout Festival — Showreel 2026</div>
-        </div>
-      </div>
-      <div class="hero-scroll-hint" aria-hidden="true">
-        <span>Scroll</span>
-        <svg width="14" height="20" viewBox="0 0 14 20" fill="none"><rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" stroke-width="1.5"/><circle class="scroll-dot" cx="7" cy="6" r="2" fill="currentColor"/></svg>
-      </div>
-    </div>
-    </div>
-
-    <!-- TICKER (moved inside hero) -->
-    <div class="ticker-wrap ticker--in-hero" aria-hidden="true">
-      <div class="ticker-track" id="tickerTrack">
-        <span>Premiere Pro</span><span class="sep">—</span><span>Aftermovies</span><span class="sep">—</span><span>Clips &amp; Reels</span><span class="sep">—</span><span>Tournage</span><span class="sep">—</span><span>Drone</span><span class="sep">—</span><span>Brand Films</span><span class="sep">—</span><span>Montage</span><span class="sep">—</span><span>Bruxelles</span><span class="sep">—</span><span>Formations</span><span class="sep">—</span><span>4K</span><span class="sep">—</span><span>Direction artistique</span><span class="sep">—</span><span>Premiere Pro</span><span class="sep">—</span><span>Aftermovies</span><span class="sep">—</span><span>Clips &amp; Reels</span><span class="sep">—</span><span>Tournage</span><span class="sep">—</span><span>Drone</span><span class="sep">—</span><span>Brand Films</span><span class="sep">—</span><span>Montage</span><span class="sep">—</span><span>Bruxelles</span><span class="sep">—</span><span>Formations</span><span class="sep">—</span><span>4K</span><span class="sep">—</span><span>Direction artistique</span><span class="sep">—</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROOF-BAND (clients) -->
-  <section class="proof-band" aria-label="Clients">
-    <div class="proof-track">
-      <span>Wenda</span><span>Bebooth</span><span>Scout Festival</span><span>Lucid Dreams</span>
-      <span>Wenda</span><span>Bebooth</span><span>Scout Festival</span><span>Lucid Dreams</span>
-      <span>Wenda</span><span>Bebooth</span><span>Scout Festival</span><span>Lucid Dreams</span>
-      <span>Wenda</span><span>Bebooth</span><span>Scout Festival</span><span>Lucid Dreams</span>
     </div>
   </section>
 
@@ -2825,9 +2956,21 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
       <div class="sub">Social content · Événementiel<br/>&amp; Music</div>
     </div>
 
-    <!-- PREVIEW STRIP — les 2 dernières vidéos visibles immédiatement -->
-    <!-- Click sur une carte → scroll vers le cahier correspondant + l'ouvre -->
-    <div class="proj-preview reveal">
+    <!-- DOSSIER UNIFIÉ — un seul bloc (preview + pile de 5 cahiers) encadré par
+         un sceau d'ouverture et un sceau de fermeture pour dire "ici commence /
+         ici s'arrête la section Projets". -->
+    <div class="section-body">
+
+      <!-- Sceau d'ouverture -->
+      <div class="section-seal section-seal--open reveal" aria-hidden="true">
+        <span class="seal-mark">§ 01 · Dossier ouvert</span>
+        <span class="seal-rule"></span>
+        <span class="seal-meta">5 cahiers · 2024 — 2026</span>
+      </div>
+
+      <!-- PREVIEW STRIP — les 2 dernières vidéos visibles immédiatement -->
+      <!-- Click sur une carte → scroll vers le cahier correspondant + l'ouvre -->
+      <div class="proj-preview reveal">
       <a class="proj-preview-card proj-preview-vert"
          href="#chapStack"
          data-preview-target="wenda"
@@ -3015,178 +3158,275 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
           </div>
         </div>
       </article>
+
+      <!-- ============ 05 — AUTRES TRAVAUX (archives) ============ -->
+      <!-- TODO Corentin : remplace les data-ghost par tes vraies vidéos quand tu les as.
+           Dupliquer un <a class="more-card">…</a> pour ajouter un slot. Le lien par défaut
+           renvoie vers #contact. Ajoute data-open-drawer="slug" si tu veux un drawer. -->
+      <article class="chap chap--autres" data-num="05" data-slug="autres">
+        <span class="chap-tab" aria-hidden="true">
+          <span class="chap-tab-num">N°05</span>
+          <span class="chap-tab-cat">Archives</span>
+        </span>
+        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-05" type="button">
+          <span class="chap-num" aria-hidden="true">05</span>
+          <span class="chap-titlewrap">
+            <span class="chap-title">Autres travaux</span>
+            <span class="chap-meta">Mariage · Corporate · Documentaire · sur demande</span>
+          </span>
+          <span class="chap-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="chap-body" id="chap-body-05" role="region" aria-label="Autres travaux — archives">
+          <div class="chap-body-inner">
+            <span class="chap-ghost" aria-hidden="true">05</span>
+            <div class="chap-autres-grid">
+              <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Mariage">
+                <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
+                <div class="more-card-foot">
+                  <span class="more-num">#05</span>
+                  <span class="more-cat">Mariage</span>
+                </div>
+              </a>
+              <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Corporate">
+                <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
+                <div class="more-card-foot">
+                  <span class="more-num">#06</span>
+                  <span class="more-cat">Corporate</span>
+                </div>
+              </a>
+              <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Documentaire">
+                <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
+                <div class="more-card-foot">
+                  <span class="more-num">#07</span>
+                  <span class="more-cat">Documentaire</span>
+                </div>
+              </a>
+            </div>
+            <p class="chap-autres-note">Un aperçu — d'autres vidéos sur demande, adaptées à ton projet.</p>
+          </div>
+        </div>
+      </article>
     </div>
 
-    <!-- SECTION "AUTRES PROJETS" — grille compact juste vidéos, pas de détails -->
-    <!-- TODO Corentin : remplace les data-src placeholder par tes vraies vidéos quand tu les as.
-         Pour ajouter un slot : dupliquer un <a class="more-card">...</a>. Le lien reste local (#projets).
-         Si tu veux qu'une carte ouvre un drawer, ajoute data-open-drawer="slug" sur le <a> et crée le <dialog> en bas. -->
-    <div class="proj-more reveal" id="projMore">
-      <div class="proj-more-head">
-        <span class="proj-more-idx">§ 01.5</span>
-        <span class="proj-more-lbl">Autres travaux</span>
-        <span class="proj-more-rule" aria-hidden="true"></span>
-        <span class="proj-more-note">Un aperçu — d'autres vidéos sur demande.</span>
+      <!-- Sceau de fermeture -->
+      <div class="section-seal section-seal--close reveal" aria-hidden="true">
+        <span class="seal-meta">Fin du dossier · retour aux services ↓</span>
+        <span class="seal-rule"></span>
+        <span class="seal-mark seal-mark--close">§ 01 · Archivé</span>
       </div>
-      <div class="proj-more-grid">
-        <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Mariage">
-          <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
-          <div class="more-card-foot">
-            <span class="more-num">#05</span>
-            <span class="more-cat">Mariage</span>
-          </div>
-        </a>
-        <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Corporate">
-          <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
-          <div class="more-card-foot">
-            <span class="more-num">#06</span>
-            <span class="more-cat">Corporate</span>
-          </div>
-        </a>
-        <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Documentaire">
-          <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
-          <div class="more-card-foot">
-            <span class="more-num">#07</span>
-            <span class="more-cat">Documentaire</span>
-          </div>
-        </a>
-      </div>
-    </div>
+
+    </div><!-- /.section-body -->
   </section>
 
-  <!-- SERVICES -->
+  <!-- SERVICES — detaillee en bref, emphase montage/video -->
   <section class="section wrap" id="services" data-section-label="§ 02 — Services">
     <div class="section-head reveal">
       <div class="idx">§ 02 / Ce que je fais</div>
       <h2>Services</h2>
-      <div class="sub">Production vidéo<br/>&amp; formation Premiere Pro</div>
+      <div class="sub">Montage &amp; vidéo<br/>au cœur du métier</div>
     </div>
-    <div class="reveal">
-      <p class="lead">Je crée des vidéos — du tournage au montage final — et je donne des cours de montage sur Premiere Pro à Bruxelles.</p>
-      <div class="hs-grid">
-        <div class="hs-item">
-          <div class="hs-num">01</div>
-          <div class="hs-label">Vidéo</div>
-          <div class="hs-role">Tournage &amp; montage</div>
-          <p class="hs-desc">Reels, clips musicaux, aftermovies et films de marque — du tournage au rendu final, soigné et rythmé.</p>
-          <div class="hs-tags"><span>Reels</span><span>Clips</span><span>Aftermovies</span><span>Drone</span><span>Contenus de marque</span></div>
-        </div>
-        <div class="hs-item">
-          <div class="hs-num">02</div>
-          <div class="hs-label">Formation</div>
-          <div class="hs-role">Cours de montage</div>
-          <p class="hs-desc">Cours particuliers sur Premiere Pro — initiation ou perfectionnement. En ligne ou en face à face à Bruxelles.</p>
-          <div class="hs-tags"><span>Premiere Pro</span><span>Initiation</span><span>Perfectionnement</span></div>
-        </div>
+
+    <!-- DOSSIER UNIFIE — meme langage que § 01 : rail vermillon + sceaux en bornes.
+         Dedans : menu-list de 5 items typographiques (1 ouvert a la fois),
+         ordre pense pour mettre montage & video en premier. -->
+    <div class="section-body">
+
+      <!-- Sceau d'ouverture -->
+      <div class="section-seal section-seal--open reveal" aria-hidden="true">
+        <span class="seal-mark">§ 02 · Offre</span>
+        <span class="seal-rule"></span>
+        <span class="seal-meta">5 prestations · montage &amp; vidéo</span>
       </div>
-    </div>
+
+      <!-- Manifeste bref au-dessus de la liste, en appui sur montage/video -->
+      <p class="services-lead reveal">
+        Je <em>conçois, filme et monte</em> des histoires. Le montage est le cœur du métier —
+        trouver le bon rythme, la bonne lumière, le détail qui fait image.
+      </p>
+
+      <!-- MENU-LIST — 5 items, montage en 01 -->
+      <ul class="menu-list reveal" role="list">
+
+        <li class="menu-item menu-item--feature" data-menu="montage">
+          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-montage" type="button">
+            <span class="menu-num">01</span>
+            <span class="menu-title">Montage vidéo</span>
+            <span class="menu-meta">Cœur du métier</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body" id="menu-body-montage">
+            <div class="menu-body-inner">
+              <p class="menu-desc">Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro &amp; DaVinci. Tout format, du reel 9:16 au court-métrage.</p>
+              <ul class="menu-tags" role="list">
+                <li>Premiere Pro</li><li>DaVinci</li><li>Étalonnage</li><li>Sound design</li><li>Tout format</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="menu-item" data-menu="clips">
+          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-clips" type="button">
+            <span class="menu-num">02</span>
+            <span class="menu-title">Clips &amp; Reels</span>
+            <span class="menu-meta">Formats courts, rythme serré</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body" id="menu-body-clips">
+            <div class="menu-body-inner">
+              <p class="menu-desc">Clips musicaux pour artistes, reels pour marques — captation multi-caméra, découpage nerveux, rendu cinéma. De l'idée au master.</p>
+              <ul class="menu-tags" role="list">
+                <li>Multi-cam</li><li>4K</li><li>Artistes</li><li>Brand content</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="menu-item" data-menu="aftermovies">
+          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-aftermovies" type="button">
+            <span class="menu-num">03</span>
+            <span class="menu-title">Aftermovies</span>
+            <span class="menu-meta">Festivals &amp; événements</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body" id="menu-body-aftermovies">
+            <div class="menu-body-inner">
+              <p class="menu-desc">Capter l'énergie d'un événement — de la captation live au montage final. Drone, grand angle, proximité. Livrables teaser + full.</p>
+              <ul class="menu-tags" role="list">
+                <li>Festivals</li><li>Events</li><li>Drone</li><li>Live</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="menu-item" data-menu="brand">
+          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-brand" type="button">
+            <span class="menu-num">04</span>
+            <span class="menu-title">Brand films &amp; Tournage</span>
+            <span class="menu-meta">Direction artistique · 4K</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body" id="menu-body-brand">
+            <div class="menu-body-inner">
+              <p class="menu-desc">Films de marque, capsules sociales, contenus identitaires — écriture, direction artistique, tournage 4K, drone si besoin. Identité forte, narration ciblée.</p>
+              <ul class="menu-tags" role="list">
+                <li>Brand films</li><li>DA</li><li>Tournage 4K</li><li>Drone</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="menu-item" data-menu="formation">
+          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-formation" type="button">
+            <span class="menu-num">05</span>
+            <span class="menu-title">Formation Premiere Pro</span>
+            <span class="menu-meta">Cours particuliers</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body" id="menu-body-formation">
+            <div class="menu-body-inner">
+              <p class="menu-desc">Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à Bruxelles. Projet réel comme support pédagogique.</p>
+              <ul class="menu-tags" role="list">
+                <li>Premiere Pro</li><li>Initiation</li><li>Perfectionnement</li><li>Remote</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+
+      <!-- Sceau de fermeture -->
+      <div class="section-seal section-seal--close reveal" aria-hidden="true">
+        <span class="seal-meta">Fin du dossier · tarifs &amp; à propos ↓</span>
+        <span class="seal-rule"></span>
+        <span class="seal-mark seal-mark--close">§ 02 · Archivé</span>
+      </div>
+
+    </div><!-- /.section-body -->
   </section>
 
-  <!-- MÉTHODE -->
-  <section class="section wrap" id="processus" data-section-label="§ 03 — Méthode">
-    <div class="section-head reveal">
-      <div class="idx">§ 03 / Comment je travaille</div>
-      <h2>Méthode</h2>
-      <div class="sub">Du brief à la livraison<br/>4 étapes claires</div>
-    </div>
-    <div class="method-grid reveal">
-      <div class="method-cell">
-        <div class="method-num">01</div>
-        <div class="method-title">Briefing</div>
-        <p class="method-desc">On se parle, on cerne ton projet, tes envies, ton budget.</p>
-      </div>
-      <div class="method-cell">
-        <div class="method-num">02</div>
-        <div class="method-title">Tournage</div>
-        <p class="method-desc">Je filme selon ta vision, avec le matériel adapté.</p>
-      </div>
-      <div class="method-cell">
-        <div class="method-num">03</div>
-        <div class="method-title">Montage</div>
-        <p class="method-desc">Construction du rythme, de la narration, de l'image.</p>
-      </div>
-      <div class="method-cell">
-        <div class="method-num">04</div>
-        <div class="method-title">Livraison</div>
-        <p class="method-desc">Fichiers exportés, droits inclus, livrables sur-mesure.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- TARIFS -->
-  <section class="section wrap" id="tarifs" data-section-label="§ 04 — Tarifs">
-    <div class="section-head reveal">
-      <div class="idx">§ 04 / Tarification</div>
-      <h2>Tarifs</h2>
-      <div class="sub">Tarif horaire · Devis gratuit<br/>Printemps 2026</div>
-    </div>
-    <div class="tariffs-edit reveal">
-      <div class="tr-row">
-        <div class="tr-left"><span class="tr-num">01</span><span class="tr-name">Montage — Reels, Clips, Aftermovies</span></div>
-        <div class="tr-right"><span class="tr-price">~ 20€</span><span class="tr-unit">/h</span></div>
-      </div>
-      <div class="tr-row">
-        <div class="tr-left"><span class="tr-num">02</span><span class="tr-name">Tournage &amp; Drone</span></div>
-        <div class="tr-right"><span class="tr-price">~ 25€</span><span class="tr-unit">/h</span></div>
-      </div>
-      <div class="tr-row">
-        <div class="tr-left"><span class="tr-num">03</span><span class="tr-name">Formation Premiere Pro</span></div>
-        <div class="tr-right"><span class="tr-price">~ 20€</span><span class="tr-unit">/h</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- À PROPOS -->
-  <section class="section wrap" id="apropos" data-section-label="§ 05 — À propos">
-    <div class="section-head reveal">
-      <div class="idx">§ 05 / Qui je suis</div>
-      <h2>À propos</h2>
-      <div class="sub">Étudiant · Vidéaste<br/>Belgique, 2026</div>
+  <!-- INFOS — zone discrete : deux fold-cards (Tarifs + A propos), fermees par defaut -->
+  <section class="section wrap section--infos" id="infos" aria-label="Informations complémentaires">
+    <div class="infos-head reveal">
+      <span class="infos-kicker">§ 03 · Informations</span>
+      <span class="infos-rule" aria-hidden="true"></span>
+      <span class="infos-meta">Clique pour déplier</span>
     </div>
 
-    <div class="apropos-grid reveal">
-      <!-- Photo + floating ID card -->
-      <aside class="apropos-visual">
-        <div class="apropos-photo">
-          <picture>
-            <source type="image/avif"
-                    srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w, assets/portrait-1200.avif 1200w"
-                    sizes="(max-width: 700px) 80vw, (max-width: 1200px) 40vw, 440px">
-            <img src="assets/portrait-800.jpg"
-                 srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w, assets/portrait-1200.jpg 1200w"
-                 sizes="(max-width: 700px) 80vw, (max-width: 1200px) 40vw, 440px"
-                 width="800" height="1200"
-                 loading="lazy" decoding="async"
-                 alt="Corentin Devillé, vidéaste, portrait en lumière naturelle chaude, regard tourné vers hors-champ." />
-          </picture>
-        </div>
-        <div class="apropos-card apropos-card--float" aria-hidden="true">
-          <div class="apropos-card-head">
-            <span class="apropos-card-tag">ID · 001</span>
-            <span>BE / 2026</span>
-          </div>
-          <div class="apropos-card-body">
-            <div class="apropos-card-initials">CD</div>
-            <div class="apropos-card-name">Corentin<br/>Devillé</div>
-          </div>
-          <div class="apropos-card-foot">
-            <span>Vidéaste</span>
-            <span>Formateur</span>
-            <span>Bruxelles</span>
+    <div class="fold-group reveal">
+
+      <!-- Tarifs -->
+      <article class="fold-card" id="tarifs" data-fold="tarifs">
+        <button class="fold-head" aria-expanded="false" aria-controls="fold-body-tarifs" type="button">
+          <span class="fold-num">§ 03.1</span>
+          <span class="fold-title">Tarifs</span>
+          <span class="fold-meta">3 prestations · ~ 20€ — 25€ / h</span>
+          <span class="fold-chev" aria-hidden="true">+</span>
+        </button>
+        <div class="fold-body" id="fold-body-tarifs">
+          <div class="fold-body-inner">
+            <p class="fold-lead">Grille indicative — tarif horaire, devis gratuit. Printemps 2026.</p>
+            <ul class="price-list" role="list">
+              <li class="price-row">
+                <span class="price-num">01</span>
+                <span class="price-name">Montage — Reels, Clips, Aftermovies</span>
+                <span class="price-val"><em>~ 20€</em><span>/h</span></span>
+              </li>
+              <li class="price-row">
+                <span class="price-num">02</span>
+                <span class="price-name">Tournage &amp; Drone</span>
+                <span class="price-val"><em>~ 25€</em><span>/h</span></span>
+              </li>
+              <li class="price-row">
+                <span class="price-num">03</span>
+                <span class="price-name">Formation Premiere Pro</span>
+                <span class="price-val"><em>~ 20€</em><span>/h</span></span>
+              </li>
+            </ul>
+            <p class="fold-note">Les projets lourds (brand films, aftermovies full) sont devisés au forfait — WhatsApp pour un chiffrage.</p>
           </div>
         </div>
-      </aside>
+      </article>
 
-      <!-- Bio content -->
-      <div class="apropos-text">
-        <p class="apropos-quote">Étudiant passionné et créatif, je donne vie à vos projets visuels — <em>brand design</em>, contenus digitaux, aftermovies et bien plus.</p>
-        <p class="apropos-body">De l'écriture au montage, je m'attache à trouver le bon rythme, la bonne lumière, le détail qui fait basculer une image en souvenir. Je travaille aussi bien avec des marques qu'avec des collectifs, pour des formats courts ou des films longs, toujours avec la même exigence : une narration honnête et une image soignée.</p>
-        <div class="apropos-stats">
-          <div class="as"><div class="n">40+</div><div class="l">Projets livrés</div></div>
-          <div class="as"><div class="n">04</div><div class="l">Ans d'expérience</div></div>
-          <div class="as"><div class="n">BE</div><div class="l">Base · disponible EU</div></div>
+      <!-- A propos -->
+      <article class="fold-card" id="apropos" data-fold="apropos" data-section-label="§ 03.2 — À propos">
+        <button class="fold-head" aria-expanded="false" aria-controls="fold-body-apropos" type="button">
+          <span class="fold-num">§ 03.2</span>
+          <span class="fold-title">À propos</span>
+          <span class="fold-meta">Étudiant · Vidéaste · BE</span>
+          <span class="fold-chev" aria-hidden="true">+</span>
+        </button>
+        <div class="fold-body" id="fold-body-apropos">
+          <div class="fold-body-inner">
+            <div class="apropos-intro">
+              <div class="apropos-photo">
+                <picture>
+                  <source type="image/avif"
+                          srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w, assets/portrait-1200.avif 1200w"
+                          sizes="(max-width: 700px) 80vw, (max-width: 1200px) 40vw, 380px">
+                  <img src="assets/portrait-800.jpg"
+                       srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w, assets/portrait-1200.jpg 1200w"
+                       sizes="(max-width: 700px) 80vw, (max-width: 1200px) 40vw, 380px"
+                       width="800" height="1200"
+                       loading="lazy" decoding="async"
+                       alt="Corentin Devillé, vidéaste, portrait en lumière naturelle chaude, regard tourné vers hors-champ." />
+                </picture>
+              </div>
+              <div class="apropos-text">
+                <p class="apropos-quote">Étudiant passionné, je donne vie à vos projets visuels — <em>brand design</em>, aftermovies, clips et contenus digitaux.</p>
+                <p class="apropos-body">De l'écriture au montage, je cherche le bon rythme, la bonne lumière, le détail qui fait basculer une image en souvenir. Marques ou collectifs, formats courts ou films longs — même exigence : une narration honnête et une image soignée.</p>
+                <ul class="apropos-facts" role="list">
+                  <li><strong>Basé à Bruxelles</strong> · disponible Belgique &amp; Europe</li>
+                  <li><strong>Vidéaste &amp; formateur</strong> · double casquette</li>
+                  <li><strong>40+ projets livrés</strong> · 2020 — 2026</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </article>
+
     </div>
   </section>
 
@@ -3201,9 +3441,9 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
   </section>
 
   <!-- CONTACT — section simplifiée, colonne unique -->
-  <section class="section wrap" id="contact" data-section-label="§ 06 — Contact">
+  <section class="section wrap" id="contact" data-section-label="§ 04 — Contact">
     <div class="section-head reveal">
-      <div class="idx">§ 06 / Prendre contact</div>
+      <div class="idx">§ 04 / Prendre contact</div>
       <h2>Contact</h2>
       <div class="sub">Répond dans la journée<br/>Bruxelles · Remote</div>
     </div>
@@ -3382,7 +3622,7 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
    - Quand un dossier s'ouvre, son carousel stack (pos0/pos1/pos2) s'initialise
      à la première ouverture et lazy-hydrate les vidéos (data-src → src).
    - Accordéon exclusif : un seul cahier ouvert à la fois (openChap ferme les autres).
-   - Entrée en scène : les 4 cahiers arrivent empilés (.is-piling), puis se déploient
+   - Entrée en scène : les 5 cahiers arrivent empilés (.is-piling), puis se déploient
      avec stagger (.is-deploying) quand la section entre en viewport. Après le
      déploiement, un teaser one-shot ouvre/ferme le 1er cahier pour suggérer
      l'interaction — sauf si l'user a déjà cliqué ailleurs.
@@ -3487,25 +3727,24 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   }
 
   /* ─── Click head → toggle (accordéon exclusif via openChap) ─── */
-  let userActed = false;
   chaps.forEach(chap => {
     const head = chap.querySelector('.chap-head');
     if(!head) return;
     head.addEventListener('click', (e) => {
       e.preventDefault();
-      userActed = true; // coupe le teaser s'il n'a pas encore terminé
       if(chap.classList.contains('is-open')) closeChap(chap);
       else openChap(chap);
     });
   });
 
   /* ─── Pile → Deploy : entrée en scène quand la section entre en viewport ───
-         1. Au chargement, .is-piling compresse les 4 cahiers en haut (CSS).
+         1. Au chargement, .is-piling compresse les 5 cahiers en haut (CSS).
          2. IntersectionObserver détecte l'entrée (threshold .25, once:true).
          3. Swap .is-piling → .is-deploying : chaque cahier glisse avec un stagger
-            (0/140/280/420ms, durée .85s).
-         4. ~1.4s après, nettoie les classes et ouvre le 1er cahier (Wenda)
-            — il reste ouvert. L'user ferme/ouvre ensuite à son rythme.
+            (0/130/260/390/520ms, durée .85s).
+         4. ~1.5s après, nettoie les classes. Les cahiers restent TOUS fermés —
+            l'utilisateur choisit ce qu'il veut ouvrir (les previews au-dessus
+            montrent déjà Wenda + Bebooth en live, donc rien d'urgent à ouvrir).
   */
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(!REDUCED && 'IntersectionObserver' in window){
@@ -3516,17 +3755,113 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
         obs.disconnect();
         stack.classList.remove('is-piling');
         stack.classList.add('is-deploying');
-        // Durée totale : dernier stagger (420ms) + transition (.85s) ≈ 1270ms.
-        // On attend 1400ms pour être safe avant de nettoyer + ouvrir Wenda.
+        // Durée totale : dernier stagger (520ms) + transition (.85s) ≈ 1370ms.
+        // On attend 1500ms pour être safe avant de nettoyer.
         setTimeout(() => {
           stack.classList.remove('is-deploying');
-          if(userActed) return; // user a déjà cliqué, on respecte son choix
-          if(chaps[0]) openChap(chaps[0]);
-        }, 1400);
+        }, 1500);
       });
     }, { threshold: 0.25 });
     deployObs.observe(stack);
   }
+})();
+
+/* ========== MENU-LIST — accordeon exclusif (Services · A propos) ==========
+   Meme logique que les chaps mais sans hydratation video ni pile/deploy.
+   Un seul item ouvert a la fois par liste. Cliquer un ouvert le referme. */
+(function(){
+  const lists = document.querySelectorAll('.menu-list');
+  if(!lists.length) return;
+
+  lists.forEach(list => {
+    const items = [...list.querySelectorAll('.menu-item')];
+    if(!items.length) return;
+
+    function openItem(target){
+      items.forEach(it => {
+        const head = it.querySelector('.menu-head');
+        if(it === target){
+          if(!it.classList.contains('is-open')){
+            it.classList.add('is-open');
+            if(head) head.setAttribute('aria-expanded','true');
+          }
+        } else if(it.classList.contains('is-open')){
+          it.classList.remove('is-open');
+          if(head) head.setAttribute('aria-expanded','false');
+        }
+      });
+    }
+    function closeItem(target){
+      target.classList.remove('is-open');
+      const head = target.querySelector('.menu-head');
+      if(head) head.setAttribute('aria-expanded','false');
+    }
+
+    items.forEach(item => {
+      const head = item.querySelector('.menu-head');
+      if(!head) return;
+      head.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(item.classList.contains('is-open')) closeItem(item);
+        else openItem(item);
+      });
+    });
+  });
+})();
+
+/* ========== FOLD-CARD — Tarifs + A propos (independants, non-exclusifs) ==========
+   Chaque fold-card est autonome : cliquer le head toggle son is-open.
+   Bonus : si le hash de l'URL matche une card (#tarifs, #apropos), on l'ouvre
+   automatiquement et on scroll dedans. Pareil au click sur un lien #tarifs
+   ou #apropos dans le mob-menu ou ailleurs. */
+(function(){
+  const cards = document.querySelectorAll('.fold-card');
+  if(!cards.length) return;
+
+  function openCard(card){
+    if(card.classList.contains('is-open')) return;
+    card.classList.add('is-open');
+    const head = card.querySelector('.fold-head');
+    if(head) head.setAttribute('aria-expanded','true');
+  }
+  function closeCard(card){
+    card.classList.remove('is-open');
+    const head = card.querySelector('.fold-head');
+    if(head) head.setAttribute('aria-expanded','false');
+  }
+
+  cards.forEach(card => {
+    const head = card.querySelector('.fold-head');
+    if(!head) return;
+    head.addEventListener('click', (e) => {
+      e.preventDefault();
+      if(card.classList.contains('is-open')) closeCard(card);
+      else openCard(card);
+    });
+  });
+
+  // Auto-open sur hash (au chargement + sur click lien interne)
+  function openByHash(){
+    const hash = window.location.hash;
+    if(!hash) return;
+    const target = document.querySelector(hash);
+    if(target && target.classList.contains('fold-card')){
+      openCard(target);
+    }
+  }
+  openByHash();
+  window.addEventListener('hashchange', openByHash);
+  // Click sur un <a href="#xxx"> qui pointe sur une fold-card : ouvrir puis scroller
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if(!a) return;
+    const href = a.getAttribute('href');
+    if(!href || href.length < 2) return;
+    const target = document.querySelector(href);
+    if(target && target.classList.contains('fold-card')){
+      openCard(target);
+    }
+  });
 })();
 
 /* ========== PROJETS — Preview strip (Wenda + Bebooth) ==========
@@ -3560,20 +3895,41 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   }
 
   // Click → scroll + ouverture du cahier ciblé
+  // Note : l'accordéon est exclusif (openChap ferme les autres),
+  // donc si un chap ouvert se trouve au-dessus de la cible, la position du
+  // chap cible va remonter pendant la transition (grid-template-rows 720ms).
+  // On anticipe ce shift AVANT de déclencher le click pour scroller juste.
   strip.querySelectorAll('[data-preview-target]').forEach(card => {
     card.addEventListener('click', (e) => {
       e.preventDefault();
       const slug = card.dataset.previewTarget;
       const chap = stack.querySelector('.chap[data-slug="'+slug+'"]');
       if(!chap) return;
-      // Ouvre si fermé (déclenche le handler qui fait userActed + openChap exclusif)
+
+      // Calcule le shift : somme des hauteurs des body-inner des chaps
+      // actuellement ouverts SITUÉS AVANT la cible (ceux qui vont se fermer).
+      const allChaps = [...stack.querySelectorAll('.chap')];
+      const targetIdx = allChaps.indexOf(chap);
+      let shiftUp = 0;
+      for(let i = 0; i < targetIdx; i++){
+        const c = allChaps[i];
+        if(c !== chap && c.classList.contains('is-open')){
+          const inner = c.querySelector('.chap-body-inner');
+          if(inner) shiftUp += inner.offsetHeight;
+        }
+      }
+
+      // Position actuelle du cahier (avant le click qui déclenche l'accordéon)
+      const currentTop = chap.getBoundingClientRect().top + window.scrollY;
+      const scrollTarget = Math.max(0, currentTop - shiftUp - 80);
+
+      // Ouvre si fermé (déclenche openChap exclusif via le handler head)
       if(!chap.classList.contains('is-open')){
         const head = chap.querySelector('.chap-head');
         if(head) head.click();
       }
-      // Scroll smooth vers le haut du cahier (offset 80px pour respirer)
-      const top = chap.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top, behavior: 'smooth' });
+
+      window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
     });
   });
 })();
@@ -3695,7 +4051,7 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
 /* ========== ANIMATED COUNTERS ========== */
 (function(){
   // Store original values in data attrs first
-  document.querySelectorAll('.stats .n, .apropos-stats .n').forEach(el=>{
+  document.querySelectorAll('.stats .n').forEach(el=>{
     el.dataset.target = el.textContent.trim();
     el.textContent = el.textContent.includes('+') ? '0+' : '00';
   });
@@ -3719,7 +4075,7 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
       obs.unobserve(e.target);
     });
   },{threshold:.3});
-  document.querySelectorAll('.stats .n, .apropos-stats .n').forEach(n=>obs.observe(n));
+  document.querySelectorAll('.stats .n').forEach(n=>obs.observe(n));
 })();
 
 /* ========== SCROLL PROGRESS BAR + scrolled state for topbar border ========== */
@@ -3859,23 +4215,6 @@ try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e)
     entries.forEach(e=>{ if(e.isIntersecting){scramble(e.target);obs.unobserve(e.target);}});
   },{threshold:.4});
   document.querySelectorAll('.section-head h2').forEach(h=>obs.observe(h));
-})();
-
-/* ========== PARALLAX SHOWREEL ========== */
-(function(){
-  const reel = document.querySelector('.hero-reel');
-  if(!reel) return;
-  let ticking = false;
-  window.addEventListener('scroll', ()=>{
-    if(ticking) return;
-    requestAnimationFrame(()=>{
-      const rect = reel.getBoundingClientRect();
-      const offset = (rect.top + rect.height/2 - window.innerHeight/2) * 0.08;
-      reel.style.transform = `translateY(${offset}px)`;
-      ticking = false;
-    });
-    ticking = true;
-  }, {passive:true});
 })();
 
 /* ========== MAGNETIC BUTTONS ========== */

@@ -731,6 +731,31 @@ body[data-mode="glass"] .hero-reel{
   margin:0 0 80px;
   display:flex;flex-direction:column;gap:clamp(28px,3vw,40px);
 }
+
+/* ── PILE → DEPLOY — entrée en scène ───────────────────────────────────
+   .is-piling  : les 4 cahiers compressés en haut, micro-rotation + scale dégressif
+                 (cards 2/3/4 translatées vers le haut pour se poser sur card 1).
+   .is-deploying : positions naturelles avec stagger par :nth-child (0/140/280/420ms).
+   JS enlève les deux classes après le déploiement → retour au base style. */
+.chap-stack.is-piling > .chap,
+.chap-stack.is-deploying > .chap{
+  transition:
+    transform .85s cubic-bezier(.22,1,.36,1),
+    opacity .55s cubic-bezier(.22,1,.36,1);
+  will-change:transform,opacity;
+}
+.chap-stack.is-piling > .chap:nth-child(1){ transform:translateY(0)      rotate(-.8deg) scale(1);    opacity:1;   z-index:4 }
+.chap-stack.is-piling > .chap:nth-child(2){ transform:translateY(-72px)  rotate(.6deg)  scale(.985); opacity:.92; z-index:3 }
+.chap-stack.is-piling > .chap:nth-child(3){ transform:translateY(-140px) rotate(-.5deg) scale(.97);  opacity:.82; z-index:2 }
+.chap-stack.is-piling > .chap:nth-child(4){ transform:translateY(-206px) rotate(.7deg)  scale(.955); opacity:.72; z-index:1 }
+.chap-stack.is-deploying > .chap{
+  transform:translateY(0) rotate(0) scale(1); opacity:1;
+}
+.chap-stack.is-deploying > .chap:nth-child(1){ transition-delay:0ms }
+.chap-stack.is-deploying > .chap:nth-child(2){ transition-delay:140ms }
+.chap-stack.is-deploying > .chap:nth-child(3){ transition-delay:280ms }
+.chap-stack.is-deploying > .chap:nth-child(4){ transition-delay:420ms }
+
 .chap{
   position:relative;
   /* Couleurs — basculent via .is-open */
@@ -1201,6 +1226,11 @@ body.drawer-open{overflow:hidden}
   .chap-carousel{transform:none;opacity:1}
   .reel-card.pos1{transform:translate3d(12%,2%,-80px) scale(.9);opacity:.8}
   .reel-card.pos2{transform:translate3d(-12%,4%,-150px) scale(.82);opacity:.6}
+  /* Pile → Deploy : neutralisés (au cas où JS laisserait la classe) */
+  .chap-stack.is-piling > .chap,
+  .chap-stack.is-deploying > .chap{
+    transform:none !important;opacity:1 !important;transition:none !important;
+  }
 }
 
 /* ── Responsive ── */
@@ -1222,6 +1252,10 @@ body.drawer-open{overflow:hidden}
   .chap-meta{font-size:11px;letter-spacing:.14em}
   .chap-tab{top:-18px;left:14px;font-size:10px;padding:6px 14px 8px;gap:8px}
   .chap-ghost{font-size:clamp(180px,50vw,280px)}
+  /* Pile resserrée sur mobile (cahiers + courts) */
+  .chap-stack.is-piling > .chap:nth-child(2){ transform:translateY(-48px)  rotate(.6deg)  scale(.985) }
+  .chap-stack.is-piling > .chap:nth-child(3){ transform:translateY(-94px)  rotate(-.5deg) scale(.97) }
+  .chap-stack.is-piling > .chap:nth-child(4){ transform:translateY(-138px) rotate(.7deg)  scale(.955) }
   .chap-carousel{padding:28px 12px 52px}
   .reel-stage{width:min(100%, 280px)}
   .reel-card.pos1{transform:translate3d(14%,3%,-110px) rotateY(-10deg) scale(.86);opacity:.78}
@@ -2729,13 +2763,13 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
 
     <!-- ACCORDION CHAPITRES — fond commun, un seul ouvert à la fois -->
     <div class="chap-stack reveal" id="chapStack">
-      <!-- ============ 01 — WENDA (ouvert par défaut) ============ -->
-      <article class="chap is-open" data-num="01" data-slug="wenda">
+      <!-- ============ 01 — WENDA ============ -->
+      <article class="chap" data-num="01" data-slug="wenda">
         <span class="chap-tab" aria-hidden="true">
           <span class="chap-tab-num">N°01</span>
           <span class="chap-tab-cat">Fashion</span>
         </span>
-        <button class="chap-head" aria-expanded="true" aria-controls="chap-body-01" type="button">
+        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-01" type="button">
           <span class="chap-num" aria-hidden="true">01</span>
           <span class="chap-titlewrap">
             <span class="chap-title">Les filles de Wenda</span>
@@ -3246,11 +3280,14 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
 
 /* ========== PROJETS — Dossiers (accordion) + carousel 3D + lazy video ==========
    Architecture :
-   - Chaque <article.chap> = un dossier avec tab + tampon + coin corné.
+   - Chaque <article.chap> = un cahier (couverture noire quadrillée → page crème).
    - Quand un dossier s'ouvre, son carousel stack (pos0/pos1/pos2) s'initialise
      à la première ouverture et lazy-hydrate les vidéos (data-src → src).
-   - IntersectionObserver : auto-open du dossier dont le head traverse le viewport.
-   - Click manuel toujours dispo (lock 2.5s pour empêcher le scroll de reprendre).
+   - Accordéon exclusif : un seul cahier ouvert à la fois (openChap ferme les autres).
+   - Entrée en scène : les 4 cahiers arrivent empilés (.is-piling), puis se déploient
+     avec stagger (.is-deploying) quand la section entre en viewport. Après le
+     déploiement, un teaser one-shot ouvre/ferme le 1er cahier pour suggérer
+     l'interaction — sauf si l'user a déjà cliqué ailleurs.
 */
 (function(){
   const stack = document.getElementById('chapStack');
@@ -3351,52 +3388,51 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     dehydrateChap(chap);
   }
 
-  /* ─── Click head → toggle (+ lock scroll-trigger 2.5s) ─── */
-  let userLockUntil = 0;
+  /* ─── Click head → toggle (accordéon exclusif via openChap) ─── */
+  let userActed = false;
   chaps.forEach(chap => {
     const head = chap.querySelector('.chap-head');
     if(!head) return;
     head.addEventListener('click', (e) => {
       e.preventDefault();
-      userLockUntil = Date.now() + 2500;
+      userActed = true; // coupe le teaser s'il n'a pas encore terminé
       if(chap.classList.contains('is-open')) closeChap(chap);
       else openChap(chap);
     });
   });
 
-  /* ─── Hydrate le chapitre par défaut ouvert au chargement ─── */
-  const defaultOpen = chaps.find(c => c.classList.contains('is-open'));
-  if(defaultOpen) hydrateChap(defaultOpen);
-
-  /* ─── Scroll auto-open : quand le head d'un chapitre croise la zone cible,
-         on ouvre ce chapitre (ferme les autres). Respecte prefers-reduced-motion
-         et un lock de 2.5s après un click manuel. ─── */
+  /* ─── Pile → Deploy : entrée en scène quand la section entre en viewport ───
+         1. Au chargement, .is-piling compresse les 4 cahiers en haut (CSS).
+         2. IntersectionObserver détecte l'entrée (threshold .25, once:true).
+         3. Swap .is-piling → .is-deploying : chaque cahier glisse avec un stagger
+            (0/140/280/420ms, durée .85s).
+         4. ~1.4s après, nettoie les classes. Lance le teaser one-shot :
+            ouvre le 1er cahier, le referme après ~1.4s si user inactif.
+  */
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(!REDUCED && 'IntersectionObserver' in window){
-    // Zone "trigger" : 40% haut / 55% bas de l'écran
-    const io = new IntersectionObserver((entries) => {
-      if(Date.now() < userLockUntil) return;
-      // On prend le head le plus "visible" dans la zone
-      let best = null, bestRatio = 0;
+    stack.classList.add('is-piling');
+    const deployObs = new IntersectionObserver((entries, obs) => {
       entries.forEach(en => {
-        if(en.isIntersecting && en.intersectionRatio > bestRatio){
-          bestRatio = en.intersectionRatio;
-          best = en.target;
-        }
+        if(!en.isIntersecting) return;
+        obs.disconnect();
+        stack.classList.remove('is-piling');
+        stack.classList.add('is-deploying');
+        // Durée totale : dernier stagger (420ms) + transition (.85s) ≈ 1270ms.
+        // On attend 1400ms pour être safe avant de nettoyer + teaser.
+        setTimeout(() => {
+          stack.classList.remove('is-deploying');
+          if(userActed) return; // user a déjà cliqué, on skippe le teaser
+          if(!chaps[0]) return;
+          openChap(chaps[0]);
+          setTimeout(() => {
+            if(userActed) return;
+            if(chaps[0].classList.contains('is-open')) closeChap(chaps[0]);
+          }, 1400);
+        }, 1400);
       });
-      if(best){
-        const chap = best.closest('.chap');
-        if(chap && !chap.classList.contains('is-open')) openChap(chap);
-      }
-    }, {
-      // Zone de déclenchement : bande horizontale centrée haut-milieu
-      rootMargin:'-38% 0px -52% 0px',
-      threshold:[0, .5, 1]
-    });
-    chaps.forEach(c => {
-      const head = c.querySelector('.chap-head');
-      if(head) io.observe(head);
-    });
+    }, { threshold: 0.25 });
+    deployObs.observe(stack);
   }
 })();
 

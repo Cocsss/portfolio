@@ -1417,295 +1417,290 @@ body[data-mode="glass"] .topbar{
 }
 
 /* =====================================================================
-   FOLDERS SWITCHER — tabs horizontaux dans "Autres dossiers".
-   Sélecteur en haut (clavier + scroll-x mobile), stage en bas qui slide :
-   panel sortant → gauche, nouveau panel entre par la droite.
+   PRJ-SWIPE — gallery swipeable mobile (scroll-snap natif)
+   + grid 3 cols desktop. Remplace toute la stack .folders / .ad-*.
    ===================================================================== */
-.folders{
-  margin-top: 4px;
-  display:flex;flex-direction:column;gap: clamp(18px, 2.4vw, 28px);
-  border: 1px solid var(--rule);
-  background: color-mix(in srgb, var(--ink) 2%, var(--bg));
-  padding: clamp(14px, 2vw, 22px);
-  border-radius: 4px;
+.prj-swipe{
+  position: relative;
+  margin: clamp(16px, 2vw, 24px) 0 8px;
 }
-.folders-tabs{
-  display:flex;gap: 6px;
-  padding-bottom: 2px;
-  border-bottom: 1px solid var(--rule);
+
+/* ---------- RAIL ---------- */
+.prj-swipe-rail{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: 12px;
   overflow-x: auto;
-  scroll-snap-type: x proximity;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  padding: 4px 16px 20px;
+  margin: 0 -16px;
   scrollbar-width: none;
 }
-.folders-tabs::-webkit-scrollbar{ display:none; }
-.folders-tab{
-  position:relative;
-  display:flex;flex-direction:column;gap: 3px;
-  padding: 10px 14px 12px;
-  background: transparent;
-  border: none;border-radius: 4px 4px 0 0;
-  color: var(--muted);
-  cursor: pointer;
-  text-align: left;
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-  font-family: inherit;
-  transition: color .3s ease, background .3s ease;
-}
-.folders-tab::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-1px;
-  height: 2px;background: var(--accent);
-  transform: scaleX(0);transform-origin: left;
-  transition: transform .4s cubic-bezier(.3,.9,.2,1);
-}
-.folders-tab:hover{ color: var(--ink);background: color-mix(in srgb, var(--ink) 4%, transparent); }
-.folders-tab.is-active{ color: var(--ink); }
-.folders-tab.is-active::after{ transform: scaleX(1); }
-.folders-tab-num{
-  font-family: var(--font-mono);font-size: 9.5px;letter-spacing:.18em;
-  text-transform:uppercase;font-weight:600;
-  color: var(--accent-text);
-}
-.folders-tab-name{
-  font-family: var(--font-display);font-size: 14px;
-  letter-spacing:-.005em;line-height:1;white-space:nowrap;
-}
-.folders-tab-cat{
-  font-family: var(--font-mono);font-size: 9.5px;letter-spacing:.1em;
-  text-transform:uppercase;color: var(--muted);white-space:nowrap;
-}
-.folders-tab--ghost .folders-tab-name{ color: color-mix(in srgb, var(--ink) 55%, var(--bg)); }
-.folders-tab--ghost .folders-tab-num{ color: var(--muted); }
+.prj-swipe-rail::-webkit-scrollbar{ display: none; }
 
-/* =====================================================================
-   AD-STAGE — nouveau layout "Autres dossiers", remplace le vieux
-   .folders-stage + .chap-carousel qui galère en mobile.
-   Structure ultra-simple :
-     .ad-stage > .ad-panel.is-active > .ad-frame > .ad-video.is-active
-                                       .ad-controls > .ad-prev .ad-dots .ad-next
-   ===================================================================== */
-.ad-stage{
-  position: relative;
-  width: 100%;
+/* ---------- SLIDE ---------- */
+.prj-swipe-slide{
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
   display: flex;
-  justify-content: center;
-}
-.ad-panel{
-  display: none;
   flex-direction: column;
-  align-items: center;
-  gap: clamp(16px, 2vw, 22px);
-  width: 100%;
-  animation: adPanelIn .45s cubic-bezier(.22,1,.36,1);
-}
-.ad-panel[hidden]{ display: none !important; }
-.ad-panel.is-active{ display: flex; }
-@keyframes adPanelIn{
-  from{ opacity: 0; transform: translateX(16px); }
-  to  { opacity: 1; transform: translateX(0); }
-}
-
-/* Frame vidéo centrée avec aspect-ratio */
-.ad-frame{
-  position: relative;
-  width: 100%;
-  max-width: 320px;
-  aspect-ratio: 9 / 16;
-  background: #0e0d0b;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow:
-    0 28px 56px -24px rgba(26,26,26,.38),
-    0 10px 24px -12px rgba(26,26,26,.22);
-}
-.ad-frame[data-format="16x9"]{
-  max-width: 640px;
-  aspect-ratio: 16 / 9;
-}
-.ad-video{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  opacity: 0;
-  transition: opacity .4s cubic-bezier(.22,1,.36,1);
-  background: #0e0d0b;
-}
-.ad-video.is-active{ opacity: 1; }
-
-/* Index numéroté dans le coin de la frame */
-.ad-frame-idx{
-  position: absolute;
-  top: 12px;left: 12px;z-index: 3;
-  padding: 5px 9px;
-  border-radius: 3px;
-  background: rgba(0,0,0,.55);color: #F0EEE9;
-  font-family: var(--font-mono);font-size: 10px;letter-spacing:.22em;
-  text-transform: uppercase;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  pointer-events: none;
-}
-
-/* Controls en dessous de la frame : prev — dots — next */
-.ad-controls{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  width: 100%;
-  max-width: 320px;
-}
-.ad-nav{
-  all: unset;
-  cursor: pointer;
-  width: 42px;height: 42px;
-  border-radius: 50%;
-  display: grid;place-items: center;
-  background: var(--ink);color: var(--bg);
-  font-family: var(--font-display);font-size: 20px;line-height: 1;
-  box-shadow: 0 6px 16px -6px rgba(26,26,26,.4);
-  transition: transform .25s cubic-bezier(.22,1,.36,1), background .25s;
-}
-.ad-nav:hover{ background: var(--accent);transform: scale(1.05); }
-.ad-nav:active{ transform: scale(.94); }
-.ad-nav:focus-visible{ outline: 2px solid var(--accent);outline-offset: 3px; }
-
-.ad-dots{
-  display: inline-flex;gap: 8px;
-  padding: 4px;
-}
-.ad-dot{
-  all: unset;
-  cursor: pointer;
-  width: 8px;height: 8px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--ink) 22%, transparent);
-  transition: background .25s, width .3s cubic-bezier(.22,1,.36,1);
-}
-.ad-dot:hover{ background: color-mix(in srgb, var(--ink) 40%, transparent); }
-.ad-dot.is-active{
-  background: var(--accent);
-  width: 22px;border-radius: 4px;
-}
-
-/* Panel ghost (placeholder : Mariage, Corporate, Doc) */
-.ad-panel--ghost{ align-items: stretch; }
-.ad-ghost{
-  display:flex;flex-direction:column;align-items:flex-start;gap: 14px;
-  padding: clamp(28px, 4vw, 48px) clamp(20px, 3vw, 36px);
-  min-height: 260px;justify-content:center;
-  width: 100%;
-  max-width: 560px;
-  margin: 0 auto;
-  background:
-    repeating-linear-gradient(135deg,
-      color-mix(in srgb, var(--ink) 2%, transparent) 0 8px,
-      transparent 8px 16px);
-  border: 1px dashed var(--rule);
-  border-radius: 4px;
+  gap: 14px;
+  background: color-mix(in srgb, var(--ink) 3%, var(--bg));
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  padding: 14px 14px 18px;
+  min-height: 0;
   box-sizing: border-box;
 }
-.ad-ghost-k{
-  font-family: var(--font-mono);font-size: 11px;letter-spacing:.22em;
-  text-transform:uppercase;color: var(--accent-text);font-weight:600;
+
+/* ---------- MEDIA ---------- */
+.prj-swipe-media{
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0b0b0b;
+  box-shadow:
+    0 14px 40px -18px rgba(0,0,0,.35),
+    0 6px 16px -10px rgba(0,0,0,.22);
+  margin: 0 auto;
 }
-.ad-ghost-lede{
+.prj-swipe-media[data-ratio="9x16"]{
+  aspect-ratio: 9 / 16;
+  max-height: 62vh;
+  width: auto;
+}
+.prj-swipe-media[data-ratio="16x9"]{
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+.prj-swipe-video{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.prj-swipe-live{
+  position: absolute; top: 10px; left: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .12em;
+  color: #fff;
+  background: rgba(0,0,0,.55);
+  padding: 4px 8px; border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* ---------- CAPTION ---------- */
+.prj-swipe-cap{
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 4px 2px 0;
+}
+.prj-swipe-k{
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.prj-swipe-title{
   font-family: var(--font-display);
-  font-size: clamp(18px, 2.2vw, 26px);
-  line-height: 1.3;letter-spacing:-.01em;
-  max-width: 44ch;
+  font-size: clamp(22px, 5.5vw, 30px);
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  margin: 0;
   color: var(--ink);
 }
-.ad-ghost-cta{
-  display:inline-flex;align-items:center;gap: 10px;
+.prj-swipe-sub{
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.45;
+  margin: 0;
+  color: var(--muted);
+}
+.prj-swipe-more{
+  align-self: flex-start;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink);
   padding: 10px 16px;
-  background: var(--ink);color: var(--bg);
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 40px;
+  transition: border-color .2s, color .2s, background .2s;
+}
+.prj-swipe-more:hover{ border-color: var(--accent); color: var(--accent-text); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+/* ---------- GHOST SLIDE ---------- */
+.prj-swipe-slide--ghost{
+  background:
+    repeating-linear-gradient(135deg, color-mix(in srgb, var(--ink) 3%, transparent) 0 10px, transparent 10px 20px),
+    var(--bg);
+  border-style: dashed;
+}
+.prj-swipe-ghost{
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 10px;
+  aspect-ratio: 9/16;
+  max-height: 62vh;
+  padding: 24px;
+  text-align: left;
+}
+.prj-swipe-ghost .prj-swipe-title{ font-size: clamp(26px, 6.5vw, 36px); }
+.prj-swipe-cta{
+  align-self: flex-start;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--ink);
+  padding: 11px 18px;
+  border-radius: 999px;
   text-decoration: none;
-  font-family: var(--font-mono);font-size: 11px;letter-spacing:.2em;
-  text-transform:uppercase;
-  transition: background .3s ease, transform .3s ease;
+  min-height: 44px;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: background .25s ease, transform .25s ease;
 }
-.ad-ghost-cta:hover{ background: var(--accent);transform: translateY(-1px); }
-.ad-ghost-cta span{ font-family: inherit; }
+.prj-swipe-cta:hover{ background: var(--accent); transform: translateY(-1px); }
 
-/* Mobile (≤700px) : frame plus compacte, controls collés */
-@media(max-width:700px){
-  .ad-frame{ max-width: 240px; }
-  .ad-frame[data-format="16x9"]{ max-width: 100%; }
-  .ad-controls{ gap: 14px;max-width: 240px; }
-  .ad-nav{ width: 40px;height: 40px;font-size: 19px; }
-  .ad-frame-idx{ font-size: 9px;padding: 4px 7px; }
-  .ad-ghost{ min-height: 200px;padding: 22px 16px; }
-  .ad-ghost-lede{ font-size: 16px; }
+/* ---------- INDICATEUR ---------- */
+.prj-swipe-indicator{
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px;
+  margin-top: 4px;
+}
+.prj-swipe-count{
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .12em;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.prj-swipe-bar{
+  flex: 1;
+  height: 2px;
+  background: var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.prj-swipe-bar-fill{
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: calc(100% / 6);
+  background: var(--accent);
+  transition: transform .3s cubic-bezier(.3,.9,.2,1);
+  transform: translateX(0);
+}
+.prj-swipe-hint{
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .14em;
+  color: var(--muted);
+  flex-shrink: 0;
+  animation: prjSwipeHint 2.4s ease-in-out infinite;
+}
+@keyframes prjSwipeHint{
+  0%,100%{ transform: translateX(0); opacity: .55; }
+  50%    { transform: translateX(5px); opacity: 1; }
 }
 
-/* =====================================================================
-   FOLDERS SWITCHER — refonte mobile (≤700px)
-   - Tabs : chips arrondis compacts, scroll-snap horizontal, 6 rentrent
-   - Stage : carousel centré plein-largeur, pas d'overflow des cartes peek
-   - Panel ghost : carte plus compacte
-   ===================================================================== */
-@media(max-width:700px){
-  .folders{
-    padding: 14px 12px 16px;
+/* ---------- DRAWER (extras Lucid) ---------- */
+.prj-swipe-drawer{
+  position: fixed; inset: 0;
+  z-index: 980;
+  display: none;
+}
+.prj-swipe-drawer.is-open{ display: block; }
+.prj-swipe-drawer-backdrop{
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: prjSwipeFade .22s ease;
+}
+.prj-swipe-drawer-panel{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  max-height: 88vh;
+  background: var(--bg);
+  border-top: 2px solid var(--ink);
+  border-radius: 20px 20px 0 0;
+  padding: 22px 18px 36px;
+  overflow-y: auto;
+  animation: prjSwipeUp .28s cubic-bezier(.2,.8,.2,1);
+  box-shadow: 0 -16px 40px -10px rgba(0,0,0,.25);
+}
+.prj-swipe-drawer-close{
+  position: absolute; top: 12px; right: 14px;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg); border: 0;
+  font-size: 22px; line-height: 1;
+  cursor: pointer;
+  display: grid; place-items: center;
+}
+.prj-swipe-drawer-list{
+  display: flex; flex-direction: column; gap: 18px;
+  margin-top: 24px;
+}
+.prj-swipe-drawer-item{
+  position: relative;
+  aspect-ratio: 9 / 16;
+  max-height: 70vh;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+}
+.prj-swipe-drawer-item video{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.prj-swipe-drawer-idx{
+  position: absolute; top: 10px; left: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .14em;
+  color: #fff;
+  background: rgba(0,0,0,.55);
+  padding: 4px 9px; border-radius: 999px;
+}
+@keyframes prjSwipeFade{ from{opacity:0} to{opacity:1} }
+@keyframes prjSwipeUp{ from{transform:translateY(100%)} to{transform:translateY(0)} }
+
+/* ---------- DESKTOP ≥900px : grille 3 colonnes, pas de rail ---------- */
+@media (min-width: 900px){
+  .prj-swipe-rail{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    gap: 20px;
+    overflow: visible;
+    scroll-snap-type: none;
+    padding: 4px 0 0;
     margin: 0;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    border-radius: 4px;
-    gap: 16px;
-    overflow: hidden;
   }
-  /* TABS : rail horizontal, chaque chip compact, scroll-snap, sans underline */
-  .folders-tabs{
-    gap: 6px;
-    padding: 2px 0 12px;
-    border-bottom: 1px solid var(--rule);
-    scroll-snap-type: x mandatory;
-    /* edge fade */
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 10px, #000 calc(100% - 10px), transparent);
-            mask-image: linear-gradient(to right, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  .prj-swipe-slide{
+    scroll-snap-align: none;
+    padding: 16px;
   }
-  .folders-tab{
-    padding: 8px 12px 9px;
-    min-height: 40px;
-    justify-content: center;
-    flex-direction: row;
-    align-items: center;
-    gap: 7px;
-    border: 1px solid var(--rule);
-    border-radius: 999px;
-    background: transparent;
-    scroll-snap-align: start;
-  }
-  .folders-tab::after{ display:none; }
-  .folders-tab.is-active{
-    background: var(--ink);
-    color: var(--bg);
-    border-color: var(--ink);
-  }
-  .folders-tab.is-active .folders-tab-num{ color: var(--accent); }
-  .folders-tab-num{
-    font-size: 9px;letter-spacing:.14em;
-    color: var(--accent-text);
-  }
-  .folders-tab-name{
-    font-size: 13px;
-    line-height: 1;
-  }
-  /* Mobile : catégorie cachée pour gagner de la place */
-  .folders-tab-cat{ display: none; }
-
+  .prj-swipe-media[data-ratio="9x16"]{ max-height: none; width: 100%; }
+  .prj-swipe-ghost{ aspect-ratio: 9/16; max-height: none; }
+  .prj-swipe-indicator{ display: none; }
+  .prj-swipe-hint{ display: none; }
 }
-@media(prefers-reduced-motion:reduce){
-  .ad-panel{ animation: none !important; }
-  .folders-tab::after{ transition: none !important; }
-  .ad-video{ transition: none !important; }
+
+@media (prefers-reduced-motion: reduce){
+  .prj-swipe-rail{ scroll-behavior: auto; }
+  .prj-swipe-hint{ animation: none; }
 }
 .more-card{
   display:flex;flex-direction:column;gap:12px;
@@ -4737,97 +4732,116 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
           <div class="chap-body-inner">
             <span class="chap-ghost" aria-hidden="true">03</span>
 
-            <div class="folders" data-active="lucid">
+            <!-- PRJ-SWIPE : gallery swipeable mobile (scroll-snap natif) / grid 3 cols desktop -->
+            <div class="prj-swipe" id="prjSwipe" data-count="6">
 
-              <!-- Tabs : sélecteur de dossier -->
-              <div class="folders-tabs" role="tablist" aria-label="Choisir un dossier">
-                <button class="folders-tab is-active" role="tab" aria-selected="true" data-slug="lucid" type="button">
-                  <span class="folders-tab-num">#01</span>
-                  <span class="folders-tab-name">Lucid Dreams</span>
-                  <span class="folders-tab-cat">Music · Clip</span>
-                </button>
-                <button class="folders-tab" role="tab" aria-selected="false" data-slug="scout-reel" type="button">
-                  <span class="folders-tab-num">#02</span>
-                  <span class="folders-tab-name">Reel Scout</span>
-                  <span class="folders-tab-cat">Teaser · 9:16</span>
-                </button>
-                <button class="folders-tab" role="tab" aria-selected="false" data-slug="scout" type="button">
-                  <span class="folders-tab-num">#03</span>
-                  <span class="folders-tab-name">Scout Festival</span>
-                  <span class="folders-tab-cat">Aftermovie</span>
-                </button>
-                <button class="folders-tab folders-tab--ghost" role="tab" aria-selected="false" data-slug="mariage" type="button">
-                  <span class="folders-tab-num">#04</span>
-                  <span class="folders-tab-name">Mariage</span>
-                  <span class="folders-tab-cat">À&nbsp;venir</span>
-                </button>
-                <button class="folders-tab folders-tab--ghost" role="tab" aria-selected="false" data-slug="corporate" type="button">
-                  <span class="folders-tab-num">#05</span>
-                  <span class="folders-tab-name">Corporate</span>
-                  <span class="folders-tab-cat">À&nbsp;venir</span>
-                </button>
-                <button class="folders-tab folders-tab--ghost" role="tab" aria-selected="false" data-slug="doc" type="button">
-                  <span class="folders-tab-num">#06</span>
-                  <span class="folders-tab-name">Documentaire</span>
-                  <span class="folders-tab-cat">À&nbsp;venir</span>
-                </button>
+              <div class="prj-swipe-rail" role="list">
+
+                <!-- 01 · Lucid Dreams -->
+                <article class="prj-swipe-slide" role="listitem" data-slug="lucid" data-format="9x16">
+                  <div class="prj-swipe-media" data-ratio="9x16">
+                    <video class="prj-swipe-video"
+                           data-src="https://videos.corentindeville.com/lucid-clip-1.mp4"
+                           muted loop playsinline preload="none" aria-hidden="true"></video>
+                    <span class="prj-swipe-live" aria-hidden="true">● LIVE</span>
+                  </div>
+                  <div class="prj-swipe-cap">
+                    <span class="prj-swipe-k">#01 · Music · Clip</span>
+                    <h3 class="prj-swipe-title">Lucid Dreams</h3>
+                    <p class="prj-swipe-sub">Clip — ambiance nocturne, montage rythmique.</p>
+                    <button class="prj-swipe-more" type="button" data-drawer="lucid">
+                      +2 extraits <span aria-hidden="true">↗</span>
+                    </button>
+                  </div>
+                </article>
+
+                <!-- 02 · Reel Scout -->
+                <article class="prj-swipe-slide" role="listitem" data-slug="scout-reel" data-format="9x16">
+                  <div class="prj-swipe-media" data-ratio="9x16">
+                    <video class="prj-swipe-video"
+                           data-src="https://videos.corentindeville.com/scout-reel-1.mp4"
+                           muted loop playsinline preload="none" aria-hidden="true"></video>
+                    <span class="prj-swipe-live" aria-hidden="true">● LIVE</span>
+                  </div>
+                  <div class="prj-swipe-cap">
+                    <span class="prj-swipe-k">#02 · Teaser · 9:16</span>
+                    <h3 class="prj-swipe-title">Reel Scout</h3>
+                    <p class="prj-swipe-sub">Teaser social — festival scout, format vertical.</p>
+                  </div>
+                </article>
+
+                <!-- 03 · Scout Festival -->
+                <article class="prj-swipe-slide" role="listitem" data-slug="scout" data-format="16x9">
+                  <div class="prj-swipe-media" data-ratio="16x9">
+                    <video class="prj-swipe-video"
+                           data-src="https://videos.corentindeville.com/aftermovie-scout.mp4"
+                           muted loop playsinline preload="none" aria-hidden="true"></video>
+                    <span class="prj-swipe-live" aria-hidden="true">● LIVE</span>
+                  </div>
+                  <div class="prj-swipe-cap">
+                    <span class="prj-swipe-k">#03 · Aftermovie</span>
+                    <h3 class="prj-swipe-title">Scout Festival</h3>
+                    <p class="prj-swipe-sub">Aftermovie — énergie collective, grand format.</p>
+                  </div>
+                </article>
+
+                <!-- 04 · Mariage (ghost) -->
+                <article class="prj-swipe-slide prj-swipe-slide--ghost" role="listitem" data-slug="mariage">
+                  <div class="prj-swipe-ghost">
+                    <span class="prj-swipe-k">#04 · Mariage</span>
+                    <h3 class="prj-swipe-title">À&nbsp;venir</h3>
+                    <p class="prj-swipe-sub">Dossier en préparation — aperçu sur demande, adapté à ton projet.</p>
+                    <a class="prj-swipe-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
+                  </div>
+                </article>
+
+                <!-- 05 · Corporate (ghost) -->
+                <article class="prj-swipe-slide prj-swipe-slide--ghost" role="listitem" data-slug="corporate">
+                  <div class="prj-swipe-ghost">
+                    <span class="prj-swipe-k">#05 · Corporate</span>
+                    <h3 class="prj-swipe-title">À&nbsp;venir</h3>
+                    <p class="prj-swipe-sub">Brand films — sur demande.</p>
+                    <a class="prj-swipe-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
+                  </div>
+                </article>
+
+                <!-- 06 · Documentaire (ghost) -->
+                <article class="prj-swipe-slide prj-swipe-slide--ghost" role="listitem" data-slug="doc">
+                  <div class="prj-swipe-ghost">
+                    <span class="prj-swipe-k">#06 · Documentaire</span>
+                    <h3 class="prj-swipe-title">À&nbsp;venir</h3>
+                    <p class="prj-swipe-sub">Format long — en conversation.</p>
+                    <a class="prj-swipe-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
+                  </div>
+                </article>
+
               </div>
 
-              <!-- AD-STAGE : nouveau layout propre, 1 panel visible, structure simple -->
-              <div class="ad-stage">
+              <!-- Indicateur bas (mobile only) : compteur + barre progression -->
+              <div class="prj-swipe-indicator" aria-hidden="true">
+                <span class="prj-swipe-count"><span class="prj-swipe-cur">01</span> / <span class="prj-swipe-tot">06</span></span>
+                <span class="prj-swipe-bar"><span class="prj-swipe-bar-fill"></span></span>
+                <span class="prj-swipe-hint">glisser&nbsp;→</span>
+              </div>
 
-                <article class="ad-panel is-active" data-slug="lucid" role="tabpanel" aria-label="Lucid Dreams">
-                  <div class="ad-frame" data-format="9x16">
-                    <video class="ad-video is-active" data-src="https://videos.corentindeville.com/lucid-clip-1.mp4" muted loop playsinline preload="none"></video>
-                    <video class="ad-video" data-src="https://videos.corentindeville.com/lucid-clip-2.mp4" muted loop playsinline preload="none"></video>
-                    <video class="ad-video" data-src="https://videos.corentindeville.com/lucid-clip-3.mp4" muted loop playsinline preload="none"></video>
-                    <span class="ad-frame-idx"><span class="ad-cur">1</span>/<span class="ad-tot">3</span></span>
-                  </div>
-                  <div class="ad-controls">
-                    <button class="ad-nav ad-prev" type="button" aria-label="Extrait précédent">‹</button>
-                    <div class="ad-dots" role="tablist" aria-label="Extraits Lucid Dreams">
-                      <button class="ad-dot is-active" type="button" aria-label="Extrait 1"></button>
-                      <button class="ad-dot" type="button" aria-label="Extrait 2"></button>
-                      <button class="ad-dot" type="button" aria-label="Extrait 3"></button>
-                    </div>
-                    <button class="ad-nav ad-next" type="button" aria-label="Extrait suivant">›</button>
-                  </div>
-                </article>
+            </div>
 
-                <article class="ad-panel" data-slug="scout-reel" role="tabpanel" aria-label="Reel Scout" hidden>
-                  <div class="ad-frame" data-format="9x16">
-                    <video class="ad-video is-active" data-src="https://videos.corentindeville.com/scout-reel-1.mp4" muted loop playsinline preload="none"></video>
+            <!-- Drawer Lucid — extras 2 & 3 -->
+            <div class="prj-swipe-drawer" id="prjSwipeDrawer" aria-hidden="true" role="dialog" aria-label="Extraits Lucid Dreams">
+              <div class="prj-swipe-drawer-backdrop" data-drawer-close></div>
+              <div class="prj-swipe-drawer-panel">
+                <button class="prj-swipe-drawer-close" type="button" data-drawer-close aria-label="Fermer">×</button>
+                <span class="prj-swipe-k">Lucid Dreams · extraits</span>
+                <div class="prj-swipe-drawer-list">
+                  <div class="prj-swipe-drawer-item" data-ratio="9x16">
+                    <video data-src="https://videos.corentindeville.com/lucid-clip-2.mp4" muted loop playsinline preload="none"></video>
+                    <span class="prj-swipe-drawer-idx">02</span>
                   </div>
-                </article>
-
-                <article class="ad-panel" data-slug="scout" role="tabpanel" aria-label="Scout Festival" hidden>
-                  <div class="ad-frame" data-format="16x9">
-                    <video class="ad-video is-active" data-src="https://videos.corentindeville.com/aftermovie-scout.mp4" muted loop playsinline preload="none"></video>
+                  <div class="prj-swipe-drawer-item" data-ratio="9x16">
+                    <video data-src="https://videos.corentindeville.com/lucid-clip-3.mp4" muted loop playsinline preload="none"></video>
+                    <span class="prj-swipe-drawer-idx">03</span>
                   </div>
-                </article>
-
-                <article class="ad-panel ad-panel--ghost" data-slug="mariage" role="tabpanel" aria-label="Mariage" hidden>
-                  <div class="ad-ghost">
-                    <span class="ad-ghost-k">#04 · Mariage</span>
-                    <p class="ad-ghost-lede">Dossier en préparation — un aperçu sur demande, adapté à ton projet.</p>
-                    <a class="ad-ghost-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
-                  </div>
-                </article>
-                <article class="ad-panel ad-panel--ghost" data-slug="corporate" role="tabpanel" aria-label="Corporate" hidden>
-                  <div class="ad-ghost">
-                    <span class="ad-ghost-k">#05 · Corporate</span>
-                    <p class="ad-ghost-lede">Dossier en préparation — un aperçu sur demande, adapté à ton projet.</p>
-                    <a class="ad-ghost-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
-                  </div>
-                </article>
-                <article class="ad-panel ad-panel--ghost" data-slug="doc" role="tabpanel" aria-label="Documentaire" hidden>
-                  <div class="ad-ghost">
-                    <span class="ad-ghost-k">#06 · Documentaire</span>
-                    <p class="ad-ghost-lede">Dossier en préparation — un aperçu sur demande, adapté à ton projet.</p>
-                    <a class="ad-ghost-cta" href="#contact">Écris-moi <span aria-hidden="true">↗</span></a>
-                  </div>
-                </article>
-
+                </div>
               </div>
             </div>
 
@@ -5442,114 +5456,106 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     });
   });
 
-  /* ─── AD SWITCHER (nouveau système "Autres dossiers") ──────────────
-     Tabs en haut sélectionnent un .ad-panel. À l'intérieur, chaque panel
-     a une .ad-frame avec des .ad-video empilées (1 visible par .is-active)
-     + des .ad-controls (prev/next/dots) pour cycler entre les extraits. */
-  document.querySelectorAll('.folders').forEach(foldersRoot => {
-    const tabs   = [...foldersRoot.querySelectorAll('.folders-tab')];
-    const panels = [...foldersRoot.querySelectorAll('.ad-panel')];
-    if(!tabs.length || !panels.length) return;
+  /* ─── PRJ-SWIPE (Approche A : gallery swipeable) ────────────────────
+     Scroll-snap natif horizontal → pas de JS pour le swipe.
+     JS s'occupe de : lazy-load vidéos (IO), indicator (compteur + barre),
+     drawer pour les 2 reels Lucid supplémentaires. */
+  (function initPrjSwipe(){
+    const root = document.getElementById('prjSwipe');
+    if(!root) return;
 
-    // Lazy-load : injecte src au 1er besoin
-    function hydrateVideo(v){
-      if(!v) return;
-      if(!v.src && v.dataset.src){ v.src = v.dataset.src; v.load(); }
+    const rail    = root.querySelector('.prj-swipe-rail');
+    const slides  = Array.from(rail.querySelectorAll('.prj-swipe-slide'));
+    const curEl   = root.querySelector('.prj-swipe-cur');
+    const totEl   = root.querySelector('.prj-swipe-tot');
+    const barFill = root.querySelector('.prj-swipe-bar-fill');
+    const total   = slides.length;
+    if(totEl) totEl.textContent = String(total).padStart(2,'0');
+
+    // Lazy-load vidéos via IntersectionObserver
+    const loadVideo = (v) => {
+      if(!v || v.dataset.loaded === '1') return;
+      const src = v.getAttribute('data-src');
+      if(!src) return;
+      v.src = src;
+      v.dataset.loaded = '1';
       const p = v.play();
       if(p && typeof p.catch === 'function') p.catch(()=>{});
-    }
-    function dehydrateVideo(v){
-      if(!v) return;
-      try{ v.pause(); v.currentTime = 0; }catch(_){}
-    }
+    };
+    const pauseVideo = (v) => { if(v && !v.paused) try{ v.pause(); }catch(_){} };
 
-    function hydratePanel(panel){
-      const active = panel.querySelector('.ad-video.is-active');
-      hydrateVideo(active);
-    }
-    function dehydratePanel(panel){
-      panel.querySelectorAll('.ad-video').forEach(dehydrateVideo);
-    }
-
-    // Switch entre les panels (tabs)
-    function activatePanel(slug){
-      const nextPanel = panels.find(p => p.dataset.slug === slug);
-      const nextTab   = tabs.find(t => t.dataset.slug === slug);
-      if(!nextPanel || !nextTab) return;
-      if(nextTab.classList.contains('is-active')) return;
-
-      const currentPanel = panels.find(p => p.classList.contains('is-active'));
-
-      tabs.forEach(t => {
-        const on = t === nextTab;
-        t.classList.toggle('is-active', on);
-        t.setAttribute('aria-selected', on ? 'true' : 'false');
-      });
-
-      if(currentPanel && currentPanel !== nextPanel){
-        currentPanel.classList.remove('is-active');
-        currentPanel.hidden = true;
-        dehydratePanel(currentPanel);
-      }
-      nextPanel.hidden = false;
-      nextPanel.classList.add('is-active');
-      hydratePanel(nextPanel);
-
-      foldersRoot.dataset.active = slug;
-    }
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => activatePanel(tab.dataset.slug));
-      tab.addEventListener('keydown', (e) => {
-        const i = tabs.indexOf(tab);
-        if(e.key === 'ArrowRight'){ e.preventDefault(); const t = tabs[i+1]||tabs[0]; t.focus(); t.click(); }
-        if(e.key === 'ArrowLeft') { e.preventDefault(); const t = tabs[i-1]||tabs[tabs.length-1]; t.focus(); t.click(); }
-      });
-    });
-
-    // Dans chaque panel : cycling entre les .ad-video via prev/next/dots
-    panels.forEach(panel => {
-      const videos = [...panel.querySelectorAll('.ad-video')];
-      const dots   = [...panel.querySelectorAll('.ad-dot')];
-      const prev   = panel.querySelector('.ad-prev');
-      const next   = panel.querySelector('.ad-next');
-      const cur    = panel.querySelector('.ad-cur');
-      if(videos.length < 2) return; // rien à cycler
-      let active = videos.findIndex(v => v.classList.contains('is-active'));
-      if(active < 0) active = 0;
-
-      function go(idx){
-        const n = videos.length;
-        active = ((idx % n) + n) % n;
-        videos.forEach((v, i) => v.classList.toggle('is-active', i === active));
-        dots.forEach((d, i) => {
-          d.classList.toggle('is-active', i === active);
-          d.setAttribute('aria-selected', i === active ? 'true' : 'false');
+    if('IntersectionObserver' in window){
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const v = entry.target.querySelector('video.prj-swipe-video');
+          if(!v) return;
+          if(entry.isIntersecting && entry.intersectionRatio > 0.5){
+            loadVideo(v);
+          } else {
+            pauseVideo(v);
+          }
         });
-        if(cur) cur.textContent = (active + 1);
-        // Hydrate new, pause others
-        videos.forEach((v, i) => i === active ? hydrateVideo(v) : dehydrateVideo(v));
-      }
-
-      prev && prev.addEventListener('click', (e) => { e.stopPropagation(); go(active - 1); });
-      next && next.addEventListener('click', (e) => { e.stopPropagation(); go(active + 1); });
-      dots.forEach((d, i) => d.addEventListener('click', (e) => { e.stopPropagation(); go(i); }));
-    });
-
-    // Hydrate le panel actif initial quand le parent chap s'ouvre
-    const parentChap = foldersRoot.closest('.chap');
-    if(parentChap){
-      const initObs = new MutationObserver(() => {
-        if(parentChap.classList.contains('is-open')){
-          const active = panels.find(p => p.classList.contains('is-active'));
-          if(active) hydratePanel(active);
-        } else {
-          panels.forEach(dehydratePanel);
-        }
-      });
-      initObs.observe(parentChap, { attributes:true, attributeFilter:['class'] });
+      }, { root: null, threshold: [0, 0.5, 1] });
+      slides.forEach(s => io.observe(s));
     }
-  });
+
+    // Indicator : compteur + barre (suit le slide le plus centré)
+    const updateIndicator = () => {
+      const railRect = rail.getBoundingClientRect();
+      const center = railRect.left + railRect.width / 2;
+      let bestIdx = 0, bestDist = Infinity;
+      slides.forEach((s, i) => {
+        const r = s.getBoundingClientRect();
+        const c = r.left + r.width / 2;
+        const d = Math.abs(c - center);
+        if(d < bestDist){ bestDist = d; bestIdx = i; }
+      });
+      if(curEl) curEl.textContent = String(bestIdx+1).padStart(2,'0');
+      if(barFill){
+        const pct = bestIdx / Math.max(1, total - 1);
+        barFill.style.transform = `translateX(${pct * (total - 1) * 100}%)`;
+      }
+    };
+
+    let ticking = false;
+    rail.addEventListener('scroll', () => {
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateIndicator(); ticking = false; });
+    }, { passive: true });
+    window.addEventListener('resize', updateIndicator, { passive: true });
+    updateIndicator();
+
+    // Drawer : Lucid extras (vidéo 2 & 3)
+    const drawer = document.getElementById('prjSwipeDrawer');
+    if(drawer){
+      const openBtns = root.querySelectorAll('[data-drawer="lucid"]');
+      const closeEls = drawer.querySelectorAll('[data-drawer-close]');
+      const drawerVideos = drawer.querySelectorAll('video[data-src]');
+
+      const open = () => {
+        drawer.classList.add('is-open');
+        drawer.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+        drawerVideos.forEach(v => {
+          if(v.dataset.loaded !== '1'){ v.src = v.getAttribute('data-src'); v.dataset.loaded = '1'; }
+          const p = v.play();
+          if(p && typeof p.catch === 'function') p.catch(()=>{});
+        });
+      };
+      const close = () => {
+        drawer.classList.remove('is-open');
+        drawer.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+        drawerVideos.forEach(pauseVideo);
+      };
+      openBtns.forEach(b => b.addEventListener('click', open));
+      closeEls.forEach(el => el.addEventListener('click', close));
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && drawer.classList.contains('is-open')) close();
+      });
+    }
+  })();
 
   /* ─── Pile → Deploy : entrée en scène quand la section entre en viewport ───
          1. Au chargement, .is-piling compresse les 5 cahiers en haut (CSS).

@@ -674,54 +674,107 @@ body[data-mode="glass"] .hero-reel{
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* ── HOOK NARRATIF au-dessus de l'accordion ── */
-.proj-hook{
-  display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,56px);align-items:end;
-  margin:24px 0 56px;padding:0 8px;
+/* ── PREVIEW STRIP — 2 vidéos immédiates (Wenda 9:16 + Bebooth 16:9) ──
+   Layout asymétrique desktop : colonne étroite (vertical) à gauche,
+   colonne large (horizontal + texte) à droite, alignées en haut.
+   Click → scroll vers le cahier correspondant + l'ouvre (JS plus bas). */
+.proj-preview{
+  display:grid;
+  grid-template-columns: minmax(240px, 340px) 1fr;
+  gap:clamp(24px,3vw,56px);
+  margin:24px 0 clamp(60px,7vw,96px);
+  padding:0 8px;
+  align-items:start;
   position:relative;
 }
-.proj-hook::after{
+.proj-preview::after{
   content:"";position:absolute;left:0;right:0;bottom:-28px;height:1px;background:var(--rule);
 }
-.proj-hook-figure{
-  display:inline-flex;align-items:flex-start;line-height:.82;
-  font-family:var(--font-display);font-weight:400;color:var(--ink);
-  letter-spacing:-.04em;
+.proj-preview-card{
+  all:unset;cursor:pointer;
+  display:flex;flex-direction:column;
+  gap:clamp(14px,1.4vw,20px);
+  position:relative;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+  -webkit-tap-highlight-color:transparent;
 }
-.proj-hook-num{
-  /* Eye-catcher au-dessus de l'accordion — plus raisonnable (176 au lieu de 220)
-     pour rester en scale avec les chap-num (104px) en-dessous. */
-  font-size:clamp(80px,13vw,176px);
-  display:inline-block;
+.proj-preview-card:hover{transform:translateY(-4px)}
+.proj-preview-card:focus-visible{outline:2px solid var(--accent);outline-offset:6px;border-radius:4px}
+
+.proj-preview-lbl{
+  display:inline-flex;align-items:baseline;gap:12px;
+  font-family:var(--font-mono);
+  font-size:clamp(11px,.85vw,13px);
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);
 }
-.proj-hook-plus{
-  font-size:clamp(36px,6vw,80px);color:var(--accent);
-  margin-left:.1em;margin-top:.12em;
-  animation:hookPlusPulse 2.8s cubic-bezier(.22,1,.36,1) infinite;
+.proj-preview-lbl-num{color:var(--accent);font-weight:500}
+
+.proj-preview-media{
+  position:relative;overflow:hidden;
+  border-radius:4px;background:#0e0d0b;
+  box-shadow:
+    0 28px 56px -28px rgba(26,26,26,.32),
+    0 10px 22px -12px rgba(26,26,26,.2);
+  transition:box-shadow .5s cubic-bezier(.22,1,.36,1);
 }
-@keyframes hookPlusPulse{
-  0%,100%{transform:translateY(0) rotate(0)}
-  50%{transform:translateY(-8px) rotate(12deg)}
+.proj-preview-card:hover .proj-preview-media{
+  box-shadow:
+    0 36px 70px -22px rgba(26,26,26,.4),
+    0 14px 28px -10px rgba(26,26,26,.26),
+    0 0 0 1px rgba(255,79,0,.2);
 }
-.proj-hook-text{
-  padding-bottom:clamp(12px,2vw,22px);
-  display:flex;flex-direction:column;gap:14px;
+.proj-preview-vert .proj-preview-media{aspect-ratio:9/16}
+.proj-preview-horiz .proj-preview-media{aspect-ratio:16/9}
+.proj-preview-media video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  background:#0e0d0b;
+  transition:transform .9s cubic-bezier(.22,1,.36,1);
 }
-.proj-hook-lede{
+.proj-preview-card:hover .proj-preview-media video{transform:scale(1.03)}
+
+/* Badge "● LIVE" en coin — dot pulse + label mono */
+.proj-preview-live{
+  position:absolute;top:14px;left:14px;z-index:2;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  padding:5px 10px 5px 8px;border-radius:3px;
+  background:rgba(0,0,0,.55);color:#F0EEE9;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  pointer-events:none;
+  display:inline-flex;align-items:center;gap:0;
+  font-size:0; /* cache le "●" inline — on redessine avec ::before */
+}
+.proj-preview-live::before{
+  content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  animation:previewLivePulse 2s ease-in-out infinite;
+}
+.proj-preview-live::after{
+  content:"LIVE";font-size:10px;letter-spacing:.2em;margin-left:8px;color:#F0EEE9;
+}
+@keyframes previewLivePulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.45;transform:scale(.8)}
+}
+
+.proj-preview-title{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(20px,2vw,30px);line-height:1.3;letter-spacing:-.008em;
-  color:var(--ink);max-width:30ch;
+  font-size:clamp(22px,2.2vw,32px);line-height:1.05;letter-spacing:-.015em;
+  color:var(--ink);
+  display:inline-flex;align-items:baseline;gap:12px;
 }
-.proj-hook-lede strong{font-weight:400;color:var(--accent-text,#C43C00)}
-.proj-hook-arrow{
-  font-family:var(--font-display);font-size:clamp(28px,3vw,42px);
-  color:var(--accent);line-height:1;
-  animation:hookArrowBounce 2.4s cubic-bezier(.22,1,.36,1) infinite;
+.proj-preview-arr{
+  color:var(--accent);font-size:.75em;
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
   display:inline-block;
 }
-@keyframes hookArrowBounce{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(10px)}
+.proj-preview-card:hover .proj-preview-arr{transform:translate(5px,-5px)}
+
+.proj-preview-sub{
+  font-family:var(--font-body);font-size:clamp(14px,1vw,16px);line-height:1.5;
+  color:var(--muted);max-width:44ch;margin:0;
 }
+
 
 /* ── STACK ACCORDION — cahier qui s'ouvre ─────────────────────────────
    Fermé : couverture anthracite quadrillée (vraie "farde").
@@ -1238,7 +1291,9 @@ body.drawer-open{overflow:hidden}
 @media (prefers-reduced-motion:reduce){
   .chap,.chap::before,.chap-body,.chap-carousel,.reel-card,.chap-more-btn,
   .chap-chevron,.chap-num,.chap-title,.chap-meta,.chap-ghost,.chap-tab,
-  .proj-hook-plus,.proj-hook-arrow,.proj-drawer,.proj-drawer::backdrop{
+  .proj-preview-card,.proj-preview-media,.proj-preview-media video,
+  .proj-preview-live::before,.proj-preview-arr,
+  .proj-drawer,.proj-drawer::backdrop{
     transition:none !important;animation:none !important;
   }
   .chap-carousel{transform:none;opacity:1}
@@ -1258,9 +1313,12 @@ body.drawer-open{overflow:hidden}
   .proj-more-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:720px){
-  .proj-hook{grid-template-columns:1fr;gap:8px;margin-bottom:40px}
-  .proj-hook-figure{align-self:start}
-  .proj-hook-text{padding-bottom:0}
+  /* Preview strip : empile verticalement (Wenda au-dessus de Bebooth) */
+  .proj-preview{grid-template-columns:1fr;gap:clamp(28px,5vw,40px);margin-bottom:48px}
+  .proj-preview-vert .proj-preview-media,
+  .proj-preview-horiz .proj-preview-media{max-width:100%}
+  .proj-preview-title{font-size:clamp(22px,6vw,28px)}
+  .proj-preview-sub{font-size:14px}
   .chap{margin-top:26px;border-radius:3px}
   .chap-head{grid-template-columns:auto 1fr;gap:16px;padding:34px 18px 24px}
   .chap-head:hover{padding-left:24px}
@@ -2767,16 +2825,38 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
       <div class="sub">Social content · Événementiel<br/>&amp; Music</div>
     </div>
 
-    <!-- HOOK NARRATIF — capte l'attention avant l'accordion -->
-    <div class="proj-hook reveal">
-      <div class="proj-hook-figure" aria-hidden="true">
-        <span class="proj-hook-num">04</span>
-        <span class="proj-hook-plus">+</span>
-      </div>
-      <div class="proj-hook-text">
-        <p class="proj-hook-lede"><strong>Quatre dossiers récents.</strong> Déplie pour voir les images, ouvre le dossier complet pour les détails.</p>
-        <span class="proj-hook-arrow" aria-hidden="true">↓</span>
-      </div>
+    <!-- PREVIEW STRIP — les 2 dernières vidéos visibles immédiatement -->
+    <!-- Click sur une carte → scroll vers le cahier correspondant + l'ouvre -->
+    <div class="proj-preview reveal">
+      <a class="proj-preview-card proj-preview-vert"
+         href="#chapStack"
+         data-preview-target="wenda"
+         aria-label="Les filles de Wenda — Fashion, ouvre le dossier">
+        <span class="proj-preview-lbl">
+          <span class="proj-preview-lbl-num">N°01</span>
+          <span class="proj-preview-lbl-cat">Fashion</span>
+        </span>
+        <div class="proj-preview-media">
+          <video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+          <span class="proj-preview-live" aria-hidden="true">● LIVE</span>
+        </div>
+        <span class="proj-preview-title">Les filles de Wenda<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
+      </a>
+      <a class="proj-preview-card proj-preview-horiz"
+         href="#chapStack"
+         data-preview-target="bebooth"
+         aria-label="Bebooth — Événementiel, ouvre le dossier">
+        <span class="proj-preview-lbl">
+          <span class="proj-preview-lbl-num">N°02</span>
+          <span class="proj-preview-lbl-cat">Événementiel</span>
+        </span>
+        <div class="proj-preview-media">
+          <video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+          <span class="proj-preview-live" aria-hidden="true">● LIVE</span>
+        </div>
+        <span class="proj-preview-title">Bebooth<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
+        <p class="proj-preview-sub">Photobooth événementiel · 2025. Retour d'image en live + capsules éditoriales.</p>
+      </a>
     </div>
 
     <!-- ACCORDION CHAPITRES — fond commun, un seul ouvert à la fois -->
@@ -3447,6 +3527,55 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     }, { threshold: 0.25 });
     deployObs.observe(stack);
   }
+})();
+
+/* ========== PROJETS — Preview strip (Wenda + Bebooth) ==========
+   Lazy-hydrate les 2 vidéos quand la strip entre dans le viewport.
+   Click sur une card → scroll smooth vers le cahier correspondant
+   + ouvre ce cahier (via head.click() qui respecte l'accordéon exclusif). */
+(function(){
+  const strip = document.querySelector('.proj-preview');
+  if(!strip) return;
+  const stack = document.getElementById('chapStack');
+  if(!stack) return;
+
+  // Lazy hydrate des vidéos preview
+  const videos = [...strip.querySelectorAll('video[data-src]')];
+  if('IntersectionObserver' in window){
+    const hydrateIO = new IntersectionObserver((entries, obs) => {
+      entries.forEach(en => {
+        if(!en.isIntersecting) return;
+        obs.unobserve(en.target);
+        const v = en.target;
+        if(!v.src){ v.src = v.dataset.src; v.load(); }
+        const p = v.play();
+        if(p && typeof p.catch === 'function') p.catch(()=>{});
+      });
+    }, { threshold: 0.1 });
+    videos.forEach(v => hydrateIO.observe(v));
+  } else {
+    videos.forEach(v => {
+      if(!v.src){ v.src = v.dataset.src; v.load(); }
+    });
+  }
+
+  // Click → scroll + ouverture du cahier ciblé
+  strip.querySelectorAll('[data-preview-target]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      const slug = card.dataset.previewTarget;
+      const chap = stack.querySelector('.chap[data-slug="'+slug+'"]');
+      if(!chap) return;
+      // Ouvre si fermé (déclenche le handler qui fait userActed + openChap exclusif)
+      if(!chap.classList.contains('is-open')){
+        const head = chap.querySelector('.chap-head');
+        if(head) head.click();
+      }
+      // Scroll smooth vers le haut du cahier (offset 80px pour respirer)
+      const top = chap.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
 })();
 
 /* ========== PROJETS — Drawer (dialog) open/close ========== */

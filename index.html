@@ -668,302 +668,612 @@ body[data-mode="glass"] .hero-reel{
   border-top:1px solid var(--rule);padding-top:18px;
 }
 
-/* ===== PROJECT SECTION — generic reusable block ===== */
-.ps-block{position:relative;margin:96px 0 0;padding:80px 0;isolation:isolate}
-.ps-block + .ps-block{margin-top:96px}
-.ps-bg{
-  position:absolute;inset:-40px -80px;z-index:-1;border-radius:40px;overflow:hidden;
-  background:
-    radial-gradient(ellipse 60% 70% at 15% 30%, rgba(255,200,170,.55), transparent 65%),
-    radial-gradient(ellipse 55% 65% at 90% 80%, rgba(228,61,18,.22), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 50% 50%, rgba(245,239,227,.7), transparent 70%);
-  filter: blur(20px);opacity:.85;
-}
-/* zigzag alternating bg tints */
-.ps-block:nth-child(even) .ps-bg{
-  background:
-    radial-gradient(ellipse 65% 60% at 85% 25%, rgba(255,200,170,.45), transparent 65%),
-    radial-gradient(ellipse 50% 65% at 10% 80%, rgba(228,61,18,.18), transparent 60%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(245,239,227,.65), transparent 70%);
-}
-.ps-grid{display:grid;grid-template-columns: 45fr 55fr;gap:80px;align-items:center}
-/* REVERSED layout: text left, media right */
-.ps-grid[data-layout="media-right"]{grid-template-columns: 52fr 48fr;overflow:visible}
-.ps-grid[data-layout="media-right"] .ps-carousel{order:2;overflow:visible}
-.ps-grid[data-layout="media-right"] .ps-text{order:1}
+/* ═══════════════════════════════════════════════════════════════ */
+/*  PROJETS — Chapitres dépliants (Concept A, moderne expressif)    */
+/*  Fond commun sable, accordion single-open, lazy video, drawer    */
+/* ═══════════════════════════════════════════════════════════════ */
 
-/* Carousel */
-.ps-carousel{position:relative;perspective:1400px;padding:20px 80px 60px 40px;min-height:620px;display:flex;align-items:center;justify-content:center;overflow:visible}
-/* mirror: extra space on the LEFT side for stacked cards */
-.ps-carousel[data-mirror]{padding:20px 40px 60px 100px}
-.reel-stage{position:relative;width:100%;max-width:340px;aspect-ratio:9/16;transform-style:preserve-3d}
-/* Horizontal 16:9 format */
-.reel-stage[data-format="horizontal"]{aspect-ratio:16/9;max-width:520px}
-.ps-carousel[data-format="horizontal"]{min-height:380px}
-.reel-card{
-  position:absolute;inset:0;border-radius:24px;overflow:hidden;
-  border:1px solid rgba(255,255,255,.25);
-  background: #1a1a1a;
-  box-shadow:
-    0 30px 60px -25px rgba(26,26,26,.35),
-    0 10px 25px -10px rgba(26,26,26,.2),
-    inset 0 1px 0 rgba(255,255,255,.4);
-  transition: transform .55s cubic-bezier(.22,1,.36,1), opacity .55s cubic-bezier(.22,1,.36,1), box-shadow .55s;
-  cursor:pointer;
+/* ── HOOK NARRATIF au-dessus de l'accordion ── */
+.proj-hook{
+  display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,56px);align-items:end;
+  margin:24px 0 56px;padding:0 8px;
+  position:relative;
 }
-.reel-card .thumb{position:absolute;inset:0;width:100%;height:100%}
-.reel-card .reel-hl{
-  position:absolute;inset:0;pointer-events:none;
-  background: linear-gradient(180deg, rgba(255,255,255,.25) 0%, transparent 18%, transparent 80%, rgba(0,0,0,.25) 100%);
-  mix-blend-mode: overlay;
+.proj-hook::after{
+  content:"";position:absolute;left:0;right:0;bottom:-28px;height:1px;background:var(--rule);
 }
-.reel-card .reel-play{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);
-  width:62px;height:62px;border-radius:50%;
-  background:rgba(255,255,255,.18);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,.4);
-  color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;padding-left:3px;
-  opacity:0;transition:.4s cubic-bezier(.22,1,.36,1);
+.proj-hook-figure{
+  display:inline-flex;align-items:flex-start;line-height:.82;
+  font-family:var(--font-display);font-weight:400;color:var(--ink);
+  letter-spacing:-.04em;
 }
-.reel-card.pos0:hover .reel-play{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.reel-card.pos0:hover{transform:scale(1.02)}
-
-/* Unified project index line — used at top of every .ps-text */
-.ps-idx{font-family:var(--font-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
-/* Unified title treatment */
-.ps-text .ps-title{font-family:var(--font-display);font-size:clamp(44px,6vw,92px);line-height:.92;letter-spacing:-.02em;margin:0 0 18px}
-.ps-text .ps-sub{font-family:var(--font-body);font-style:italic;font-size:1.05rem;color:var(--muted);margin-bottom:22px;letter-spacing:.02em}
-.ps-text .ps-p{font-size:clamp(15px,1.15vw,18px);line-height:1.55;color:var(--ink);margin-bottom:14px;max-width:46ch}
-/* Bebooth horizontal carousel — uses standard .ps-carousel grid but cards are 16/9 */
-.ps-carousel[data-format="horizontal"] .reel-stage{aspect-ratio:16/9;max-width:620px;width:100%;height:auto}
-.ps-carousel[data-format="horizontal"]{min-height:auto;padding:30px 60px 70px}
-/* Bebooth big layout: title, wide video, text stacked */
-.ps-wide-layout{display:flex;flex-direction:column;gap:28px}
-.ps-text--wide{max-width:none}
-.ps-text--wide .ps-p{max-width:60ch}
-.ps-carousel--big{padding:20px 80px 70px;min-height:auto}
-.ps-carousel--big .reel-stage{aspect-ratio:16/9;max-width:1100px;width:100%;margin:0 auto}
-/* ===== Section projets — refonte éditoriale inspiration Narrative : titres monumentaux + metadata mono + visuels pleine largeur, palette site conservée ===== */
-.ps-ed{padding:80px 0}
-.ps-ed + .ps-ed{margin-top:96px}
-.ps-ed .ps-bg{opacity:.32}
-.ps-ed-header{max-width:1400px;margin:0 auto 56px;padding:0 8px}
-.ps-ed-header .ps-idx{
-  margin-bottom:32px;
-  font-family:var(--font-mono);font-size:22px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--ink);font-weight:500;
-  display:inline-flex;align-items:center;gap:18px;
-  background:var(--ink);color:var(--bg);padding:10px 18px 10px 16px;
-  border-radius:2px;
+.proj-hook-num{
+  font-size:clamp(96px,17vw,220px);
+  display:inline-block;
 }
-.ps-ed-header .ps-idx::before{content:"▶";color:var(--accent);font-size:16px;letter-spacing:0}
-.ps-ed-title{
-  font-family:var(--font-display);font-weight:400;text-transform:none;
-  font-size:clamp(4.5rem, 10vw, 10rem);line-height:.95;letter-spacing:-.025em;
-  color:var(--ink);margin:0 0 40px;position:relative;
+.proj-hook-plus{
+  font-size:clamp(40px,7vw,96px);color:var(--accent);
+  margin-left:.1em;margin-top:.12em;
+  animation:hookPlusPulse 2.8s cubic-bezier(.22,1,.36,1) infinite;
 }
-.ps-ed-title::after{
-  content:"↓";display:inline-block;
-  margin-left:.2em;color:var(--accent);
-  font-family:var(--font-display);font-size:1em;line-height:1;
-  letter-spacing:0;
-  transform:translateY(-.06em);
-  animation: arrowPulse 2.4s cubic-bezier(.22,1,.36,1) infinite;
-  transform-origin:center;
+@keyframes hookPlusPulse{
+  0%,100%{transform:translateY(0) rotate(0)}
+  50%{transform:translateY(-8px) rotate(12deg)}
 }
-@keyframes arrowPulse{
-  0%,100%{transform:translate(0,-.06em)}
-  50%{transform:translate(0,.08em)}
+.proj-hook-text{
+  padding-bottom:clamp(12px,2vw,22px);
+  display:flex;flex-direction:column;gap:14px;
 }
-.ps-ed-meta{
-  display:flex;flex-wrap:wrap;gap:16px 50px;align-items:baseline;
-  font-family:var(--font-mono);font-size:20px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink);font-weight:500;
-  padding-top:28px;border-top:3px solid var(--ink);
-}
-.ps-ed-meta span{position:relative}
-.ps-ed-meta span + span::before{content:"·";color:var(--accent);margin-right:44px;margin-left:-44px;position:absolute;left:-22px;top:0}
-.ps-ed-media{max-width:1500px;margin:0 auto 64px;position:relative}
-.ps-ed-media .ps-carousel{padding:10px 60px 60px}
-.ps-ed-media .ps-carousel--big{padding:10px 60px 60px}
-.ps-ed-media .ps-carousel--big .reel-stage{max-width:1400px}
-.ps-ed-media .reel-card{border-radius:8px}
-
-/* Scout Festival — aftermovie horizontal pleine largeur */
-.scout-dual{
-  max-width:1400px;
-  margin:0 auto;
-  padding:20px 60px 60px;
-}
-.scout-horiz{
-  position:relative;aspect-ratio:16/9;
-  border-radius:8px;overflow:hidden;
-  background:#0e0d0b;
-  box-shadow:0 40px 80px -30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
-}
-.scout-horiz video{border-radius:8px}
-.ps-ed-desc{max-width:820px;margin:0 auto;padding:0 8px;position:relative}
-.ps-ed-desc .ps-p{font-size:clamp(20px,1.5vw,26px);line-height:1.55;max-width:none;margin-bottom:22px;color:#222}
-/* Divider between projects */
-.ps-divider{
-  max-width:1400px;margin:80px auto;padding:0 8px;
-  display:flex;align-items:center;justify-content:center;gap:32px;
-  font-family:var(--font-mono);font-size:18px;letter-spacing:.4em;text-transform:uppercase;
-  color:var(--bg);font-weight:600;
-}
-.ps-divider span{padding:10px 22px;background:var(--ink);color:var(--bg)}
-.ps-divider::before,.ps-divider::after{content:"";flex:1;height:2px;background:var(--ink)}
-.ps-divider::before,.ps-divider::after{content:"";flex:1;height:1px;background:var(--rule)}
-@media (max-width:768px){
-  .ps-ed{padding:30px 0}
-  .ps-ed-header{margin-bottom:32px}
-  .ps-ed-title{font-size:clamp(3rem, 13vw, 5.5rem);letter-spacing:-.02em;margin-bottom:28px}
-  .ps-ed-header .ps-idx{font-size:14px;letter-spacing:.2em;padding:8px 14px}
-  .ps-ed-meta{gap:10px 24px;font-size:14px;letter-spacing:.12em;padding-top:18px;border-top-width:2px}
-  .ps-ed-meta span + span::before{margin-right:24px;margin-left:-24px;left:-14px}
-  .ps-ed-media{margin-bottom:40px}
-  .ps-ed-media .ps-carousel{padding:10px 20px 50px}
-  .ps-ed-media .ps-carousel--big{padding:10px 20px 50px}
-  .scout-dual{padding:10px 20px 40px;}
-  .ps-ed-desc{padding:0 8px}
-  .ps-ed-desc .ps-p{font-size:18px}
-  .ps-divider{margin:60px auto;font-size:13px}
-  .ps-divider span{padding:8px 16px}
-}
-/* === end editorial refonte === */
-
-/* Positions: pos0 front, pos1 back-right, pos2 further back */
-.reel-card.pos0{z-index:3;transform:translateX(0) scale(1) rotateY(0);opacity:1}
-.reel-card.pos1{z-index:2;transform:translateX(40px) scale(.88) rotateY(-8deg);opacity:.6;box-shadow:0 40px 80px -30px rgba(26,26,26,.3), inset 0 1px 0 rgba(255,255,255,.4)}
-.reel-card.pos2{z-index:1;transform:translateX(75px) scale(.76) rotateY(-12deg);opacity:.3;box-shadow:0 50px 100px -30px rgba(26,26,26,.25), inset 0 1px 0 rgba(255,255,255,.3)}
-/* Mirror stack: cards go LEFT */
-.ps-carousel[data-mirror] .reel-card.pos1{transform:translateX(-40px) scale(.88) rotateY(8deg);opacity:.6}
-.ps-carousel[data-mirror] .reel-card.pos2{transform:translateX(-75px) scale(.76) rotateY(12deg);opacity:.3}
-.ps-carousel[data-mirror] .reel-prev{left:auto;right:-10px;opacity:1;pointer-events:auto}
-.ps-carousel[data-mirror] .reel-prev.show{opacity:1}
-.ps-carousel[data-mirror] .reel-next{right:auto;left:10px}
-
-/* Nav arrows */
-.reel-nav{
-  position:absolute;top:50%;transform:translateY(-50%);z-index:10;
-  width:56px;height:56px;border-radius:50%;
-  background:rgba(255,255,255,.12);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);
-  border:1px solid rgba(255,255,255,.3);
-  color:var(--ink);font-size:28px;line-height:1;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  transition: transform .3s cubic-bezier(.22,1,.36,1), background .3s, box-shadow .3s, opacity .4s;
-  animation: reelFloat 3s ease-in-out infinite;
-  box-shadow: 0 8px 24px -10px rgba(26,26,26,.2), inset 0 1px 0 rgba(255,255,255,.5);
-}
-.reel-nav:hover{background:rgba(255,255,255,.22);transform:translateY(-50%) scale(1.08);box-shadow:0 12px 30px -8px rgba(255,79,0,.25), inset 0 1px 0 rgba(255,255,255,.6)}
-.reel-prev{left:-10px;opacity:0;pointer-events:none}
-.reel-prev.show{opacity:1;pointer-events:auto}
-.reel-next{right:10px}
-@keyframes reelFloat{0%,100%{translate:0 -50%}50%{translate:0 calc(-50% - 4px)}}
-
-/* Dots */
-.reel-dots{position:absolute;bottom:10px;left:0;right:80px;display:flex;gap:10px;justify-content:center}
-.reel-dot{width:8px;height:8px;border-radius:50%;background:rgba(26,26,26,.25);transition:.4s cubic-bezier(.22,1,.36,1)}
-.reel-dot.active{width:36px;height:8px;border-radius:8px;background:var(--accent);box-shadow:0 0 14px rgba(255,79,0,.35)}
-
-/* Text */
-.ps-text{max-width:560px}
-.ps-title{
+.proj-hook-lede{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(48px, 6vw, 88px);line-height:.95;letter-spacing:-.015em;
-  text-transform:uppercase;
+  font-size:clamp(22px,2.3vw,34px);line-height:1.25;letter-spacing:-.01em;
+  color:var(--ink);max-width:28ch;
 }
-.ps-sub{
-  font-family:var(--font-body);font-style:italic;font-weight:400;
-  font-size:1.1rem;opacity:.65;letter-spacing:.05em;
-  margin:16px 0 48px;
+.proj-hook-lede strong{font-weight:400;color:var(--accent-text,#C43C00)}
+.proj-hook-arrow{
+  font-family:var(--font-display);font-size:clamp(28px,3vw,42px);
+  color:var(--accent);line-height:1;
+  animation:hookArrowBounce 2.4s cubic-bezier(.22,1,.36,1) infinite;
+  display:inline-block;
 }
-.ps-p{
-  font-family:var(--font-body);font-size:clamp(18px, 1.4vw, 22px);line-height:1.6;
-  max-width:560px;color:#2a2a28;
-}
-.ps-p:first-of-type{opacity:.9}
-.ps-p + .ps-p{opacity:.75;margin-top:24px}
-
-@media (max-width: 960px){
-  .ps-grid{grid-template-columns:1fr;gap:40px}
-  .ps-grid[data-layout="media-right"] .ps-carousel{order:1}
-  .ps-grid[data-layout="media-right"] .ps-text{order:2}
-  .ps-carousel{padding:20px 20px 60px;min-height:560px}
-  .ps-carousel[data-format="horizontal"]{min-height:260px}
-  .reel-dots{right:20px}
+@keyframes hookArrowBounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(10px)}
 }
 
-/* Layout "media-below": title top, wide video below, text beneath */
-.ps-block--below .ps-below-top{
-  display:flex;justify-content:space-between;align-items:flex-end;
-  border-bottom:1px solid var(--rule);padding-bottom:20px;margin-bottom:40px;
+/* ── STACK ACCORDION — dossiers qui s'ouvrent ── */
+.chap-stack{
+  position:relative;
+  margin:0 0 80px;
+  display:flex;flex-direction:column;gap:clamp(26px,3vw,38px);
 }
-.ps-block--below .ps-below-tag{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--muted);text-align:right;
+/* Chaque .chap est une chemise cartonnée : fond sable chaud, onglet qui dépasse,
+   coin cornered, tampon vermillon, ombre multi-couches évoquant du papier */
+.chap{
+  position:relative;
+  background:linear-gradient(170deg, #F5EDDB 0%, #EFE5CE 100%);
+  border:1px solid rgba(26,26,26,.14);
+  border-radius:4px 14px 4px 4px;
+  margin-top:clamp(26px,3vw,32px); /* laisse la place au tab qui dépasse */
+  box-shadow:
+    0 1px 0 rgba(26,26,26,.08),
+    0 2px 0 #EAE0C8,
+    0 4px 0 rgba(26,26,26,.05),
+    0 5px 0 #E4DAC0,
+    0 8px 0 rgba(26,26,26,.03),
+    0 22px 40px -18px rgba(26,26,26,.18);
+  transition:
+    transform .55s cubic-bezier(.22,1,.36,1),
+    box-shadow .55s cubic-bezier(.22,1,.36,1),
+    background .6s cubic-bezier(.22,1,.36,1);
+  overflow:visible;
 }
-.ps-block--below .ps-below-sub{
-  font-family:var(--font-body);font-style:italic;font-size:1.05rem;opacity:.6;letter-spacing:.04em;
-  margin-top:6px;
+/* Fibres de papier — pseudo-grain subtil */
+.chap::before{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:
+    repeating-linear-gradient(135deg, rgba(26,26,26,.016) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(45deg, rgba(26,26,26,.012) 0 1px, transparent 1px 6px);
+  mix-blend-mode:multiply;opacity:.9;
 }
-.ps-below-desc{margin-top:36px;display:grid;grid-template-columns:1fr 1fr;gap:48px}
-.ps-below-desc .ps-p{font-size:clamp(16px,1.3vw,20px)}
-@media (max-width:960px){.ps-below-desc{grid-template-columns:1fr;gap:20px}}
-@media (max-width:600px){
-  .ps-block--below .ps-below-top{flex-direction:column;align-items:flex-start;gap:10px}
-  .ps-below-desc{grid-template-columns:1fr}
+.chap:hover{transform:translateY(-2px)}
+.chap.is-open{
+  background:linear-gradient(170deg, #F8F1DF 0%, #F2E8D1 100%);
+  box-shadow:
+    0 1px 0 rgba(26,26,26,.08),
+    0 2px 0 #EAE0C8,
+    0 4px 0 rgba(26,26,26,.05),
+    0 5px 0 #E4DAC0,
+    0 8px 0 rgba(26,26,26,.03),
+    0 40px 70px -24px rgba(26,26,26,.32),
+    0 16px 40px -12px rgba(255,79,0,.12);
+  transform:translateY(-3px);
 }
 
-/* ===== Mobile for project sections ===== */@media (max-width: 600px){
-  .ps-block{margin:60px 0 0;padding:40px 0}
-  .ps-block + .ps-block{margin-top:60px}
-  .ps-bg{inset:-20px -16px;border-radius:20px}
-  .ps-grid{grid-template-columns:1fr;gap:32px}
-  .ps-grid[data-layout="media-right"] .ps-carousel{order:1}
-  .ps-grid[data-layout="media-right"] .ps-text{order:2}
-  .ps-carousel{padding:16px 20px 50px;min-height:460px}
-  .ps-carousel[data-format="horizontal"]{min-height:200px}
-  .reel-stage{max-width:240px}
-  .reel-stage[data-format="horizontal"]{max-width:100%}
-  .ps-title{font-size:clamp(36px,10vw,56px)}
-  .ps-sub{font-size:1rem;margin-bottom:24px}
-  .ps-p{font-size:1rem}
+/* ── ONGLET (tab) qui dépasse en haut à gauche ── */
+.chap-tab{
+  position:absolute;top:-22px;left:clamp(20px,3vw,36px);
+  display:inline-flex;align-items:baseline;gap:10px;
+  padding:7px 18px 9px;
+  background:#1A1A1A;color:#F0EEE9;
+  border-radius:8px 8px 2px 2px;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  box-shadow:0 6px 14px -6px rgba(26,26,26,.3);
+  transform:rotate(-1.5deg) translateY(0);
+  transition:
+    transform .55s cubic-bezier(.22,1,.36,1),
+    background .4s, color .4s,
+    box-shadow .4s;
+  z-index:2;pointer-events:none;
+  white-space:nowrap;
+}
+.chap-tab-num{color:#FF4F00;font-weight:500}
+.chap-tab-cat{font-weight:400;opacity:.85}
+.chap:hover .chap-tab{transform:rotate(-2.5deg) translateY(-3px)}
+.chap.is-open .chap-tab{
+  background:#FF4F00;color:#fff;
+  transform:rotate(-3deg) translateY(-4px);
+  box-shadow:0 10px 20px -6px rgba(255,79,0,.45);
+}
+.chap.is-open .chap-tab-num{color:#fff}
+.chap.is-open .chap-tab-cat{opacity:1}
+
+/* ── TAMPON vermillon en haut à droite ── */
+.chap-stamp{
+  position:absolute;top:clamp(14px,2vw,22px);right:clamp(16px,2.5vw,28px);
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 11px 7px;
+  border:1.5px solid rgba(255,79,0,.55);
+  border-radius:3px;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:rgba(255,79,0,.7);
+  transform:rotate(4deg);
+  opacity:.85;
+  transition:opacity .4s, transform .4s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;z-index:2;
+  background:rgba(245,239,227,.2);
+}
+.chap-stamp::before{
+  content:"";position:absolute;inset:-2px;border-radius:inherit;
+  background:
+    repeating-linear-gradient(45deg, rgba(255,79,0,.08) 0 2px, transparent 2px 5px);
+  mix-blend-mode:multiply;opacity:.6;
+}
+.chap.is-open .chap-stamp{
+  opacity:1;transform:rotate(6deg) scale(1.05);
+  color:#FF4F00;border-color:#FF4F00;
 }
 
-/* ===== Projects list ===== */
-.plist{border-top:1px solid var(--ink)}
-.prow{
-  position:relative;border-bottom:1px solid var(--rule);
-  display:grid;grid-template-columns: 80px 1fr auto 160px;gap:24px;align-items:center;
-  padding:28px 12px;cursor:pointer;transition: background .35s ease, padding .35s ease;
+/* ── CLIP (petit trombone décoratif) ── */
+.chap-clip{
+  position:absolute;top:-14px;right:clamp(80px,8vw,140px);
+  width:28px;height:44px;
+  border:2px solid rgba(26,26,26,.4);
+  border-radius:14px 14px 3px 3px;
+  background:transparent;
+  transform:rotate(8deg);
+  transition:transform .5s cubic-bezier(.22,1,.36,1), border-color .4s;
+  pointer-events:none;z-index:2;
+  box-shadow:inset 0 -2px 0 rgba(26,26,26,.1);
 }
-.prow:hover{background:rgba(255,79,0,.04);padding-left:24px}
-.prow .num{font-family:var(--font-mono);font-size:14px;letter-spacing:.18em;color:var(--muted);transition:color .3s}
-.prow:hover .num{color:var(--accent)}
-.prow .name{font-family:var(--font-display);font-size:clamp(28px,4.5vw,72px);line-height:.95;text-transform:uppercase;letter-spacing:-.005em}
-.prow .cat{font-family:var(--font-mono);font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:right}
-.prow .preview{
-  width:160px;height:100px;background:#d9d3c8;position:relative;overflow:hidden;
-  transform:translateX(30px);opacity:0;transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .4s;
+.chap-clip::after{
+  content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  width:12px;height:22px;
+  border:2px solid rgba(26,26,26,.35);
+  border-radius:6px 6px 2px 2px;border-bottom:0;
 }
-.prow:hover .preview{transform:translateX(0);opacity:1}
-.prow .preview::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg, rgba(26,26,26,.08) 0 2px, transparent 2px 18px)}
-.prow.r1 .preview{background:linear-gradient(135deg,#2a2a28,#5a544a)}
-.prow.r2 .preview{background:linear-gradient(135deg,#e0d5c4,#b4a896)}
-.prow.r3 .preview{background:linear-gradient(135deg,#3c3a35,#1a1a1a)}
-.prow.r4 .preview{background:linear-gradient(135deg,#d8ccb9,#8f8475)}
-.prow.r5 .preview{background:linear-gradient(135deg,#4a4641,#2a2825)}
-.prow.r6 .preview{background:linear-gradient(135deg,#efe6d5,#c4b99f)}
+.chap:hover .chap-clip{transform:rotate(12deg) translateY(-1px)}
+.chap.is-open .chap-clip{transform:rotate(14deg) translateY(-2px);border-color:rgba(255,79,0,.5)}
+.chap.is-open .chap-clip::after{border-color:rgba(255,79,0,.5)}
 
-.prow .arrow{
-  position:absolute;right:12px;top:50%;transform:translateY(-50%) translateX(-20px);
-  opacity:0;color:var(--accent);font-family:var(--font-mono);font-size:18px;
-  transition:.4s;
+/* ── COIN corné (page qui se retourne) en bas à droite ── */
+.chap-corner{
+  position:absolute;bottom:0;right:0;
+  width:0;height:0;
+  border-style:solid;
+  border-width:0 0 28px 28px;
+  border-color:transparent transparent rgba(26,26,26,.08) transparent;
+  border-radius:0 0 4px 0;
+  transition:border-width .55s cubic-bezier(.22,1,.36,1), border-color .4s;
+  pointer-events:none;z-index:1;
 }
-.prow:hover .arrow{opacity:1;transform:translateY(-50%) translateX(0)}
+.chap-corner::before{
+  content:"";position:absolute;right:-28px;bottom:0;
+  width:0;height:0;
+  border-style:solid;border-width:0 0 28px 28px;
+  border-color:transparent transparent #EFE5CE transparent;
+  filter:drop-shadow(-2px -1px 2px rgba(26,26,26,.18));
+}
+.chap.is-open .chap-corner{border-width:0 0 44px 44px;border-color:transparent transparent rgba(255,79,0,.15) transparent}
+.chap.is-open .chap-corner::before{right:-44px;border-width:0 0 44px 44px;border-color:transparent transparent #F8F1DF transparent}
 
+/* ── HEAD cliquable ── */
+.chap-head{
+  all:unset;
+  display:grid;grid-template-columns:auto 1fr auto;gap:clamp(20px,4vw,64px);align-items:center;
+  width:100%;padding:clamp(36px,4.5vw,56px) clamp(22px,3vw,40px) clamp(28px,3.5vw,40px);
+  cursor:pointer;box-sizing:border-box;position:relative;z-index:1;
+  transition:padding-left .45s cubic-bezier(.22,1,.36,1), background .35s;
+}
+.chap-head:hover{padding-left:clamp(30px,4vw,52px)}
+.chap-head:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:4px}
+
+.chap-num{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(44px,6.5vw,96px);line-height:.82;letter-spacing:-.03em;
+  color:var(--muted);
+  transition:color .4s cubic-bezier(.22,1,.36,1), transform .4s cubic-bezier(.22,1,.36,1);
+  font-variant-numeric:tabular-nums;
+  min-width:2ch;
+}
+.chap-head:hover .chap-num,
+.chap.is-open .chap-num{color:var(--accent);transform:translateY(-2px)}
+
+.chap-titlewrap{
+  display:flex;flex-direction:column;gap:10px;min-width:0;
+}
+.chap-title{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(32px,5vw,72px);line-height:.95;letter-spacing:-.025em;
+  color:var(--ink);
+  display:inline-block;position:relative;
+  transition:letter-spacing .4s cubic-bezier(.22,1,.36,1);
+}
+.chap-head:hover .chap-title{letter-spacing:-.015em}
+.chap-title::after{
+  content:"";position:absolute;left:0;bottom:-6px;height:2px;width:100%;
+  background:var(--accent);transform:scaleX(0);transform-origin:left center;
+  transition:transform .55s cubic-bezier(.22,1,.36,1);
+}
+.chap-head:hover .chap-title::after,
+.chap.is-open .chap-title::after{transform:scaleX(1)}
+.chap.is-open .chap-title::after{transform-origin:left center}
+
+.chap-meta{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);
+}
+
+.chap-chevron{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:clamp(40px,4.5vw,56px);height:clamp(40px,4.5vw,56px);
+  border:1px solid var(--ink);border-radius:50%;
+  color:var(--ink);background:transparent;
+  transition:transform .5s cubic-bezier(.22,1,.36,1), background .3s, color .3s, border-color .3s;
+}
+.chap-chevron svg{width:60%;height:60%}
+.chap-head:hover .chap-chevron{background:var(--ink);color:var(--bg)}
+.chap.is-open .chap-chevron{
+  transform:rotate(180deg);background:var(--accent);color:#fff;border-color:var(--accent);
+}
+
+/* Body dépliable — technique grid-template-rows 0fr → 1fr (fluide natif) */
+.chap-body{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .72s cubic-bezier(.22,1,.36,1);
+}
+.chap.is-open .chap-body{grid-template-rows:1fr}
+.chap-body-inner{
+  overflow:hidden;min-height:0;
+  position:relative;
+}
+.chap.is-open .chap-body-inner{overflow:visible}
+
+/* Ghost number — gros chiffre décoratif qui déborde à l'ouverture */
+.chap-ghost{
+  position:absolute;pointer-events:none;user-select:none;
+  top:-.12em;left:-.04em;z-index:0;
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(200px,28vw,460px);line-height:1;letter-spacing:-.05em;
+  color:var(--ink);opacity:.06;
+  font-variant-numeric:tabular-nums;
+  transition:opacity .9s cubic-bezier(.22,1,.36,1), transform 1.2s cubic-bezier(.22,1,.36,1);
+  transform:translateX(-40px);
+}
+.chap.is-open .chap-ghost{opacity:.055;transform:translateX(0)}
+
+/* ── CAROUSEL STACK 3D — reels empilés ── */
+.chap-carousel{
+  position:relative;z-index:1;
+  padding:clamp(28px,4vw,52px) clamp(22px,3vw,40px) clamp(46px,5vw,72px);
+  perspective:1600px;
+  transform:translateY(20px);opacity:0;
+  transition:transform .8s cubic-bezier(.22,1,.36,1) .12s, opacity .7s cubic-bezier(.22,1,.36,1) .12s;
+}
+.chap.is-open .chap-carousel{transform:translateY(0);opacity:1}
+
+.reel-stage{
+  position:relative;
+  margin:0 auto;
+  width:min(100%, 380px);
+  aspect-ratio:9/16;
+  transform-style:preserve-3d;
+}
+.chap-carousel[data-format="16x9"] .reel-stage{
+  width:min(100%, 860px);
+  aspect-ratio:16/9;
+}
+
+.reel-card{
+  position:absolute;inset:0;
+  border-radius:12px;overflow:hidden;
+  background:#0e0d0b;
+  box-shadow:
+    0 30px 60px -30px rgba(26,26,26,.55),
+    0 12px 28px -14px rgba(26,26,26,.32);
+  transition:transform .7s cubic-bezier(.22,1,.36,1), opacity .6s cubic-bezier(.22,1,.36,1), box-shadow .4s;
+  will-change:transform,opacity;
+  cursor:pointer;
+}
+.reel-card video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  background:#0e0d0b;
+}
+/* Index numéroté en coin de carte */
+.reel-idx{
+  position:absolute;top:14px;left:14px;z-index:3;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  padding:5px 9px;border-radius:3px;
+  background:rgba(0,0,0,.5);color:#F0EEE9;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  pointer-events:none;
+}
+
+/* Positions stack : pos0 devant, pos1 derrière-droite, pos2 derrière-gauche */
+.reel-card.pos0{
+  transform:translate3d(0,0,0) rotateY(0) scale(1);
+  opacity:1;z-index:3;
+  box-shadow:
+    0 40px 80px -30px rgba(26,26,26,.6),
+    0 20px 50px -20px rgba(26,26,26,.35),
+    0 4px 14px -4px rgba(255,79,0,.12);
+}
+.reel-card.pos1{
+  transform:translate3d(14%, 3%, -120px) rotateY(-12deg) scale(.9);
+  opacity:.55;z-index:2;pointer-events:auto;
+}
+.reel-card.pos2{
+  transform:translate3d(-14%, 6%, -220px) rotateY(12deg) scale(.8);
+  opacity:.3;z-index:1;pointer-events:auto;
+}
+.reel-card.pos1:hover,
+.reel-card.pos2:hover{opacity:.75;box-shadow:0 28px 60px -24px rgba(26,26,26,.45)}
+
+/* ── Nav prev / next ── */
+.reel-nav{
+  all:unset;cursor:pointer;
+  position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+  width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;
+  font-family:var(--font-display);font-size:22px;line-height:1;
+  background:#1A1A1A;color:#F0EEE9;
+  border:1px solid #1A1A1A;
+  transition:background .3s, color .3s, transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s, opacity .3s;
+  box-shadow:0 10px 22px -10px rgba(26,26,26,.35);
+}
+.reel-prev{left:clamp(-8px, -1vw, 0px)}
+.reel-next{right:clamp(-8px, -1vw, 0px)}
+.reel-nav:hover{background:#FF4F00;border-color:#FF4F00;transform:translateY(-50%) scale(1.08);box-shadow:0 14px 28px -10px rgba(255,79,0,.45)}
+.reel-nav:focus-visible{outline:2px solid #FF4F00;outline-offset:3px}
+
+/* ── Dots ── */
+.reel-dots{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:5;
+  display:inline-flex;gap:9px;padding:6px 10px;
+  background:rgba(26,26,26,.55);border-radius:999px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.reel-dot{
+  all:unset;cursor:pointer;
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(240,238,233,.45);
+  transition:background .3s, transform .3s, width .3s;
+}
+.reel-dot:hover{background:rgba(240,238,233,.8)}
+.reel-dot.active{background:#FF4F00;width:18px;border-radius:4px}
+.reel-dot:focus-visible{outline:2px solid #FF4F00;outline-offset:2px}
+
+/* Mode single (Scout) : pas de nav, pas de dots */
+.chap-carousel--single .reel-nav,
+.chap-carousel--single .reel-dots{display:none}
+.chap-carousel--single .reel-card{cursor:default}
+
+/* Bouton voir le dossier complet */
+.chap-more-btn{
+  all:unset;
+  display:inline-flex;align-items:center;gap:14px;
+  margin:8px clamp(8px,1.5vw,18px) clamp(28px,3.5vw,44px);
+  padding:14px 22px 14px 24px;border-radius:999px;
+  background:transparent;color:var(--ink);border:1px solid var(--ink);
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  cursor:pointer;position:relative;z-index:1;
+  transition:background .3s, color .3s, transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s, padding .35s;
+  transform:translateY(16px);opacity:0;
+  transition:transform .7s cubic-bezier(.22,1,.36,1) .42s, opacity .6s cubic-bezier(.22,1,.36,1) .42s, background .3s, color .3s, padding .35s, box-shadow .3s;
+}
+.chap.is-open .chap-more-btn{transform:translateY(0);opacity:1}
+.chap-more-btn:hover{
+  background:var(--accent);color:#fff;border-color:var(--accent);
+  padding-right:28px;box-shadow:0 14px 30px -10px rgba(255,79,0,.45);
+}
+.chap-more-btn:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.chap-more-arr{font-family:var(--font-display);font-size:16px;line-height:1;transition:transform .3s}
+.chap-more-btn:hover .chap-more-arr{transform:translate(3px,-3px)}
+
+/* ── SECTION AUTRES PROJETS ── */
+.proj-more{
+  margin:0 0 40px;padding:0 8px;
+}
+.proj-more-head{
+  display:grid;grid-template-columns:auto auto 1fr auto;gap:20px;align-items:center;
+  margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--ink);
+  font-family:var(--font-mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+}
+.proj-more-idx{color:var(--muted)}
+.proj-more-lbl{color:var(--ink);font-weight:500}
+.proj-more-rule{height:1px;background:var(--rule);display:block;min-width:20px}
+.proj-more-note{
+  color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:none;font-style:italic;
+}
+.proj-more-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px);
+}
+.more-card{
+  display:flex;flex-direction:column;gap:12px;
+  text-decoration:none;color:var(--ink);
+  padding:14px;border:1px solid var(--rule);border-radius:8px;
+  background:rgba(245,239,227,.5);
+  transition:transform .4s cubic-bezier(.22,1,.36,1), border-color .3s, background .3s, box-shadow .4s;
+}
+.more-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--accent);background:#fff;
+  box-shadow:0 18px 40px -18px rgba(26,26,26,.28);
+}
+.more-card-media{
+  aspect-ratio:4/3;border-radius:6px;overflow:hidden;
+  background:
+    linear-gradient(135deg, rgba(26,26,26,.08) 0%, rgba(255,79,0,.06) 100%),
+    repeating-linear-gradient(45deg, rgba(26,26,26,.04) 0 2px, transparent 2px 12px);
+  position:relative;
+}
+.more-card-media[data-ghost="true"]::after{
+  content:"À venir";
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);
+}
+.more-card-foot{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:0 2px;
+}
+.more-num{
+  font-family:var(--font-display);font-size:clamp(20px,2vw,28px);letter-spacing:-.01em;
+  color:var(--ink);
+}
+.more-cat{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* ── DRAWER (dialog) — détails complets par projet ── */
+.proj-drawer{
+  position:fixed;inset:0 0 0 auto;
+  width:min(780px,92vw);max-width:100vw;height:100vh;max-height:100vh;
+  margin:0;padding:0;border:none;outline:none;
+  background:var(--bg);color:var(--ink);
+  box-shadow:-40px 0 80px -20px rgba(26,26,26,.35);
+  overflow:hidden;
+  transform:translateX(100%);
+  transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .4s;
+  opacity:0;
+}
+.proj-drawer[open]{opacity:1;transform:translateX(0)}
+.proj-drawer::backdrop{
+  background:rgba(26,26,26,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:0;transition:opacity .4s;
+}
+.proj-drawer[open]::backdrop{opacity:1}
+
+.drawer-scroll{
+  height:100%;overflow-y:auto;overflow-x:hidden;
+  padding:clamp(36px,5vw,72px) clamp(24px,4vw,56px) clamp(48px,6vw,80px);
+  scrollbar-gutter:stable;
+}
+.drawer-close{
+  position:sticky;top:0;float:right;z-index:2;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--ink);color:var(--bg);border:none;
+  font-size:18px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .3s, transform .3s;
+}
+.drawer-close:hover{background:var(--accent);transform:rotate(90deg)}
+.drawer-close:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.drawer-head{margin:12px 0 36px;max-width:60ch}
+.drawer-idx{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:18px;
+}
+.drawer-title{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(44px,6vw,86px);line-height:.92;letter-spacing:-.025em;
+  color:var(--ink);margin:0 0 20px;
+}
+.drawer-lede{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(18px,1.5vw,22px);line-height:1.35;letter-spacing:-.005em;
+  color:var(--ink);opacity:.82;
+}
+
+.drawer-meta{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px 28px;
+  margin:0 0 36px;padding:24px 0;
+  border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);
+}
+.drawer-meta div{display:flex;flex-direction:column;gap:4px}
+.drawer-meta dt{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin:0;
+}
+.drawer-meta dd{
+  font-family:var(--font-display);font-size:17px;letter-spacing:-.005em;
+  color:var(--ink);margin:0;
+}
+
+.drawer-text{display:flex;flex-direction:column;gap:18px;margin:0 0 36px}
+.drawer-text p{
+  font-family:var(--font-body);font-size:clamp(15px,1.1vw,17px);line-height:1.65;
+  color:var(--ink);max-width:58ch;margin:0;
+}
+.drawer-text strong{font-weight:600;color:var(--accent-text,#C43C00)}
+
+.drawer-credits{
+  display:flex;flex-direction:column;gap:6px;
+  padding-top:22px;border-top:1px solid var(--rule);
+}
+.drawer-credits-lbl{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);
+}
+.drawer-credits-val{
+  font-family:var(--font-body);font-size:14px;color:var(--ink);
+}
+
+/* Lock body scroll when drawer open */
+body.drawer-open{overflow:hidden}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion:reduce){
+  .chap,.chap-body,.chap-carousel,.reel-card,.chap-more-btn,.chap-chevron,
+  .chap-num,.chap-ghost,.chap-tab,.chap-stamp,.chap-clip,.chap-corner,
+  .proj-hook-plus,.proj-hook-arrow,.proj-drawer,.proj-drawer::backdrop{
+    transition:none !important;animation:none !important;
+  }
+  .chap-carousel{transform:none;opacity:1}
+  .reel-card.pos1{transform:translate3d(10%,2%,-60px) scale(.92);opacity:.5}
+  .reel-card.pos2{transform:translate3d(-10%,4%,-110px) scale(.84);opacity:.3}
+}
+
+/* ── Responsive ── */
+@media (max-width:960px){
+  .reel-stage{width:min(100%, 320px)}
+  .chap-carousel[data-format="16x9"] .reel-stage{width:min(100%, 640px)}
+  .proj-more-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:720px){
+  .proj-hook{grid-template-columns:1fr;gap:8px;margin-bottom:40px}
+  .proj-hook-figure{align-self:start}
+  .proj-hook-text{padding-bottom:0}
+  .chap{margin-top:28px;border-radius:4px 10px 4px 4px}
+  .chap-head{grid-template-columns:auto 1fr;gap:16px;padding:36px 16px 24px}
+  .chap-head:hover{padding-left:22px}
+  .chap-chevron{display:none}
+  .chap-num{font-size:clamp(36px,11vw,56px)}
+  .chap-title{font-size:clamp(26px,7.5vw,40px)}
+  .chap-meta{font-size:11px;letter-spacing:.14em}
+  .chap-tab{top:-18px;left:14px;font-size:10px;padding:6px 12px 7px;gap:8px}
+  .chap-stamp{top:12px;right:12px;font-size:9px}
+  .chap-clip{display:none}
+  .chap-ghost{font-size:clamp(180px,50vw,280px);opacity:.04}
+  .chap-carousel{padding:28px 12px 52px}
+  .reel-stage{width:min(100%, 280px)}
+  .reel-card.pos1{transform:translate3d(12%,3%,-100px) rotateY(-8deg) scale(.88);opacity:.45}
+  .reel-card.pos2{transform:translate3d(-12%,5%,-180px) rotateY(8deg) scale(.78);opacity:.25}
+  .reel-nav{width:38px;height:38px;font-size:18px}
+  .reel-prev{left:-6px}
+  .reel-next{right:-6px}
+  .proj-more-grid{grid-template-columns:1fr;gap:14px}
+  .proj-more-head{grid-template-columns:auto auto 1fr;gap:12px}
+  .proj-more-note{grid-column:1/-1;text-align:left;margin-top:4px}
+  .proj-drawer{width:100vw;max-width:100vw}
+  .drawer-close{width:40px;height:40px}
+  .drawer-meta{grid-template-columns:1fr 1fr;gap:14px 20px}
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/*  (fin section Projets)                                           */
+/* ═══════════════════════════════════════════════════════════════ */
 /* ===== Contact ===== */
 .contact-list{border-top:1px solid var(--ink);margin-top:40px}
 .crow{
@@ -1023,30 +1333,7 @@ body[data-mode="glass"] .hero-reel{
 @media (max-width: 960px){
   .hero-meta{grid-template-columns:1fr;gap:10px}
   .hero-meta .col.center,.hero-meta .col.right{justify-content:flex-start}
-  .prow .preview{display:none}
   .crow .ext{display:none}
-}
-
-/* ===== Desktop: carousels side-by-side ===== */
-@media (min-width: 961px){
-  .ps-carousel{overflow:visible}
-  .reel-stage{overflow:visible}
-  .reel-card.pos1{
-    transform:translateX(calc(100% + 18px)) translateY(18px) rotateY(0) scale(1) !important;
-    opacity:.78 !important;
-  }
-  .reel-card.pos2{
-    transform:translateX(calc(200% + 36px)) translateY(36px) rotateY(0) scale(1) !important;
-    opacity:.5 !important;
-  }
-  .ps-carousel[data-mirror] .reel-card.pos1{
-    transform:translateX(calc(-100% - 18px)) translateY(18px) rotateY(0) scale(1) !important;
-    opacity:.78 !important;
-  }
-  .ps-carousel[data-mirror] .reel-card.pos2{
-    transform:translateX(calc(-200% - 36px)) translateY(36px) rotateY(0) scale(1) !important;
-    opacity:.5 !important;
-  }
 }
 
 /* ===== Mobile menu overlay ===== */
@@ -1288,27 +1575,6 @@ body[data-mode="glass"] .hero-reel{
     border-top:1px solid var(--rule);width:100%;margin-top:4px;
   }
   #contact .section-head .sub{ border-top-color:rgba(240,238,233,.18); }
-
-  /* Project list */
-  .prow{grid-template-columns:36px 1fr;gap:8px;padding:18px 8px}
-  .prow .cat,.prow .preview,.prow .arrow{display:none}
-  .prow .name{font-size:clamp(22px,6vw,36px)}
-
-  /* Wenda / ps-block */
-  .wenda{margin:32px 0 12px;padding:24px 0}
-  .wenda-bg{inset:-20px -16px;border-radius:20px}
-  .wenda-grid{grid-template-columns:1fr;gap:20px}
-  .wenda-carousel{padding:16px 20px 50px;min-height:480px}
-  .reel-stage{max-width:260px}
-  .reel-dots{right:20px}
-  .wenda-title{font-size:clamp(28px,9vw,48px)}
-  .wenda-sub{font-size:.9rem;margin-bottom:16px}
-  .wenda-p1,.wenda-p2{font-size:.9rem}
-  .ps-block{margin:56px 0 0;padding:40px 0}
-  .ps-block + .ps-block{margin-top:56px}
-  .ps-title{font-size:clamp(28px,9vw,48px)}
-  .ps-sub{font-size:.9rem;margin:10px 0 16px}
-  .ps-p{font-size:.9rem}
 
   /* Contact */
   .crow{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:20px 16px}
@@ -2079,7 +2345,6 @@ body[data-mode="glass"] .ticker-wrap{background:transparent;backdrop-filter:blur
   body,html{cursor:auto !important}
   *{cursor:auto !important}
   .rec-dot-solo{animation-duration:2.8s !important}
-  .ps-carousel,.reel-stage{perspective:none !important;transform-style:flat !important}
 }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
@@ -2266,24 +2531,8 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
 .contact-grid--simple .contact-col-text{width:100%}
 
 /* ===== Editorial micro-moves ===== */
-/* drop inkbox bg on project metadata spans, keep accent dot */
-.ps-ed-meta span{background:transparent!important;color:var(--ink);padding:0}
-.ps-ed-meta span + span::before{
-  content:"·";color:var(--accent);margin:0 16px;position:static;font-weight:600;
-}
-/* accent line above .ps-ed-header */
-.ps-ed-header{position:relative}
-.ps-ed-header::before{
-  content:"";position:absolute;top:-16px;left:0;
-  width:48px;height:2px;background:var(--accent);
-}
-/* hide ps-divider, use whitespace instead */
-.ps-divider{display:none}
-.ps-block + .ps-block{margin-top:140px}
 /* soften .apropos-card grid (photo now dominates) */
 .apropos-card::before{opacity:.12}
-/* bump ps-idx letter-spacing slightly */
-.ps-idx{letter-spacing:.24em}
 </style>
 </head>
 <body data-mode="classic">
@@ -2502,161 +2751,229 @@ body[data-theme="dark"] .apropos-card.apropos-card--float{
       <div class="sub">Social content · Événementiel<br/>&amp; Music</div>
     </div>
 
-    <!-- ==================== WENDA ==================== -->
-    <div class="ps-block ps-ed reveal" data-ps-id="wenda">
-      <div class="ps-bg"></div>
-      <div class="ps-ed-header">
-        <div class="ps-idx">§ 01.1 / Mode — Social content</div>
-        <h3 class="ps-ed-title">Les filles de Wenda</h3>
-        <div class="ps-ed-meta"><span>Les Filles de Wenda</span><span>Fashion — Social content</span><span>Waterloo / Brussels</span><span>2024 — 2026</span><span>9:16</span></div>
+    <!-- HOOK NARRATIF — capte l'attention avant l'accordion -->
+    <div class="proj-hook reveal">
+      <div class="proj-hook-figure" aria-hidden="true">
+        <span class="proj-hook-num">04</span>
+        <span class="proj-hook-plus">+</span>
       </div>
-      <div class="ps-ed-media">
-        <div class="ps-carousel" id="carousel-wenda">
-          <div class="reel-stage">
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/wenda-reel-1.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
-              </div>
-              <div class="reel-hl"></div>
-            </div>
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/wenda-reel-2.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
-              </div>
-              <div class="reel-hl"></div>
-            </div>
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/wenda-reel-3.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
-              </div>
-              <div class="reel-hl"></div>
-            </div>
-          </div>
-          <button class="reel-nav reel-prev" aria-label="Précédent">‹</button>
-          <button class="reel-nav reel-next" aria-label="Suivant">›</button>
-          <div class="reel-dots"><span class="reel-dot active"></span><span class="reel-dot"></span><span class="reel-dot"></span></div>
-        </div>
-      </div>
-      <div class="ps-ed-desc">
-        <p class="ps-p">Je réalise les vidéos et contenus visuels pour Les Filles de Wenda, maison de mode belge fondée en 1972 par Wenda d'Ursel et Pierre Marinof, aujourd'hui reprise par leurs filles Lara et Marina Marinof. Une histoire de famille, de transmission et de style.</p>
-        <p class="ps-p">Mon travail : capturer l'élégance intemporelle et la modernité des collections à travers des reels dynamiques pour Instagram — mises en scène des nouvelles pièces, ambiances boutique, moments de shooting.</p>
+      <div class="proj-hook-text">
+        <p class="proj-hook-lede"><strong>Quatre dossiers récents.</strong> Déplie pour voir les images, ouvre le dossier complet pour les détails.</p>
+        <span class="proj-hook-arrow" aria-hidden="true">↓</span>
       </div>
     </div>
 
-    <div class="ps-divider"><span>— 02 —</span></div>
-
-    <!-- ==================== BEBOOTH ==================== -->
-    <div class="ps-block ps-ed reveal" data-ps-id="bebooth">
-      <div class="ps-bg"></div>
-      <div class="ps-ed-header">
-        <div class="ps-idx">§ 01.2 / Événementiel — Photobooth</div>
-        <h3 class="ps-ed-title">Bebooth</h3>
-        <div class="ps-ed-meta"><span>Bebooth</span><span>Event — Photobooth</span><span>Brussels</span><span>2025</span><span>16:9</span></div>
-      </div>
-      <div class="ps-ed-media">
-        <div class="ps-carousel ps-carousel--big" id="carousel-bebooth" data-format="horizontal">
-          <div class="reel-stage" data-format="horizontal">
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/bebooth-reel-1.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
+    <!-- ACCORDION CHAPITRES — fond commun, un seul ouvert à la fois -->
+    <div class="chap-stack reveal" id="chapStack">
+      <!-- ============ 01 — WENDA (ouvert par défaut) ============ -->
+      <article class="chap is-open" data-num="01" data-slug="wenda">
+        <span class="chap-tab" aria-hidden="true">
+          <span class="chap-tab-num">N°01</span>
+          <span class="chap-tab-cat">Fashion</span>
+        </span>
+        <span class="chap-stamp" aria-hidden="true">
+          <span class="chap-stamp-lbl">Vu · 04 / 22</span>
+        </span>
+        <span class="chap-clip" aria-hidden="true"></span>
+        <span class="chap-corner" aria-hidden="true"></span>
+        <button class="chap-head" aria-expanded="true" aria-controls="chap-body-01" type="button">
+          <span class="chap-num" aria-hidden="true">01</span>
+          <span class="chap-titlewrap">
+            <span class="chap-title">Les filles de Wenda</span>
+            <span class="chap-meta">Fashion · Social · 2024—2026 · 9:16</span>
+          </span>
+          <span class="chap-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="chap-body" id="chap-body-01" role="region" aria-label="Les filles de Wenda — médias">
+          <div class="chap-body-inner">
+            <span class="chap-ghost" aria-hidden="true">01</span>
+            <div class="chap-carousel" id="carousel-wenda" data-format="9x16">
+              <div class="reel-stage">
+                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none"></video></div>
+                <div class="reel-card pos1"><span class="reel-idx">02</span><video data-src="https://videos.corentindeville.com/wenda-reel-2.mp4" muted loop playsinline preload="none"></video></div>
+                <div class="reel-card pos2"><span class="reel-idx">03</span><video data-src="https://videos.corentindeville.com/wenda-reel-3.mp4" muted loop playsinline preload="none"></video></div>
               </div>
-              <div class="reel-hl"></div>
-            </div>
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/bebooth-reel-2.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
+              <button class="reel-nav reel-prev" type="button" aria-label="Reel précédent">‹</button>
+              <button class="reel-nav reel-next" type="button" aria-label="Reel suivant">›</button>
+              <div class="reel-dots" role="tablist" aria-label="Reels Wenda">
+                <button class="reel-dot active" type="button" aria-label="Reel 1" aria-selected="true"></button>
+                <button class="reel-dot" type="button" aria-label="Reel 2" aria-selected="false"></button>
+                <button class="reel-dot" type="button" aria-label="Reel 3" aria-selected="false"></button>
               </div>
-              <div class="reel-hl"></div>
             </div>
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/bebooth-reel-3.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
-              </div>
-              <div class="reel-hl"></div>
-            </div>
+            <button class="chap-more-btn" type="button" data-open-drawer="wenda">
+              <span class="chap-more-lbl">Voir le dossier complet</span>
+              <span class="chap-more-arr" aria-hidden="true">↗</span>
+            </button>
           </div>
-          <button class="reel-nav reel-prev" aria-label="Précédent">‹</button>
-          <button class="reel-nav reel-next" aria-label="Suivant">›</button>
-          <div class="reel-dots"><span class="reel-dot active"></span><span class="reel-dot"></span><span class="reel-dot"></span></div>
         </div>
-      </div>
+      </article>
+
+      <!-- ============ 02 — BEBOOTH ============ -->
+      <article class="chap" data-num="02" data-slug="bebooth">
+        <span class="chap-tab" aria-hidden="true">
+          <span class="chap-tab-num">N°02</span>
+          <span class="chap-tab-cat">Événementiel</span>
+        </span>
+        <span class="chap-stamp" aria-hidden="true">
+          <span class="chap-stamp-lbl">Vu · 2025</span>
+        </span>
+        <span class="chap-clip" aria-hidden="true"></span>
+        <span class="chap-corner" aria-hidden="true"></span>
+        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-02" type="button">
+          <span class="chap-num" aria-hidden="true">02</span>
+          <span class="chap-titlewrap">
+            <span class="chap-title">Bebooth</span>
+            <span class="chap-meta">Événementiel · Photobooth · 2025 · 16:9</span>
+          </span>
+          <span class="chap-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="chap-body" id="chap-body-02" role="region" aria-label="Bebooth — médias">
+          <div class="chap-body-inner">
+            <span class="chap-ghost" aria-hidden="true">02</span>
+            <div class="chap-carousel" id="carousel-bebooth" data-format="16x9">
+              <div class="reel-stage">
+                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none"></video></div>
+                <div class="reel-card pos1"><span class="reel-idx">02</span><video data-src="https://videos.corentindeville.com/bebooth-reel-2.mp4" muted loop playsinline preload="none"></video></div>
+                <div class="reel-card pos2"><span class="reel-idx">03</span><video data-src="https://videos.corentindeville.com/bebooth-reel-3.mp4" muted loop playsinline preload="none"></video></div>
+              </div>
+              <button class="reel-nav reel-prev" type="button" aria-label="Capsule précédente">‹</button>
+              <button class="reel-nav reel-next" type="button" aria-label="Capsule suivante">›</button>
+              <div class="reel-dots" role="tablist" aria-label="Capsules Bebooth">
+                <button class="reel-dot active" type="button" aria-label="Capsule 1" aria-selected="true"></button>
+                <button class="reel-dot" type="button" aria-label="Capsule 2" aria-selected="false"></button>
+                <button class="reel-dot" type="button" aria-label="Capsule 3" aria-selected="false"></button>
+              </div>
+            </div>
+            <button class="chap-more-btn" type="button" data-open-drawer="bebooth">
+              <span class="chap-more-lbl">Voir le dossier complet</span>
+              <span class="chap-more-arr" aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ============ 03 — LUCID DREAMS ============ -->
+      <article class="chap" data-num="03" data-slug="lucid">
+        <span class="chap-tab" aria-hidden="true">
+          <span class="chap-tab-num">N°03</span>
+          <span class="chap-tab-cat">Music</span>
+        </span>
+        <span class="chap-stamp" aria-hidden="true">
+          <span class="chap-stamp-lbl">Clip · 2025</span>
+        </span>
+        <span class="chap-clip" aria-hidden="true"></span>
+        <span class="chap-corner" aria-hidden="true"></span>
+        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-03" type="button">
+          <span class="chap-num" aria-hidden="true">03</span>
+          <span class="chap-titlewrap">
+            <span class="chap-title">Lucid Dreams</span>
+            <span class="chap-meta">Music · Clip · 9:16</span>
+          </span>
+          <span class="chap-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="chap-body" id="chap-body-03" role="region" aria-label="Lucid Dreams — médias">
+          <div class="chap-body-inner">
+            <span class="chap-ghost" aria-hidden="true">03</span>
+            <div class="chap-carousel" id="carousel-lucid" data-format="9x16">
+              <div class="reel-stage">
+                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/lucid-clip-1.mp4" muted loop playsinline preload="none"></video></div>
+                <div class="reel-card pos1"><span class="reel-idx">02</span><video data-src="https://videos.corentindeville.com/lucid-clip-2.mp4" muted loop playsinline preload="none"></video></div>
+                <div class="reel-card pos2"><span class="reel-idx">03</span><video data-src="https://videos.corentindeville.com/lucid-clip-3.mp4" muted loop playsinline preload="none"></video></div>
+              </div>
+              <button class="reel-nav reel-prev" type="button" aria-label="Extrait précédent">‹</button>
+              <button class="reel-nav reel-next" type="button" aria-label="Extrait suivant">›</button>
+              <div class="reel-dots" role="tablist" aria-label="Extraits Lucid Dreams">
+                <button class="reel-dot active" type="button" aria-label="Extrait 1" aria-selected="true"></button>
+                <button class="reel-dot" type="button" aria-label="Extrait 2" aria-selected="false"></button>
+                <button class="reel-dot" type="button" aria-label="Extrait 3" aria-selected="false"></button>
+              </div>
+            </div>
+            <button class="chap-more-btn" type="button" data-open-drawer="lucid">
+              <span class="chap-more-lbl">Voir le dossier complet</span>
+              <span class="chap-more-arr" aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ============ 04 — SCOUT FESTIVAL ============ -->
+      <article class="chap" data-num="04" data-slug="scout">
+        <span class="chap-tab" aria-hidden="true">
+          <span class="chap-tab-num">N°04</span>
+          <span class="chap-tab-cat">Aftermovie</span>
+        </span>
+        <span class="chap-stamp" aria-hidden="true">
+          <span class="chap-stamp-lbl">2026</span>
+        </span>
+        <span class="chap-clip" aria-hidden="true"></span>
+        <span class="chap-corner" aria-hidden="true"></span>
+        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-04" type="button">
+          <span class="chap-num" aria-hidden="true">04</span>
+          <span class="chap-titlewrap">
+            <span class="chap-title">Scout Festival</span>
+            <span class="chap-meta">Événementiel · Aftermovie · 2026 · 16:9</span>
+          </span>
+          <span class="chap-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="chap-body" id="chap-body-04" role="region" aria-label="Scout Festival — médias">
+          <div class="chap-body-inner">
+            <span class="chap-ghost" aria-hidden="true">04</span>
+            <div class="chap-carousel chap-carousel--single" id="carousel-scout" data-format="16x9">
+              <div class="reel-stage">
+                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/aftermovie-scout.mp4" muted loop playsinline preload="none"></video></div>
+              </div>
+            </div>
+            <button class="chap-more-btn" type="button" data-open-drawer="scout">
+              <span class="chap-more-lbl">Voir le dossier complet</span>
+              <span class="chap-more-arr" aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </div>
+      </article>
     </div>
 
-    <div class="ps-divider"><span>— 03 —</span></div>
-
-    <!-- ==================== LUCID DREAMS ==================== -->
-    <div class="ps-block ps-ed reveal" data-ps-id="lucid">
-      <div class="ps-bg"></div>
-      <div class="ps-ed-header">
-        <div class="ps-idx">§ 01.3</div>
-        <h3 class="ps-ed-title">Lucid Dreams</h3>
-        <div class="ps-ed-meta"><span>Lucid Dreams</span><span>—</span><span>—</span><span>—</span><span>9:16</span></div>
+    <!-- SECTION "AUTRES PROJETS" — grille compact juste vidéos, pas de détails -->
+    <!-- TODO Corentin : remplace les data-src placeholder par tes vraies vidéos quand tu les as.
+         Pour ajouter un slot : dupliquer un <a class="more-card">...</a>. Le lien reste local (#projets).
+         Si tu veux qu'une carte ouvre un drawer, ajoute data-open-drawer="slug" sur le <a> et crée le <dialog> en bas. -->
+    <div class="proj-more reveal" id="projMore">
+      <div class="proj-more-head">
+        <span class="proj-more-idx">§ 01.5</span>
+        <span class="proj-more-lbl">Autres travaux</span>
+        <span class="proj-more-rule" aria-hidden="true"></span>
+        <span class="proj-more-note">Un aperçu — d'autres vidéos sur demande.</span>
       </div>
-      <div class="ps-ed-media">
-        <div class="ps-carousel" id="carousel-lucid">
-          <div class="reel-stage">
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/lucid-clip-1.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
-              </div>
-              <div class="reel-hl"></div>
-            </div>
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/lucid-clip-2.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
-              </div>
-              <div class="reel-hl"></div>
-            </div>
-            <div class="reel-card">
-              <div class="thumb" style="position:absolute;inset:0;background:#0e0d0b">
-                <video src="https://videos.corentindeville.com/lucid-clip-3.mp4"
-                       autoplay muted loop playsinline preload="metadata"
-                       style="width:100%;height:100%;object-fit:cover;display:block"></video>
-              </div>
-              <div class="reel-hl"></div>
-            </div>
+      <div class="proj-more-grid">
+        <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Mariage">
+          <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
+          <div class="more-card-foot">
+            <span class="more-num">#05</span>
+            <span class="more-cat">Mariage</span>
           </div>
-          <button class="reel-nav reel-prev" aria-label="Précédent">‹</button>
-          <button class="reel-nav reel-next" aria-label="Suivant">›</button>
-          <div class="reel-dots"><span class="reel-dot active"></span><span class="reel-dot"></span><span class="reel-dot"></span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="ps-divider"><span>— 04 —</span></div>
-
-    <!-- ==================== SCOUT FESTIVAL ==================== -->
-    <div class="ps-block ps-ed reveal" data-ps-id="scout">
-      <div class="ps-bg"></div>
-      <div class="ps-ed-header">
-        <div class="ps-idx">§ 01.4 / Événementiel — Aftermovie</div>
-        <h3 class="ps-ed-title">Scout Festival</h3>
-        <div class="ps-ed-meta"><span>Scout Festival</span><span>Event — Aftermovie</span><span>Belgique</span><span>2026</span><span>16:9</span></div>
-      </div>
-      <div class="ps-ed-media">
-        <div class="scout-dual">
-          <div class="scout-horiz">
-            <video src="https://videos.corentindeville.com/aftermovie-scout.mp4"
-                   autoplay muted loop playsinline preload="metadata"
-                   style="width:100%;height:100%;object-fit:cover;display:block;background:#0e0d0b"></video>
+        </a>
+        <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Corporate">
+          <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
+          <div class="more-card-foot">
+            <span class="more-num">#06</span>
+            <span class="more-cat">Corporate</span>
           </div>
-        </div>
+        </a>
+        <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Documentaire">
+          <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
+          <div class="more-card-foot">
+            <span class="more-num">#07</span>
+            <span class="more-cat">Documentaire</span>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -2983,34 +3300,212 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
 
 
 
-/* ========== STACK CAROUSEL — generic factory ========== */
-function initStackCarousel(rootId) {
-  const root = document.getElementById(rootId);
-  if (!root) return;
-  const cards = [...root.querySelectorAll('.reel-card')];
-  const dots  = [...root.querySelectorAll('.reel-dot')];
-  const prev  = root.querySelector('.reel-prev');
-  const next  = root.querySelector('.reel-next');
-  let active = 0;
-  const n = cards.length;
+/* ========== PROJETS — Dossiers (accordion) + carousel 3D + lazy video ==========
+   Architecture :
+   - Chaque <article.chap> = un dossier avec tab + tampon + coin corné.
+   - Quand un dossier s'ouvre, son carousel stack (pos0/pos1/pos2) s'initialise
+     à la première ouverture et lazy-hydrate les vidéos (data-src → src).
+   - IntersectionObserver : auto-open du dossier dont le head traverse le viewport.
+   - Click manuel toujours dispo (lock 2.5s pour empêcher le scroll de reprendre).
+*/
+(function(){
+  const stack = document.getElementById('chapStack');
+  if(!stack) return;
 
-  function render() {
+  const chaps = [...stack.querySelectorAll('.chap')];
+
+  /* ─── Carousel stack 3D — factory par chapitre ─── */
+  function initStackCarousel(root){
+    if(!root || root.dataset.init === '1') return;
+    root.dataset.init = '1';
+
+    const cards = [...root.querySelectorAll('.reel-card')];
+    const dots  = [...root.querySelectorAll('.reel-dot')];
+    const prev  = root.querySelector('.reel-prev');
+    const next  = root.querySelector('.reel-next');
+    const n = cards.length;
+    if(n <= 1) return; // Scout : single slide, pas de nav
+    let active = 0;
+
+    function render(){
+      cards.forEach((c, i) => {
+        c.classList.remove('pos0','pos1','pos2');
+        const offset = (i - active + n) % n;
+        c.classList.add('pos' + Math.min(offset, 2));
+      });
+      dots.forEach((d, i) => {
+        const isActive = i === active;
+        d.classList.toggle('active', isActive);
+        d.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+    }
+    function go(idx){
+      active = ((idx % n) + n) % n;
+      render();
+    }
+
+    if(next) next.addEventListener('click', (e) => { e.stopPropagation(); go(active + 1); });
+    if(prev) prev.addEventListener('click', (e) => { e.stopPropagation(); go(active - 1); });
+
     cards.forEach((c, i) => {
-      c.classList.remove('pos0','pos1','pos2');
-      const offset = (i - active + n) % n;
-      c.classList.add('pos' + Math.min(offset, 2));
+      c.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if(i !== active) go(i);
+      });
     });
-    dots.forEach((d, i) => d.classList.toggle('active', i === active));
-    if (prev) prev.classList.toggle('show', active > 0);
+    dots.forEach((d, i) => {
+      d.addEventListener('click', (e) => { e.stopPropagation(); go(i); });
+    });
+
+    render();
   }
 
-  if (next) next.addEventListener('click', () => { active = (active + 1) % n; render(); });
-  if (prev) prev.addEventListener('click', () => { active = (active - 1 + n) % n; render(); });
-  cards.forEach((c, i) => c.addEventListener('click', () => { if (i !== active) { active = i; render(); } }));
-  render();
-}
+  /* ─── Lazy hydrate / dehydrate vidéos d'un dossier ─── */
+  function hydrateChap(chap){
+    const carousel = chap.querySelector('.chap-carousel');
+    if(carousel) initStackCarousel(carousel);
 
-['carousel-wenda','carousel-bebooth','carousel-lucid'].forEach(initStackCarousel);
+    const videos = chap.querySelectorAll('.reel-card video[data-src]');
+    videos.forEach(v => {
+      if(!v.src){
+        v.src = v.dataset.src;
+        v.load();
+      }
+      const p = v.play();
+      if(p && typeof p.catch === 'function') p.catch(()=>{});
+    });
+  }
+  function dehydrateChap(chap){
+    const videos = chap.querySelectorAll('.reel-card video');
+    videos.forEach(v => {
+      try{ v.pause(); v.currentTime = 0; }catch(_){}
+    });
+  }
+
+  /* ─── Open / close ─── */
+  function openChap(chap){
+    chaps.forEach(c => {
+      if(c === chap){
+        if(!c.classList.contains('is-open')){
+          c.classList.add('is-open');
+          const btn = c.querySelector('.chap-head');
+          if(btn) btn.setAttribute('aria-expanded','true');
+          hydrateChap(c);
+        }
+      } else if(c.classList.contains('is-open')){
+        c.classList.remove('is-open');
+        const btn = c.querySelector('.chap-head');
+        if(btn) btn.setAttribute('aria-expanded','false');
+        dehydrateChap(c);
+      }
+    });
+  }
+  function closeChap(chap){
+    chap.classList.remove('is-open');
+    const btn = chap.querySelector('.chap-head');
+    if(btn) btn.setAttribute('aria-expanded','false');
+    dehydrateChap(chap);
+  }
+
+  /* ─── Click head → toggle (+ lock scroll-trigger 2.5s) ─── */
+  let userLockUntil = 0;
+  chaps.forEach(chap => {
+    const head = chap.querySelector('.chap-head');
+    if(!head) return;
+    head.addEventListener('click', (e) => {
+      e.preventDefault();
+      userLockUntil = Date.now() + 2500;
+      if(chap.classList.contains('is-open')) closeChap(chap);
+      else openChap(chap);
+    });
+  });
+
+  /* ─── Hydrate le chapitre par défaut ouvert au chargement ─── */
+  const defaultOpen = chaps.find(c => c.classList.contains('is-open'));
+  if(defaultOpen) hydrateChap(defaultOpen);
+
+  /* ─── Scroll auto-open : quand le head d'un chapitre croise la zone cible,
+         on ouvre ce chapitre (ferme les autres). Respecte prefers-reduced-motion
+         et un lock de 2.5s après un click manuel. ─── */
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!REDUCED && 'IntersectionObserver' in window){
+    // Zone "trigger" : 40% haut / 55% bas de l'écran
+    const io = new IntersectionObserver((entries) => {
+      if(Date.now() < userLockUntil) return;
+      // On prend le head le plus "visible" dans la zone
+      let best = null, bestRatio = 0;
+      entries.forEach(en => {
+        if(en.isIntersecting && en.intersectionRatio > bestRatio){
+          bestRatio = en.intersectionRatio;
+          best = en.target;
+        }
+      });
+      if(best){
+        const chap = best.closest('.chap');
+        if(chap && !chap.classList.contains('is-open')) openChap(chap);
+      }
+    }, {
+      // Zone de déclenchement : bande horizontale centrée haut-milieu
+      rootMargin:'-38% 0px -52% 0px',
+      threshold:[0, .5, 1]
+    });
+    chaps.forEach(c => {
+      const head = c.querySelector('.chap-head');
+      if(head) io.observe(head);
+    });
+  }
+})();
+
+/* ========== PROJETS — Drawer (dialog) open/close ========== */
+(function(){
+  const openers = [...document.querySelectorAll('[data-open-drawer]')];
+  if(!openers.length) return;
+  let lastFocus = null;
+
+  function openDrawer(slug){
+    const dlg = document.getElementById('drawer-' + slug);
+    if(!dlg) return;
+    lastFocus = document.activeElement;
+    if(typeof dlg.showModal === 'function') dlg.showModal();
+    else dlg.setAttribute('open','');
+    document.body.classList.add('drawer-open');
+    // Focus sur bouton close pour a11y
+    requestAnimationFrame(() => {
+      const close = dlg.querySelector('.drawer-close');
+      if(close) close.focus();
+    });
+  }
+  function closeDrawer(dlg){
+    if(!dlg) return;
+    if(typeof dlg.close === 'function') dlg.close();
+    else dlg.removeAttribute('open');
+    document.body.classList.remove('drawer-open');
+    if(lastFocus && typeof lastFocus.focus === 'function'){
+      try{ lastFocus.focus(); }catch(_){}
+    }
+  }
+
+  openers.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openDrawer(btn.dataset.openDrawer);
+    });
+  });
+
+  // Tous les dialogs : bouton close + clic backdrop + Escape
+  document.querySelectorAll('dialog.proj-drawer').forEach(dlg => {
+    const closeBtn = dlg.querySelector('.drawer-close');
+    if(closeBtn) closeBtn.addEventListener('click', () => closeDrawer(dlg));
+    // Clic backdrop : cible = dlg lui-même (pas ses enfants)
+    dlg.addEventListener('click', (e) => {
+      if(e.target === dlg) closeDrawer(dlg);
+    });
+    // Fermeture native Escape → nettoyer body class
+    dlg.addEventListener('close', () => {
+      document.body.classList.remove('drawer-open');
+    });
+  });
+})();
 
 /* ========== SECTION PILL NAV (topbar) ========== */
 (function(){
@@ -3133,28 +3628,6 @@ function initStackCarousel(rootId) {
 
 /* ========== MOUSE-REACTIVE HERO TITLE — disabled ========== */
 
-/* ========== NEXT PROJECT LINKS ========== */
-(function(){
-  const blocks = [...document.querySelectorAll('.ps-block[data-ps-id]')];
-  blocks.forEach((b,i)=>{
-    if(i >= blocks.length-1) return;
-    const next = blocks[i+1];
-    const nextTitle = next.querySelector('.ps-ed-title');
-    if(!nextTitle) return;
-    const link = document.createElement('a');
-    link.href='#';
-    link.style.cssText='display:inline-flex;gap:16px;align-items:center;margin-top:40px;font-family:var(--font-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);transition:color .3s;cursor:none';
-    link.innerHTML=`<span style="width:36px;height:1px;background:currentColor;display:inline-block"></span>Projet suivant — ${nextTitle.textContent.trim()}<span style="font-size:16px">→</span>`;
-    link.addEventListener('click',e=>{
-      e.preventDefault();
-      next.scrollIntoView ? window.scrollTo({top:next.offsetTop-80,behavior:'smooth'}) : next.scrollIntoView();
-    });
-    link.addEventListener('mouseover',()=>link.style.color='var(--accent)');
-    link.addEventListener('mouseout',()=>link.style.color='var(--muted)');
-    b.appendChild(link);
-  });
-})();
-
 /* ========== EYE BUBBLE CONTACT ========== */
 (function(){
   const btn = document.getElementById('eyeBubble');
@@ -3212,7 +3685,7 @@ try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e)
     ring.style.top=Math.round(ry*10)/10+'px';
     requestAnimationFrame(anim);
   })();
-  document.querySelectorAll('a,button,.crow,.reel-card').forEach(el=>{
+  document.querySelectorAll('a,button,.reel-card,.more-card').forEach(el=>{
     el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
     el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
   });
@@ -3300,5 +3773,140 @@ try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e)
   });
 })();
 </script>
+
+<!-- ========================================================= -->
+<!-- PROJECT DRAWERS — détails complets par projet                -->
+<!-- Ouverts depuis les boutons .chap-more-btn[data-open-drawer]   -->
+<!-- Pour ajouter un drawer : <dialog class="proj-drawer" id="drawer-{slug}"> -->
+<!-- ========================================================= -->
+
+<dialog class="proj-drawer" id="drawer-wenda" aria-labelledby="drawer-wenda-title">
+  <div class="drawer-scroll">
+    <button class="drawer-close" type="button" aria-label="Fermer le dossier">
+      <span aria-hidden="true">✕</span>
+    </button>
+    <div class="drawer-head">
+      <span class="drawer-idx">§ 01 — Fashion</span>
+      <h3 class="drawer-title" id="drawer-wenda-title">Les filles de Wenda</h3>
+      <p class="drawer-lede">Une maison belge, trois générations, une image qui devait respirer la transmission sans sentir le vieux.</p>
+    </div>
+
+    <dl class="drawer-meta">
+      <div><dt>Client</dt><dd>Les filles de Wenda</dd></div>
+      <div><dt>Catégorie</dt><dd>Fashion · Social content</dd></div>
+      <div><dt>Lieu</dt><dd>Waterloo · Brussels</dd></div>
+      <div><dt>Années</dt><dd>2024 — 2026</dd></div>
+      <div><dt>Format</dt><dd>9:16 vertical</dd></div>
+      <div><dt>Livraison</dt><dd>~40 reels / an</dd></div>
+    </dl>
+
+    <div class="drawer-text">
+      <p>Je réalise les vidéos et contenus visuels pour <strong>Les Filles de Wenda</strong>, maison de mode belge fondée en 1972 par Wenda d'Ursel et Pierre Marinof, aujourd'hui reprise par leurs filles Lara et Marina Marinof. Une histoire de famille, de transmission et de style.</p>
+      <p>Mon travail : capturer l'élégance intemporelle et la modernité des collections à travers des reels dynamiques pour Instagram — mises en scène des nouvelles pièces, ambiances boutique, moments de shooting. Le ton doit rester doux, féminin, un peu retenu — on montre sans crier.</p>
+    </div>
+
+    <div class="drawer-credits">
+      <span class="drawer-credits-lbl">Crédits</span>
+      <span class="drawer-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="proj-drawer" id="drawer-bebooth" aria-labelledby="drawer-bebooth-title">
+  <div class="drawer-scroll">
+    <button class="drawer-close" type="button" aria-label="Fermer le dossier">
+      <span aria-hidden="true">✕</span>
+    </button>
+    <div class="drawer-head">
+      <span class="drawer-idx">§ 02 — Événementiel</span>
+      <h3 class="drawer-title" id="drawer-bebooth-title">Bebooth</h3>
+      <p class="drawer-lede">Un photobooth nouvelle génération à documenter comme un produit — rapide, fun, parfaitement lisible en 10 secondes.</p>
+    </div>
+
+    <dl class="drawer-meta">
+      <div><dt>Client</dt><dd>Bebooth</dd></div>
+      <div><dt>Catégorie</dt><dd>Événementiel · Photobooth</dd></div>
+      <div><dt>Lieu</dt><dd>Brussels</dd></div>
+      <div><dt>Année</dt><dd>2025</dd></div>
+      <div><dt>Format</dt><dd>16:9 horizontal</dd></div>
+      <div><dt>Livraison</dt><dd>Capsules produit + social cuts</dd></div>
+    </dl>
+
+    <div class="drawer-text">
+      <p><strong>Bebooth</strong> propose un photobooth connecté pour mariages, événements corporate et fêtes privées. L'enjeu : montrer le produit en action, l'ambiance qu'il crée, la simplicité d'usage — tout ça en quelques secondes, pour des posts, des landing pages et des pitchs commerciaux.</p>
+      <p>Série de capsules 16:9 à cuts serrés, alternant plans produits et moments vécus. Chaque séquence est pensée comme un teaser autonome, déclinable en reels 9:16 pour Instagram et TikTok sans retournage.</p>
+    </div>
+
+    <div class="drawer-credits">
+      <span class="drawer-credits-lbl">Crédits</span>
+      <span class="drawer-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="proj-drawer" id="drawer-lucid" aria-labelledby="drawer-lucid-title">
+  <div class="drawer-scroll">
+    <button class="drawer-close" type="button" aria-label="Fermer le dossier">
+      <span aria-hidden="true">✕</span>
+    </button>
+    <div class="drawer-head">
+      <span class="drawer-idx">§ 03 — Music</span>
+      <h3 class="drawer-title" id="drawer-lucid-title">Lucid Dreams</h3>
+      <p class="drawer-lede">Un clip onirique à mi-chemin entre rêve et réalité — textures, lenteurs, respiration.</p>
+    </div>
+
+    <dl class="drawer-meta">
+      <div><dt>Artiste</dt><dd>Lucid Dreams</dd></div>
+      <div><dt>Catégorie</dt><dd>Music · Clip</dd></div>
+      <div><dt>Lieu</dt><dd>Brussels</dd></div>
+      <div><dt>Année</dt><dd>2025</dd></div>
+      <div><dt>Format</dt><dd>9:16 vertical</dd></div>
+      <div><dt>Livraison</dt><dd>Clip + extraits teaser</dd></div>
+    </dl>
+
+    <div class="drawer-text">
+      <p>Projet plus libre, plus personnel — un clip qui devait <strong>exister pour lui-même</strong> sans promettre de conversion. On a cherché l'image qui reste : un grain, une couleur, un mouvement lent.</p>
+      <p>Trois extraits verticaux pensés pour vivre en autonomie sur Instagram et TikTok. Montage au service de la musique, pas l'inverse.</p>
+    </div>
+
+    <div class="drawer-credits">
+      <span class="drawer-credits-lbl">Crédits</span>
+      <span class="drawer-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="proj-drawer" id="drawer-scout" aria-labelledby="drawer-scout-title">
+  <div class="drawer-scroll">
+    <button class="drawer-close" type="button" aria-label="Fermer le dossier">
+      <span aria-hidden="true">✕</span>
+    </button>
+    <div class="drawer-head">
+      <span class="drawer-idx">§ 04 — Événementiel</span>
+      <h3 class="drawer-title" id="drawer-scout-title">Scout Festival</h3>
+      <p class="drawer-lede">L'aftermovie du festival — condenser trois jours d'énergie en une minute trente qui donne envie de revenir.</p>
+    </div>
+
+    <dl class="drawer-meta">
+      <div><dt>Client</dt><dd>Scout Festival</dd></div>
+      <div><dt>Catégorie</dt><dd>Événementiel · Aftermovie</dd></div>
+      <div><dt>Lieu</dt><dd>Belgique</dd></div>
+      <div><dt>Année</dt><dd>2026</dd></div>
+      <div><dt>Format</dt><dd>16:9 horizontal</dd></div>
+      <div><dt>Livraison</dt><dd>Aftermovie principal + social cuts</dd></div>
+    </dl>
+
+    <div class="drawer-text">
+      <p>Aftermovie pour <strong>Scout Festival</strong> — événement musique & arts vivants. Trois jours de tournage, multi-cam, captation spontanée des foules, des backstages, des concerts.</p>
+      <p>Montage nerveux au service de la montée : intro posée, montée en énergie, climax, respiration finale. Pensé pour fonctionner en annonce d'édition suivante, comme en teaser de sponsoring.</p>
+    </div>
+
+    <div class="drawer-credits">
+      <span class="drawer-credits-lbl">Crédits</span>
+      <span class="drawer-credits-val">Réalisation, tournage multi-cam &amp; montage — Corentin Devillé</span>
+    </div>
+  </div>
+</dialog>
+
 </body>
 </html>

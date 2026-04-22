@@ -2374,10 +2374,6 @@ body[data-theme="dark"] .eye-label::after{border-left-color:var(--bg)}
   cursor:none;overflow:hidden;
   transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s;
 }
-/* Mobile : masqué (le FAB WhatsApp mobile .mwa-fab prend le relais) */
-@media(max-width:700px){
-  .eye-bubble, .eye-label{ display: none !important; }
-}
 .eye-bubble:hover{transform:scale(1.1);box-shadow:0 14px 44px -8px rgba(26,26,26,.55)}
 .eye-bubble:active{transform:scale(.93)}
 /* Rest: full eye (Fichier 4) with scanning pupil bar — same look as end of intro */

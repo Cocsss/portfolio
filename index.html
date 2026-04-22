@@ -83,7 +83,7 @@
   --accent-text: #C43C00;    /* body-text usage — darker shade, WCAG AA ≥4.5:1 on --bg */
   --grid: #E8E4DD;
   --rule: #D4CFC7;
-  --muted: #6E6A63;
+  --muted: #55514A;          /* darkened for WCAG AA (≥4.5:1) on --bg */
 
   --font-display: "Dela Gothic One", "Impact", "Arial Black", sans-serif;
   --font-body: "Inter", -apple-system, Helvetica, Arial, sans-serif;
@@ -264,10 +264,60 @@ body[data-mode="glass"] .gridbg::before{
 body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
 
 .film-loader{
-  position:fixed;inset:0;z-index:6000;pointer-events:none;
-  background:#0a0a09;overflow:hidden;
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  z-index:6000;pointer-events:none;
+  /* Base SMPTE — voilée par ::before jusqu'à l'arrivée à la barre */
+  background:linear-gradient(90deg,
+    #c0c0c0 0%, #c0c0c0 14.28%,
+    #c0c000 14.28%, #c0c000 28.57%,
+    #00c0c0 28.57%, #00c0c0 42.86%,
+    #00c000 42.86%, #00c000 57.14%,
+    #c000c0 57.14%, #c000c0 71.43%,
+    #c00000 71.43%, #c00000 85.71%,
+    #0000c0 85.71%, #0000c0 100%);
+  /* clip-path au lieu de height : GPU-accelerated, zéro reflow → smooth */
+  clip-path:inset(0 0 0 0);
+  will-change:clip-path;
   animation:
-    filmReveal .65s cubic-bezier(.65,0,.25,1) 3.4s forwards;
+    filmCurtainClose .75s cubic-bezier(.72,.02,.22,1) 3.25s forwards;
+}
+/* Voile noir — reste opaque tout le long de la descente.
+   Ne se retire qu'au moment où le rideau atteint la barre. */
+.film-loader::before{
+  content:"";
+  position:absolute;inset:0;
+  background:#0a0a09;
+  animation: curtainColorIn .22s cubic-bezier(.2,.8,.2,1) 3.98s forwards;
+  z-index:1;
+}
+/* Scanline lumineuse horizontale qui traverse la barre au moment du swap couleur.
+   Simule l'allumage d'un moniteur / mire vidéo qui s'active. */
+.film-loader::after{
+  content:"";
+  position:absolute;top:0;left:0;bottom:0;
+  width:35vw;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,.15) 30%,
+    rgba(255,255,255,.92) 50%,
+    rgba(255,255,255,.15) 70%,
+    transparent 100%);
+  opacity:0;
+  transform:translateX(-100%);
+  mix-blend-mode:screen;
+  animation: curtainSweep .6s cubic-bezier(.3,.7,.25,1) 3.98s forwards;
+  z-index:2;
+  pointer-events:none;
+}
+@keyframes curtainColorIn{
+  from { opacity:1; }
+  to   { opacity:0; }
+}
+@keyframes curtainSweep{
+  0%   { opacity:0;   transform:translateX(-100%); }
+  15%  { opacity:1; }
+  85%  { opacity:.9; }
+  100% { opacity:0;   transform:translateX(calc(100vw + 100%)); }
 }
 .fl-stage{
   position:absolute;top:50%;left:50%;
@@ -275,8 +325,12 @@ body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
   display:flex;align-items:center;justify-content:center;gap:0;
   height:clamp(120px, 22vw, 200px);
   transform-origin:50% 50%;
-  /* One blink masks the swap from C+D → eye */
-  animation: stageBlinkSwap .45s cubic-bezier(.4,0,.3,1) 1.15s forwards;
+  z-index:3; /* au-dessus du voile noir et du flash blanc */
+  /* One blink masks the swap from C+D → eye,
+     then fade out before the curtain compacts into the horizontal bar */
+  animation:
+    stageBlinkSwap .45s cubic-bezier(.4,0,.3,1) 1.15s forwards,
+    stageFadeOut .28s cubic-bezier(.4,0,.2,1) 3.0s forwards;
 }
 @keyframes stageBlinkSwap{
   0%,100% { transform:translate(-50%,-50%) scaleY(1); }
@@ -355,10 +409,21 @@ body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
   100%{ transform:translateX(0); }
 }
 @keyframes fadeIn{ to{ opacity:1; } }
-@keyframes filmReveal{
-  0%{transform:translateY(0)}
-  100%{transform:translateY(-100%)}
+/* Rideau → barre SMPTE via clip-path (GPU, smooth, zéro reflow).
+   inset(0 0 X 0) : la coupe du bas grandit, seul le haut reste visible.
+   Fin : top 8px visible, le reste clippé → le rideau EST la barre. */
+@keyframes filmCurtainClose{
+  0%   { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 0 calc(100% - 8px) 0); }
 }
+@media(max-width:900px){
+  @keyframes filmCurtainClose{
+    0%   { clip-path: inset(0 0 0 0); }
+    100% { clip-path: inset(0 0 calc(100% - 6px) 0); }
+  }
+}
+/* Fade out du contenu (lettres + œil) juste avant que le rideau se compacte */
+@keyframes stageFadeOut{ to{ opacity:0; } }
 
 /* ===== Available for work badge ===== */
 .avail-badge{
@@ -592,6 +657,82 @@ body[data-mode="glass"] .topbar{
 }
 .hero-cta--ghost:hover .hero-cta-arrow{ transform: translateY(3px); }
 .hero-cta:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ===== Hero epigraph — signature "focus-pull" (objectif qui fait le point) ===== */
+.hero-epigraph{
+  margin:32px 0 0;padding:18px 0 0;
+  border-top:1px solid var(--rule);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  color:var(--muted);
+  opacity:0;
+  animation: epiFocusIn .9s cubic-bezier(.2,.85,.2,1) 4.2s forwards;
+}
+.epi-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--accent);
+  flex:0 0 auto;
+  animation: epiDotPulse 2.4s cubic-bezier(.4,0,.2,1) 4.9s infinite;
+}
+.epi-text{
+  flex:1 1 auto;min-width:0;
+  font-family:var(--font-body);font-size:13px;font-style:italic;letter-spacing:.01em;
+  color:var(--ink);
+  filter:blur(10px);
+  transform:translateY(3px);
+  animation: epiFocusPull 1.2s cubic-bezier(.2,.85,.2,1) 4.35s forwards;
+  position:relative;
+}
+.epi-text::before,
+.epi-text::after{
+  content:attr(data-text);
+  position:absolute;top:0;left:0;width:100%;
+  pointer-events:none;
+  font-style:italic;
+  opacity:0;
+}
+.epi-text::before{ color:#FF2E2E; transform:translateX(-3px); mix-blend-mode:multiply; animation: epiChroma 1.2s cubic-bezier(.2,.85,.2,1) 4.35s forwards; }
+.epi-text::after { color:#00E0C0; transform:translateX(3px);  mix-blend-mode:multiply; animation: epiChroma 1.2s cubic-bezier(.2,.85,.2,1) 4.35s forwards; }
+.epi-sign{
+  flex:0 0 auto;
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.22em;
+  color:var(--accent);font-weight:500;text-transform:uppercase;
+}
+@keyframes epiFocusIn{
+  from{ opacity:0; }
+  to  { opacity:1; }
+}
+@keyframes epiFocusPull{
+  0%   { filter:blur(10px); transform:translateY(3px); letter-spacing:.12em; }
+  60%  { filter:blur(2px);  transform:translateY(0);   letter-spacing:.03em; }
+  100% { filter:blur(0);    transform:translateY(0);   letter-spacing:.01em; }
+}
+@keyframes epiChroma{
+  0%   { opacity:.55; }
+  55%  { opacity:.3; }
+  100% { opacity:0; }
+}
+@keyframes epiDotPulse{
+  0%,100%{ box-shadow: 0 0 0 0 rgba(255,79,0,.5); opacity:1; }
+  50%    { box-shadow: 0 0 0 6px rgba(255,79,0,0);  opacity:.7; }
+}
+/* Hover : refait le focus-pull comme si on zoomait à nouveau */
+.hero-epigraph:hover .epi-text{
+  animation: epiFocusPull .7s cubic-bezier(.2,.85,.2,1);
+}
+.hero-epigraph:hover .epi-text::before,
+.hero-epigraph:hover .epi-text::after{
+  animation: epiChroma .7s cubic-bezier(.2,.85,.2,1);
+}
+@media(max-width:700px){
+  .hero-epigraph{margin-top:24px;padding-top:14px;gap:10px}
+  .epi-text{font-size:12px}
+  .epi-sign{font-size:9.5px;letter-spacing:.18em}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-epigraph,.epi-text{animation:none !important;opacity:1 !important;filter:none !important;transform:none !important}
+  .epi-text::before,.epi-text::after{display:none !important}
+}
 
 /* ===== Section header ===== */
 .section{padding: 96px var(--page-pad) 80px;position:relative}
@@ -1873,14 +2014,14 @@ body[data-theme="dark"] .eye-label::after{border-left-color:var(--bg)}
 .split-c{ transform: translateX(0); }
 .split-d{ transform: translateX(0); }
 
-/* On HOVER (desktop): swap unified → C+D during closed eyelid */
+/* On HOVER (desktop): swap unified → C+D */
 @media (hover:hover) and (pointer:fine){
   .eye-bubble:hover .eye-unified{ opacity:0; }
   .eye-bubble:hover .eye-cd{ opacity:1; }
   .eye-bubble:hover .split-c{ transform: translateX(-6px); }
   .eye-bubble:hover .split-d{ transform: translateX(6px); }
 }
-/* On TAP (mobile/tactile): same spread via .open toggle, returns on tap-away */
+/* On TAP (mobile): same spread via .open toggle */
 .eye-bubble.open .eye-unified{ opacity:0; }
 .eye-bubble.open .eye-cd{ opacity:1; }
 .eye-bubble.open .split-c{ transform: translateX(-6px); }
@@ -1889,66 +2030,15 @@ body[data-theme="dark"] .eye-label::after{border-left-color:var(--bg)}
 body[data-theme="dark"] .eye-unified .eye-body,
 body[data-theme="dark"] .eye-unified .bubble-pupil rect,
 body[data-theme="dark"] .eye-cd svg path,
-body[data-theme="dark"] .eye-cd svg rect{ fill:#1A1A1A; }
-/* Click: quick wink on the unified eye only (C+D letters don't blink) */
+body[data-theme="dark"] .eye-cd svg rect{ fill:#0F0F0E; }
+/* Click: quick wink on the unified eye */
 .eye-bubble.clicked .eye-unified{ animation: bubbleWink .6s cubic-bezier(.4,0,.3,1); }
 @keyframes bubbleWink{
   0%,100% { transform:scaleY(1); }
   40%     { transform:scaleY(.06); }
   70%     { transform:scaleY(1.04); }
 }
-body[data-theme="dark"] .eye-bubble{background:var(--bg);box-shadow:0 8px 32px -8px rgba(0,0,0,.6)}
-body[data-theme="dark"] .eye-cd svg path,
-body[data-theme="dark"] .eye-cd svg rect{ fill:#1A1A1A; }
-
-/* Contact drawer */
-.contact-drawer{
-  position:fixed;bottom:108px;right:28px;z-index:989;
-  width:300px;
-  background:var(--ink);color:var(--bg);
-  border-radius:20px;
-  padding:24px;
-  box-shadow:0 24px 64px -16px rgba(26,26,26,.5);
-  transform:translateY(20px) scale(.95);opacity:0;pointer-events:none;
-  transition:transform .4s cubic-bezier(.22,1,.36,1), opacity .35s;
-}
-.contact-drawer.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
-.contact-drawer .cd-title{
-  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(240,238,233,.4);margin-bottom:18px;
-}
-.contact-drawer .cd-link{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 0;border-bottom:1px solid rgba(240,238,233,.08);
-  color:var(--bg);text-decoration:none;
-  font-family:var(--font-body);font-size:14px;font-weight:500;
-  transition:color .25s;
-  cursor:none;
-}
-.contact-drawer .cd-link:last-child{border-bottom:0}
-.contact-drawer .cd-link:hover{color:var(--accent)}
-.contact-drawer .cd-link .cd-lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,238,233,.4);margin-bottom:2px;display:block}
-.contact-drawer .cd-link-inner{display:flex;flex-direction:column}
-.contact-drawer .cd-link-arr{font-size:16px;opacity:.5;transition:transform .25s}
-.contact-drawer .cd-link:hover .cd-link-arr{transform:translateX(4px);opacity:1}
-/* WA link — highlighted */
-.contact-drawer .cd-wa{
-  background:rgba(37,211,102,.12);
-  border:1px solid rgba(37,211,102,.2);
-  border-radius:12px;
-  padding:14px 16px;
-  margin-bottom:10px;
-  display:flex;align-items:center;gap:12px;
-}
-.contact-drawer .cd-wa:hover{background:rgba(37,211,102,.22);border-color:rgba(37,211,102,.4)}
-.contact-drawer .cd-wa-icon{width:22px;height:22px;flex-shrink:0;fill:#25D366}
-.contact-drawer .cd-wa-text .cd-lbl{color:rgba(240,238,233,.5)}
-.contact-drawer .cd-wa-text span:not(.cd-lbl){color:#4cd9a0;font-weight:600}
-body[data-theme="dark"] .contact-drawer{background:#F0EEE9;color:#1A1A1A}
-body[data-theme="dark"] .contact-drawer .cd-link{color:#1A1A1A}
-body[data-theme="dark"] .contact-drawer .cd-title{color:rgba(26,26,26,.4)}
-body[data-theme="dark"] .contact-drawer .cd-link .cd-lbl{color:rgba(26,26,26,.4)}
-body[data-theme="dark"] .contact-drawer .cd-link{border-color:rgba(26,26,26,.08)}
+body[data-theme="dark"] .eye-bubble{background:var(--ink);box-shadow:0 8px 32px -8px rgba(0,0,0,.6)}
 
 /* ===== Mobile sticky WhatsApp FAB ===== */
 .mwa-fab{
@@ -2503,6 +2593,770 @@ body[data-theme="dark"] .fold-card.is-open{
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
+/*  RATES — grille tarifaire éditoriale, cream, lisible                 */
+/* ═══════════════════════════════════════════════════════════════ */
+.rates-lede{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(22px,2.4vw,34px);line-height:1.25;letter-spacing:-.015em;
+  color:var(--ink);max-width:46ch;
+  margin:0 0 clamp(28px,3.5vw,48px);
+}
+.rates-lede em{ font-style:italic;color:var(--accent); }
+
+.rates-grid{
+  list-style:none;margin:0 0 clamp(28px,3.5vw,40px);padding:0;
+  border-top:1px solid var(--ink);
+}
+.rates-row{
+  display:grid;
+  grid-template-columns:auto 1fr auto auto;
+  align-items:baseline;
+  gap:clamp(16px,2vw,28px);
+  padding:clamp(20px,2.4vw,28px) 4px;
+  border-bottom:1px solid var(--rule);
+  position:relative;
+  transition:padding-left .28s ease;
+}
+.rates-row:last-child{ border-bottom:1px solid var(--ink); }
+.rates-row::before{
+  content:"";position:absolute;left:-14px;top:0;bottom:0;
+  width:2px;background:var(--accent);
+  opacity:0;transition:opacity .28s ease;
+}
+.rates-row:hover{ padding-left:12px; }
+.rates-row:hover::before{ opacity:1; }
+.rates-num{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;
+  min-width:28px;
+}
+.rates-name{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(24px,2.8vw,36px);line-height:1;letter-spacing:-.02em;
+  color:var(--ink);
+}
+.rates-desc{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+  justify-self:end;text-align:right;max-width:28ch;
+}
+.rates-price{
+  font-family:var(--font-display);font-weight:400;
+  color:var(--ink);letter-spacing:-.01em;
+  display:inline-flex;align-items:baseline;gap:4px;
+  min-width:110px;justify-content:flex-end;
+}
+.rates-price em{
+  font-style:normal;font-size:clamp(22px,2.4vw,30px);
+}
+.rates-price > span{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+}
+.rates-note{
+  font-family:var(--font-body);font-size:14px;line-height:1.6;
+  color:var(--muted);font-style:italic;
+  margin:0;max-width:56ch;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/*  BIO — portrait + texte + meta (§ 04 À propos)                  */
+/* ═══════════════════════════════════════════════════════════════ */
+.bio-grid{
+  display:grid;
+  grid-template-columns:minmax(260px,360px) 1fr;
+  gap:clamp(28px,4vw,60px);
+  align-items:start;
+  border-top:1px solid var(--ink);
+  padding-top:clamp(32px,4vw,52px);
+}
+.bio-photo{ position:relative; }
+.bio-photo picture,
+.bio-photo img{ display:block;width:100%;height:auto; }
+.bio-photo img{
+  border-radius:4px;
+  filter:grayscale(.08) contrast(1.02);
+}
+.bio-photo::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  border:1px solid rgba(26,26,26,.08);border-radius:4px;
+}
+.bio-text{ display:flex;flex-direction:column;gap:clamp(18px,2vw,24px); }
+.bio-quote{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(22px,2.4vw,30px);line-height:1.25;letter-spacing:-.015em;
+  color:var(--ink);margin:0;max-width:40ch;
+}
+.bio-quote em{ font-style:italic;color:var(--accent); }
+.bio-body{
+  font-family:var(--font-body);font-size:clamp(15px,1.1vw,17px);line-height:1.7;
+  color:var(--ink);margin:0;max-width:56ch;
+}
+.bio-meta{
+  list-style:none;margin:0;padding:0;
+  border-top:1px solid var(--rule);
+  display:flex;flex-direction:column;
+}
+.bio-meta li{
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:20px;align-items:baseline;
+  padding:12px 0;border-bottom:1px solid var(--rule);
+}
+.bio-meta li:last-child{ border-bottom:0; }
+.bio-k{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted);
+}
+.bio-v{
+  font-family:var(--font-body);font-size:15px;color:var(--ink);
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/*  PREMIERE — timeline editoriale (ilot sombre moderne sur cream)  */
+/*  Inspiration Premiere Pro, pas copie. Propre, aere, typo solide. */
+/*  [CODE MORT — remplacé par accordéon .menu-list + blocs rates/bio] */
+/* ═══════════════════════════════════════════════════════════════ */
+:root{
+  /* Surface — graphite warm, pas bleu */
+  --pp-bg:#141414;             /* canvas */
+  --pp-bg-2:#1c1c1b;           /* panels / headers */
+  --pp-bg-3:#242422;           /* lanes (video) */
+  --pp-bg-4:#1f1f1e;           /* lanes (audio) */
+  --pp-border:#000;
+  --pp-line:#2e2e2c;           /* grid lines subtiles */
+  --pp-line-2:#3a3a37;         /* separateurs doux */
+  --pp-text:#e8e4da;           /* cream text */
+  --pp-text-2:#9a968c;
+  --pp-text-dim:#66635c;
+  --pp-accent:#FF4F00;         /* vermillon site — playhead + selection */
+  /* Couleurs pistes — desaturees, editoriales */
+  --pp-v1:#FF4F00;             /* montage = vermillon site (feature) */
+  --pp-v2:#6b9bb8;             /* clips = bleu ardoise */
+  --pp-v3:#d9a26b;             /* aftermovies = sable dore */
+  --pp-v4:#a090c8;             /* brand = lavande poudree */
+  --pp-a1:#7fa884;             /* formation = sauge */
+}
+.pp-project{
+  position:relative;
+  margin:clamp(24px,3vw,36px) 0 clamp(12px,1.4vw,18px);
+  background:var(--pp-bg);
+  border:1px solid var(--pp-line);
+  border-radius:10px;
+  box-shadow:
+    0 32px 80px -40px rgba(0,0,0,.55),
+    0 1px 0 rgba(255,255,255,.03) inset;
+  color:var(--pp-text);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px;
+  overflow:hidden;
+}
+
+/* ───── Title bar — minimal et moderne ───── */
+.pp-titlebar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:14px 20px;
+  background:var(--pp-bg-2);
+  border-bottom:1px solid var(--pp-line);
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--pp-text-2);
+}
+.pp-seq{ display:inline-flex;align-items:center;gap:10px; }
+.pp-rec{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--pp-accent);display:inline-block;
+  box-shadow:0 0 10px color-mix(in srgb,var(--pp-accent) 70%,transparent);
+  animation:pp-blink 1.8s ease-in-out infinite;
+}
+@keyframes pp-blink{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+.pp-seq-name{ color:var(--pp-text);letter-spacing:.16em; }
+.pp-tc{
+  color:var(--pp-text);
+  font-variant-numeric:tabular-nums;letter-spacing:.08em;font-size:11px;
+}
+
+/* ───── Tabs ───── */
+.pp-tabs{
+  display:flex;align-items:stretch;
+  background:var(--pp-bg-2);
+  border-bottom:1px solid var(--pp-line);
+  overflow-x:auto;scrollbar-width:none;
+}
+.pp-tabs::-webkit-scrollbar{ display:none; }
+.pp-tab{
+  position:relative;
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 22px;
+  background:transparent;border:0;
+  color:var(--pp-text-dim);
+  font:inherit;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  cursor:pointer;white-space:nowrap;
+  transition:color .18s ease;
+}
+.pp-tab::after{
+  content:"";position:absolute;left:22px;right:22px;bottom:-1px;height:1px;
+  background:var(--pp-accent);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .24s cubic-bezier(.2,.8,.2,1);
+}
+.pp-tab:hover{ color:var(--pp-text-2); }
+.pp-tab.is-active{ color:var(--pp-text); }
+.pp-tab.is-active::after{ transform:scaleX(1); }
+.pp-tab-icon{
+  font-family:ui-monospace,monospace;font-size:10px;
+  color:var(--pp-text-dim);
+}
+.pp-tab.is-active .pp-tab-icon{ color:var(--pp-accent); }
+
+.pp-panel{ display:none; }
+.pp-panel.is-active{ display:block; }
+.pp-panel[hidden]{ display:none; }
+
+/* ───── Timeline — colonne SECTIONS à GAUCHE (cœur éditorial), lane à droite ───── */
+/* Variables de colonnes partagées par ruler + toutes les rows   */
+.pp-tl{
+  --pp-section-w:clamp(280px,30vw,380px);
+  position:relative;
+  background:var(--pp-bg);
+}
+.pp-row{
+  display:grid;
+  grid-template-columns:var(--pp-section-w) 1fr;
+  border-bottom:1px solid var(--pp-line);
+  min-height:86px;
+  position:relative;
+}
+.pp-row--ruler{
+  min-height:32px;
+  background:var(--pp-bg-2);
+}
+.pp-row:last-of-type{ border-bottom:0; }
+
+/* Ruler (à gauche) */
+.pp-ruler{
+  position:relative;height:100%;
+  background:
+    linear-gradient(to right,var(--pp-line-2) 1px,transparent 1px) 0 0/20% 100%,
+    linear-gradient(to right,var(--pp-line) 1px,transparent 1px) 0 0/4% 100%;
+}
+.pp-ruler span{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  font-size:9.5px;letter-spacing:.14em;
+  font-variant-numeric:tabular-nums;
+  padding:0 6px;
+  color:var(--pp-text-dim);
+  background:var(--pp-bg-2);
+}
+.pp-ruler span:first-child{ transform:translate(0,-50%); }
+.pp-ruler span:last-child{ transform:translate(-100%,-50%); }
+
+/* En-tête de la colonne SECTIONS (gauche de la row ruler) */
+.pp-sections-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px 0 26px;
+  background:var(--pp-bg-2);
+  border-right:1px solid var(--pp-line);
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--pp-text-dim);
+  position:relative;
+}
+.pp-sections-head::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--pp-accent);
+}
+.pp-sections-k{ color:var(--pp-text);font-weight:600;letter-spacing:.2em; }
+.pp-sections-v{ color:var(--pp-text-dim);font-family:ui-monospace,monospace; }
+
+/* Lane — fond légèrement assombri pour contraster avec la colonne sections */
+.pp-lane{
+  position:relative;
+  background:
+    linear-gradient(to right,var(--pp-line) 1px,transparent 1px) 0 0/20% 100%,
+    var(--pp-bg-3);
+}
+.pp-row--audio .pp-lane{
+  background:
+    linear-gradient(to right,var(--pp-line) 1px,transparent 1px) 0 0/20% 100%,
+    var(--pp-bg-4);
+}
+/* Connecteur pointillé : début de la lane (colle à la section à gauche) → début du clip.
+   Rendu via pseudo sur la lane, positionné grâce aux CSS vars héritées
+   de la row (--s, --e, --c). Subtil en permanence, plein au hover. */
+.pp-lane::after{
+  content:"";
+  position:absolute;
+  top:50%;left:0;right:calc(100% - var(--s, 0%));
+  height:0;
+  border-top:1px dashed color-mix(in srgb,var(--c) 38%,transparent);
+  opacity:.35;
+  pointer-events:none;
+  transition:opacity .25s ease;
+}
+.pp-row:hover .pp-lane::after,
+.pp-row.is-active .pp-lane::after{ opacity:1; }
+
+/* ───── Clips — flat, accent stripe, éditorial ───── */
+.pp-clip{
+  position:absolute;top:11px;bottom:11px;
+  left:var(--s);right:calc(100% - var(--e));
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--c) 14%,var(--pp-bg-2) 86%) 0%,
+    color-mix(in srgb,var(--c) 8%,var(--pp-bg-2) 92%) 100%);
+  border:1px solid color-mix(in srgb,var(--c) 35%,var(--pp-line) 65%);
+  border-radius:5px;
+  padding:0;
+  display:grid;
+  grid-template-columns:3px 1fr;
+  overflow:hidden;
+  cursor:pointer;
+  font:inherit;color:var(--pp-text);
+  text-align:left;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;
+  box-shadow:0 1px 0 rgba(255,255,255,.03) inset;
+}
+.pp-clip-bar{
+  background:var(--c);
+  box-shadow:0 0 8px color-mix(in srgb,var(--c) 50%,transparent);
+}
+.pp-clip-body{
+  display:flex;flex-direction:column;justify-content:center;gap:4px;
+  padding:0 14px;min-width:0;
+}
+.pp-clip-name{
+  font-family:Georgia,'Times New Roman',Times,serif;
+  font-size:14px;line-height:1.2;letter-spacing:-.005em;
+  color:var(--pp-text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.pp-clip-meta{
+  font-family:ui-monospace,monospace;
+  font-size:10px;letter-spacing:.04em;
+  color:var(--pp-text-dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.pp-clip:hover,
+.pp-row:hover .pp-clip,
+.pp-row.is-active .pp-clip{
+  transform:translateY(-1px);
+  border-color:var(--c);
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--c) 22%,var(--pp-bg-2) 78%) 0%,
+    color-mix(in srgb,var(--c) 14%,var(--pp-bg-2) 86%) 100%);
+  box-shadow:0 8px 20px -10px color-mix(in srgb,var(--c) 50%,transparent);
+}
+.pp-clip:hover .pp-clip-name,
+.pp-row:hover .pp-clip-name{ color:#fff; }
+.pp-clip.is-selected{
+  border-color:var(--c);
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--c) 30%,var(--pp-bg-2) 70%) 0%,
+    color-mix(in srgb,var(--c) 20%,var(--pp-bg-2) 80%) 100%);
+  box-shadow:0 0 0 1px var(--c),0 10px 24px -10px color-mix(in srgb,var(--c) 60%,transparent);
+  z-index:2;
+}
+.pp-clip.is-selected .pp-clip-name{ color:#fff; }
+
+/* Audio clip — waveform */
+.pp-clip--audio{
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--c) 10%,var(--pp-bg-4) 90%) 0%,
+    color-mix(in srgb,var(--c) 6%,var(--pp-bg-4) 94%) 100%);
+}
+.pp-clip--audio .pp-clip-body{ padding:8px 14px; }
+.pp-wave{
+  position:absolute;left:20px;right:14px;bottom:8px;
+  height:22px;
+  color:color-mix(in srgb,var(--c) 80%,#fff 20%);
+  opacity:.7;
+  pointer-events:none;
+}
+
+/* ───── SECTIONS (colonne de GAUCHE — vrai cœur du layout éditorial) ───── */
+.pp-section{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  grid-template-rows:auto auto;
+  grid-template-areas:
+    "num   title  arr"
+    "num   sub    arr";
+  column-gap:16px;row-gap:4px;
+  align-items:center;
+  padding:20px 26px 20px 26px;
+  background:var(--pp-bg-2);
+  border:0;border-right:1px solid var(--pp-line);
+  color:var(--pp-text);
+  cursor:pointer;text-align:left;
+  font:inherit;
+  position:relative;
+  transition:background .22s ease,padding-left .22s ease;
+}
+/* Rail vertical coloré à gauche du section-block (identite de categorie) */
+.pp-section::before{
+  content:"";
+  position:absolute;left:0;top:16px;bottom:16px;width:3px;
+  background:var(--c);
+  opacity:.55;
+  transition:opacity .22s ease,width .22s ease,box-shadow .22s ease;
+}
+.pp-section-num{
+  grid-area:num;
+  align-self:start;
+  padding:5px 9px;
+  background:transparent;
+  border:1px solid color-mix(in srgb,var(--pp-accent) 35%,transparent);
+  border-radius:3px;
+  color:var(--pp-accent);
+  font-family:ui-monospace,monospace;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:600;
+  white-space:nowrap;
+  transition:background .22s ease,color .22s ease,border-color .22s ease;
+}
+.pp-section-title{
+  grid-area:title;
+  align-self:end;
+  font-family:Georgia,'Times New Roman',Times,serif;
+  font-weight:500;
+  font-size:clamp(26px,2.6vw,32px);line-height:1.05;
+  letter-spacing:-.015em;
+  color:var(--pp-text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:color .22s ease;
+}
+.pp-section-sub{
+  grid-area:sub;
+  align-self:start;
+  font-family:ui-monospace,monospace;
+  font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--pp-text-dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:color .22s ease;
+}
+.pp-section-arr{
+  grid-area:arr;
+  align-self:center;
+  font-size:22px;line-height:1;
+  color:var(--pp-text-dim);
+  transition:transform .22s ease,color .22s ease;
+}
+/* Feature row (montage) : titre encore plus gros */
+.pp-row[data-track="montage"] .pp-section-title{
+  font-size:clamp(32px,3.2vw,40px);
+}
+
+/* Hover / active (row-level pour sync clip ↔ section) */
+.pp-section:hover,
+.pp-row:hover .pp-section,
+.pp-row.is-active .pp-section{
+  background:color-mix(in srgb,var(--c) 6%,var(--pp-bg-2) 94%);
+  padding-left:34px;
+}
+.pp-row:hover .pp-section::before,
+.pp-row.is-active .pp-section::before{
+  opacity:1;width:4px;
+  box-shadow:0 0 12px color-mix(in srgb,var(--c) 70%,transparent);
+}
+.pp-row:hover .pp-section-title,
+.pp-row.is-active .pp-section-title{ color:#fff; }
+.pp-row:hover .pp-section-sub{ color:var(--pp-text-2); }
+.pp-row:hover .pp-section-arr{ transform:translateX(4px);color:var(--pp-accent); }
+.pp-row:hover .pp-section-num,
+.pp-row.is-active .pp-section-num{
+  background:var(--pp-accent);color:var(--pp-bg);border-color:var(--pp-accent);
+}
+
+/* ───── Playhead (scrube uniquement dans la lane) ───── */
+.pp-playhead{
+  position:absolute;top:0;bottom:0;
+  left:0;                     /* JS recalc, reste dans la zone lane */
+  width:1px;background:var(--pp-accent);
+  pointer-events:none;
+  transition:left .05s linear;
+  box-shadow:0 0 8px color-mix(in srgb,var(--pp-accent) 55%,transparent);
+  z-index:3;
+}
+.pp-playhead-dot{
+  position:absolute;top:-4px;left:50%;transform:translateX(-50%);
+  width:9px;height:9px;border-radius:50%;
+  background:var(--pp-accent);
+  box-shadow:0 0 0 2px var(--pp-bg),0 0 12px color-mix(in srgb,var(--pp-accent) 70%,transparent);
+}
+
+/* ───── Detail fiche (sous la timeline, au click d'un clip) ───── */
+.pp-detail{
+  background:var(--pp-bg-2);
+  border-top:1px solid var(--pp-line);
+  padding:24px clamp(20px,2.4vw,30px) 28px;
+  color:var(--pp-text);
+  animation:pp-detail-in .28s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes pp-detail-in{ from{ opacity:0;transform:translateY(-6px); } to{ opacity:1;transform:none; } }
+.pp-detail-head{
+  display:flex;align-items:center;gap:16px;
+  padding-bottom:14px;margin-bottom:14px;
+  border-bottom:1px solid var(--pp-line);
+}
+.pp-detail-num{
+  background:transparent;color:var(--pp-accent);
+  padding:5px 10px;border-radius:3px;
+  border:1px solid color-mix(in srgb,var(--pp-accent) 40%,transparent);
+  font-size:10px;letter-spacing:.14em;font-weight:600;
+  font-family:ui-monospace,monospace;text-transform:uppercase;
+  white-space:nowrap;
+}
+.pp-detail-name{
+  flex:1;
+  font-family:Georgia,'Times New Roman',Times,serif;
+  font-size:clamp(20px,2.6vw,26px);letter-spacing:-.01em;color:var(--pp-text);
+  line-height:1.2;
+}
+.pp-detail-close{
+  background:transparent;border:1px solid var(--pp-line-2);
+  color:var(--pp-text-2);
+  width:32px;height:32px;border-radius:3px;
+  cursor:pointer;font-size:18px;line-height:1;
+  transition:background .18s,color .18s,border-color .18s;
+}
+.pp-detail-close:hover{ background:var(--pp-bg-3);color:var(--pp-text);border-color:var(--pp-text-dim); }
+.pp-detail-desc{
+  font-family:Georgia,serif;font-size:15.5px;line-height:1.6;
+  color:var(--pp-text-2);margin:0 0 16px;max-width:68ch;
+}
+.pp-detail-tags{
+  display:flex;flex-wrap:wrap;gap:6px;
+  list-style:none;padding:0;margin:0;
+}
+.pp-detail-tags li{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  padding:6px 10px;border:1px solid var(--pp-line-2);
+  border-radius:3px;color:var(--pp-text-2);
+  font-family:ui-monospace,monospace;
+}
+
+/* ───── Status bar ───── */
+.pp-statusbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 20px;
+  background:var(--pp-bg-2);
+  border-top:1px solid var(--pp-line);
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--pp-text-dim);
+}
+.pp-status-meta{ font-variant-numeric:tabular-nums; }
+.pp-status-hint{ font-style:normal;color:var(--pp-text-dim); }
+
+/* ───── Inspector (Rates + Project Info) — meme langage ───── */
+.pp-inspector{
+  padding:clamp(26px,3vw,38px) clamp(22px,2.4vw,32px) clamp(32px,3.4vw,42px);
+  background:var(--pp-bg);
+  color:var(--pp-text);
+  animation:pp-detail-in .28s cubic-bezier(.2,.8,.2,1);
+}
+.pp-insp-head{
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
+  padding-bottom:18px;margin-bottom:24px;
+  border-bottom:1px solid var(--pp-line);
+}
+.pp-insp-num{
+  background:transparent;color:var(--pp-accent);
+  padding:5px 10px;border-radius:3px;
+  border:1px solid color-mix(in srgb,var(--pp-accent) 40%,transparent);
+  font-size:10px;letter-spacing:.14em;
+  font-family:ui-monospace,monospace;text-transform:uppercase;
+}
+.pp-insp-title{
+  font-family:Georgia,'Times New Roman',Times,serif;
+  font-size:clamp(26px,3.2vw,34px);color:var(--pp-text);letter-spacing:-.012em;
+  line-height:1.1;
+}
+.pp-insp-meta{
+  margin-left:auto;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--pp-text-dim);
+  font-family:ui-monospace,monospace;
+}
+.pp-insp-lead{
+  font-family:Georgia,serif;font-size:15.5px;line-height:1.6;
+  color:var(--pp-text-2);margin:0 0 22px;max-width:64ch;
+}
+.pp-insp-grid{
+  list-style:none;padding:0;margin:0;
+  border-top:1px solid var(--pp-line);
+}
+.pp-insp-grid li{
+  display:grid;
+  grid-template-columns:180px 1fr auto;
+  align-items:center;gap:20px;
+  padding:20px 0;
+  border-bottom:1px solid var(--pp-line);
+  transition:padding-left .2s ease;
+}
+.pp-insp-grid li:hover{ padding-left:6px; }
+.pp-insp-k{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--pp-text-dim);
+  font-family:ui-monospace,monospace;
+}
+.pp-insp-v{
+  font-family:Georgia,serif;font-size:15.5px;color:var(--pp-text-2);
+}
+.pp-insp-n{
+  font-family:Georgia,'Times New Roman',Times,serif;
+  color:var(--pp-accent);font-variant-numeric:tabular-nums;
+  display:inline-flex;align-items:baseline;gap:3px;
+}
+.pp-insp-n em{ font-style:normal;font-size:clamp(22px,2.6vw,28px);letter-spacing:-.01em; }
+.pp-insp-n span{ font-size:11px;color:var(--pp-text-dim);font-family:ui-monospace,monospace; }
+.pp-insp-note{
+  margin:24px 0 0;font-size:13px;color:var(--pp-text-dim);
+  font-family:Georgia,serif;font-style:italic;line-height:1.55;
+  max-width:62ch;
+}
+
+/* Project Info — portrait + meta */
+.pp-insp-about{
+  display:grid;grid-template-columns:300px 1fr;gap:clamp(24px,2.8vw,38px);
+  align-items:start;
+}
+.pp-insp-photo{
+  aspect-ratio:3/4;overflow:hidden;border-radius:4px;
+  border:1px solid var(--pp-line);
+  background:#000;
+  position:relative;
+}
+.pp-insp-photo::after{
+  content:"PORTRAIT · 3200×4000";
+  position:absolute;left:10px;bottom:10px;
+  font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.8);
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  padding:4px 8px;border-radius:2px;
+  pointer-events:none;
+}
+.pp-insp-photo img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:saturate(.9);
+}
+.pp-insp-text{ display:flex;flex-direction:column;gap:16px; }
+.pp-insp-quote{
+  font-family:Georgia,'Times New Roman',Times,serif;
+  font-size:clamp(20px,2.4vw,24px);line-height:1.35;
+  color:var(--pp-text);margin:0;letter-spacing:-.005em;
+}
+.pp-insp-quote em{ font-style:italic;color:var(--pp-accent); }
+.pp-insp-body{
+  font-family:Georgia,serif;font-size:14.5px;line-height:1.65;
+  color:var(--pp-text-2);margin:0;max-width:58ch;
+}
+.pp-insp-meta-list{
+  list-style:none;padding:16px 0 0;margin:8px 0 0;
+  border-top:1px solid var(--pp-line);
+  display:grid;gap:10px;
+}
+.pp-insp-meta-list li{
+  display:grid;grid-template-columns:130px 1fr;gap:16px;
+  align-items:baseline;
+  padding:4px 0;
+}
+.pp-insp-meta-list .pp-k{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--pp-text-dim);
+  font-family:ui-monospace,monospace;
+}
+.pp-insp-meta-list .pp-v{
+  color:var(--pp-text);font-family:Georgia,serif;font-size:14.5px;
+}
+
+/* ═══════════════════════ Responsive ═══════════════════════ */
+/* Tablet : colonne sections plus étroite + titres ajustés */
+@media (max-width:1100px){
+  .pp-tl{ --pp-section-w:clamp(220px,28vw,300px); }
+  .pp-section-title{ font-size:clamp(20px,2.3vw,24px); }
+  .pp-row[data-track="montage"] .pp-section-title{ font-size:clamp(24px,2.8vw,28px); }
+  .pp-section{ padding:18px 22px 18px 22px; }
+}
+
+/* Mobile : on masque la timeline lane + ruler, on garde uniquement la liste
+   éditoriale des sections en cartes tactiles pleine largeur.
+   C'est l'identité "magazine" qui prime, la mécanique Premiere reste
+   suggérée par la titlebar + les onglets seulement. */
+@media (max-width:780px){
+  .pp-project{ font-size:11px;border-radius:6px;margin-left:-6px;margin-right:-6px; }
+  .pp-titlebar{ padding:11px 14px;font-size:10px;letter-spacing:.1em; }
+  .pp-seq-name{ font-size:10px; }
+  .pp-tc{ font-size:10px; }
+  .pp-tab{ padding:12px 14px;font-size:9.5px;letter-spacing:.1em; }
+  .pp-tab::after{ left:14px;right:14px; }
+
+  /* Rows : colonne unique, section pleine largeur */
+  .pp-tl{ --pp-section-w:1fr; }
+  .pp-row{
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+    min-height:0;
+  }
+
+  /* Mobile = éditorial : on masque ruler + lane + playhead.
+     Les clips sont implicites dans le titre de section. */
+  .pp-row--ruler,
+  .pp-lane,
+  .pp-playhead{ display:none; }
+
+  /* Section = carte éditoriale tactile, rail coloré à gauche */
+  .pp-section{
+    border-right:0;
+    border-top:1px solid var(--pp-line);
+    padding:22px 20px 22px 28px;
+    grid-template-columns:auto 1fr auto;
+    grid-template-rows:auto auto;
+    grid-template-areas:
+      "num   title  arr"
+      "num   sub    arr";
+    column-gap:14px;row-gap:4px;
+    min-height:90px;
+    align-items:center;
+  }
+  .pp-section::before{
+    top:16px;bottom:16px;left:0;right:auto;width:3px;height:auto;
+    opacity:.65;
+  }
+  .pp-section-num{
+    font-size:10px;padding:4px 8px;letter-spacing:.14em;
+  }
+  .pp-section-title{
+    font-size:22px;line-height:1.15;
+    white-space:normal;            /* titre peut wrapper sur mobile */
+    overflow:visible;text-overflow:clip;
+  }
+  .pp-row[data-track="montage"] .pp-section-title{ font-size:26px; }
+  .pp-section-sub{
+    font-size:10px;letter-spacing:.08em;
+    white-space:normal;overflow:visible;text-overflow:clip;
+  }
+  .pp-section-arr{ font-size:22px; }
+  .pp-row:hover .pp-section,
+  .pp-section:hover,
+  .pp-row.is-active .pp-section{ padding-left:34px; }
+
+  /* Detail + inspector */
+  .pp-detail{ padding:20px 16px 24px; }
+  .pp-detail-head{ gap:10px; }
+  .pp-statusbar{ padding:8px 14px;font-size:9.5px;letter-spacing:.1em; }
+  .pp-status-hint{ display:none; }
+
+  .pp-inspector{ padding:22px 16px 28px; }
+  .pp-insp-head{ gap:10px;padding-bottom:12px;margin-bottom:18px; }
+  .pp-insp-meta{ margin-left:0;width:100%;font-size:9.5px; }
+  .pp-insp-about{ grid-template-columns:1fr;gap:22px; }
+  .pp-insp-photo{ max-width:260px; }
+  .pp-insp-grid li{ grid-template-columns:1fr;gap:6px;padding:16px 0; }
+  .pp-insp-grid li:hover{ padding-left:0; }
+  .pp-insp-grid .pp-insp-n{ margin-top:2px; }
+  .pp-insp-meta-list li{ grid-template-columns:110px 1fr;gap:10px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
 /*  Responsive — menu-list · price-block · apropos-intro            */
 /* ═══════════════════════════════════════════════════════════════ */
 @media(max-width:900px){
@@ -2573,6 +3427,39 @@ body[data-theme="dark"] .fold-card.is-open{
   .apropos-photo{ max-width:100%; }
   .apropos-facts{ padding-top:14px;gap:8px; }
   .apropos-facts li{ font-size:11.5px;padding-left:16px; }
+
+  /* Rates mobile : passe la ligne en grille 2 cols, prix sous le nom */
+  .rates-lede{ font-size:clamp(20px,6.5vw,26px); }
+  .rates-row{
+    grid-template-columns:auto 1fr;
+    grid-template-areas:
+      "num  name"
+      "num  desc"
+      ".    price";
+    gap:4px 14px;padding:18px 4px;
+  }
+  .rates-num{ grid-area:num;align-self:start;margin-top:6px; }
+  .rates-name{ grid-area:name;font-size:clamp(24px,7.5vw,30px); }
+  .rates-desc{ grid-area:desc;justify-self:start;text-align:left;font-size:10.5px;letter-spacing:.12em;max-width:100%; }
+  .rates-price{ grid-area:price;justify-self:start;min-width:0;margin-top:8px; }
+  .rates-price em{ font-size:clamp(22px,6.5vw,26px); }
+  .rates-note{ font-size:13px; }
+
+  /* Bio mobile : stack photo au-dessus, bio dessous */
+  .bio-grid{
+    grid-template-columns:1fr;
+    gap:28px;
+    padding-top:28px;
+  }
+  .bio-photo{ max-width:280px;margin:0 auto; }
+  .bio-quote{ font-size:clamp(22px,6.8vw,28px);max-width:100%; }
+  .bio-body{ font-size:15px; }
+  .bio-meta li{
+    grid-template-columns:110px 1fr;
+    gap:10px;padding:10px 0;
+  }
+  .bio-k{ font-size:10px;letter-spacing:.16em; }
+  .bio-v{ font-size:14px; }
 
   /* Infos + fold-card : versions mobiles sobres */
   .section--infos{ margin-top:32px;margin-bottom:48px; }
@@ -2745,7 +3632,6 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
   .eye-bubble .eye-cd svg{height:20px}
   .eye-bubble.open .split-c{ transform: translateX(-4px); }
   .eye-bubble.open .split-d{ transform: translateX(4px); }
-  .contact-drawer{bottom:82px;right:12px;width:calc(100vw - 24px);max-width:340px}
 }
 
 /* ===== Ticker in hero modifier ===== */
@@ -2797,6 +3683,393 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
 /* ===== Contact simplified ===== */
 .contact-grid--simple{display:block;max-width:720px;margin:0 auto}
 .contact-grid--simple .contact-col-text{width:100%}
+
+/* ═══════════════════════════════════════════════════════════════
+   ARTISTIC SIGNATURES — 2026 refonte
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ---------- Brand CD monogram (logo officiel) + wordmark ---------- */
+.brand-logo{
+  display:inline-flex;align-items:center;gap:12px;
+  text-decoration:none;color:var(--ink);
+  padding:2px 4px 2px 0;
+  transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .25s;
+}
+.brand-logo:hover{color:var(--ink)}
+.brand-logo:hover .cd-mono{transform:scale(1.03)}
+.topbar a.brand-logo:hover{color:var(--ink)} /* override .topbar a:hover qui passe en accent */
+.cd-mono{
+  width:auto;height:30px;display:block;
+  color:var(--ink);
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
+  flex-shrink:0;
+  overflow:visible;
+}
+/* Le D est positionné à droite du C au repos, et glisse vers lui au hover */
+.cd-mono .cd-d{
+  transform:translateX(83px);
+  transition:transform .55s cubic-bezier(.55,1.4,.35,1); /* petit rebond élastique */
+}
+.brand-logo:hover .cd-mono .cd-d{
+  transform:translateX(68px); /* D se colle au C */
+}
+/* Micro-mouvement du C à l'inverse pour un effet "rencontre" */
+.cd-mono .cd-c{
+  transition:transform .55s cubic-bezier(.55,1.4,.35,1);
+}
+.brand-logo:hover .cd-mono .cd-c{
+  transform:translateX(-2px);
+}
+body[data-theme="dark"] .brand-logo,
+body[data-theme="dark"] .brand-logo:hover,
+body[data-theme="dark"] .cd-mono{color:var(--cream)}
+.brand-wordmark{
+  display:flex;flex-direction:column;gap:1px;line-height:1;
+}
+.brand-wordmark-top{
+  font-family:var(--font-display);
+  font-size:15px;letter-spacing:.01em;
+  color:var(--ink);
+}
+.brand-wordmark-sub{
+  font-family:var(--font-mono);
+  font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--muted);
+  margin-top:2px;
+}
+body[data-theme="dark"] .brand-wordmark-top{color:var(--cream)}
+@media(max-width:720px){
+  .brand-wordmark-sub{display:none}
+  .brand-wordmark-top{font-size:13px}
+  .cd-mono{height:24px}
+}
+
+/* SMPTE bars passent devant la topbar */
+.smpte-bars{z-index:60}
+
+/* ---------- SMPTE color bars + halo diffus (unifie avec la topbar) ---------- */
+.smpte-bars{
+  position:fixed;top:0;left:0;right:0;
+  height:8px;display:flex;z-index:101;
+  pointer-events:none;
+  opacity:.92;
+}
+.smpte-bars span{flex:1;display:block;height:100%}
+body[data-theme="dark"] .smpte-bars{opacity:.82}
+@media(max-width:900px){.smpte-bars{height:6px}}
+
+/* Halo SMPTE — diffuse discrètement la couleur sous la barre.
+   Volontairement contenu : fine bande (~70px), opacité modérée,
+   les 7 secteurs SMPTE restent identifiables sans envahir la page. */
+.smpte-mist{
+  position:fixed;top:8px;left:0;right:0;
+  height:70px;z-index:38;
+  background:linear-gradient(90deg,
+    #c0c0c0 0%, #c0c0c0 14.28%,
+    #c0c000 14.28%, #c0c000 28.57%,
+    #00c0c0 28.57%, #00c0c0 42.86%,
+    #00c000 42.86%, #00c000 57.14%,
+    #c000c0 57.14%, #c000c0 71.43%,
+    #c00000 71.43%, #c00000 85.71%,
+    #0000c0 85.71%, #0000c0 100%);
+  opacity:0;          /* fade-in synchronisé avec l'arrivée de la barre */
+  filter:blur(14px) saturate(1.45);
+  /* Fade rapide vers transparent pour rester discret */
+  -webkit-mask-image:linear-gradient(to bottom,
+    #000 0%,
+    rgba(0,0,0,.75) 30%,
+    rgba(0,0,0,.3) 65%,
+    transparent 100%);
+          mask-image:linear-gradient(to bottom,
+    #000 0%,
+    rgba(0,0,0,.75) 30%,
+    rgba(0,0,0,.3) 65%,
+    transparent 100%);
+  pointer-events:none;
+  transform:translateZ(0);
+  animation: mistFadeIn .55s cubic-bezier(.25,.8,.3,1) 4.0s forwards;
+}
+@keyframes mistFadeIn{
+  from { opacity:0; }
+  to   { opacity:.32; }
+}
+body[data-theme="dark"] .smpte-mist{
+  filter:blur(18px) saturate(1.3);
+  animation: mistFadeInDark .55s cubic-bezier(.25,.8,.3,1) 4.0s forwards;
+}
+@keyframes mistFadeInDark{
+  from { opacity:0; }
+  to   { opacity:.42; }
+}
+@media(max-width:900px){
+  .smpte-mist{top:6px;height:52px;filter:blur(10px) saturate(1.35)}
+  @keyframes mistFadeIn{
+    from { opacity:0; }
+    to   { opacity:.28; }
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .smpte-mist{opacity:.32}
+  body[data-theme="dark"] .smpte-mist{opacity:.42}
+}
+
+/* ---------- Live timecode in topbar-spec ---------- */
+.topbar-spec{display:inline-flex;align-items:center;gap:14px}
+.nav-tc{
+  font-family:var(--font-mono);
+  font-size:11px;letter-spacing:.14em;
+  color:var(--muted);
+  padding:4px 9px;
+  border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+  border-radius:2px;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+body[data-theme="dark"] .nav-tc{border-color:color-mix(in srgb,var(--cream) 20%,transparent)}
+@media(max-width:900px){.nav-tc{display:none}}
+
+/* ---------- Hero ticker marquee (bas du hero) ---------- */
+.hero-ticker{
+  position:absolute;left:0;right:0;bottom:0;
+  overflow:hidden;
+  border-top:1px solid color-mix(in srgb,var(--ink) 10%,transparent);
+  border-bottom:1px solid color-mix(in srgb,var(--ink) 10%,transparent);
+  background:color-mix(in srgb,var(--cream) 50%,transparent);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  padding:10px 0;
+  z-index:4;
+  pointer-events:none;
+}
+.hero-ticker-inner{
+  display:flex;width:max-content;
+  animation:htkScroll 42s linear infinite;
+}
+.hero-ticker-track{
+  display:inline-flex;align-items:center;gap:0;flex-shrink:0;
+}
+.htk{
+  display:inline-flex;align-items:center;gap:14px;
+  padding:0 30px;
+  font-family:var(--font-mono);
+  font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink);
+  opacity:.72;
+  white-space:nowrap;
+}
+.htk-dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent);
+  animation:htkPulse 1.8s ease-in-out infinite;
+}
+.htk-sep{color:var(--accent);font-size:14px;letter-spacing:0}
+@keyframes htkScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes htkPulse{
+  0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 50%,transparent)}
+  50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 0%,transparent)}
+}
+body[data-theme="dark"] .hero-ticker{
+  background:color-mix(in srgb,#0f0f0e 60%,transparent);
+  border-color:color-mix(in srgb,var(--cream) 14%,transparent);
+}
+body[data-theme="dark"] .htk{color:var(--cream)}
+@media(max-width:720px){
+  .hero-ticker{padding:8px 0}
+  .htk{font-size:10.5px;padding:0 18px;gap:10px}
+}
+
+/* ---------- Planche contact (fin § 01) ---------- */
+.planche{
+  margin:120px auto 40px;
+  max-width:960px;
+  padding:32px 28px 24px;
+  background:#FAF8F3;
+  border:1px solid color-mix(in srgb,var(--ink) 10%,transparent);
+  position:relative;
+}
+.planche::before,.planche::after{
+  content:"";position:absolute;
+  width:10px;height:10px;
+  border:1px solid color-mix(in srgb,var(--ink) 30%,transparent);
+  border-radius:50%;
+}
+.planche::before{top:12px;left:12px}
+.planche::after{bottom:12px;right:12px}
+.planche-header{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding-bottom:14px;margin-bottom:22px;
+  border-bottom:1px dashed color-mix(in srgb,var(--ink) 18%,transparent);
+  font-family:var(--font-mono);
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+}
+.planche-k{color:var(--accent);font-weight:600}
+.planche-v{color:var(--muted)}
+.planche-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.pl-frame{
+  position:relative;
+  aspect-ratio:3/2;
+  background:
+    linear-gradient(135deg, #2a2a28 0%, #1a1a19 50%, #232321 100%);
+  border:1px solid rgba(0,0,0,.2);
+  overflow:hidden;
+}
+.pl-frame::before{
+  content:attr(data-fr);
+  position:absolute;top:4px;left:6px;
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;
+  color:rgba(255,255,255,.45);
+}
+.pl-frame::after{
+  content:"";position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 28%,rgba(255,255,255,.03) 28% 29%,transparent 29% 100%),
+    repeating-linear-gradient(0deg,transparent 0 40%,rgba(255,255,255,.04) 40% 41%,transparent 41% 100%);
+  mix-blend-mode:overlay;
+}
+.pl-frame--mark{overflow:visible}
+.pl-circle{
+  position:absolute;inset:-8px -10px;
+  width:calc(100% + 20px);height:calc(100% + 16px);
+  pointer-events:none;z-index:2;
+}
+.pl-circle path{
+  stroke-dasharray:400;stroke-dashoffset:400;
+  animation:plStroke 1.4s cubic-bezier(.55,.05,.35,1) .25s forwards;
+}
+@keyframes plStroke{to{stroke-dashoffset:0}}
+.planche-foot{
+  margin-top:20px;padding-top:14px;
+  border-top:1px dashed color-mix(in srgb,var(--ink) 18%,transparent);
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+}
+.planche-mark-note{color:var(--accent);font-weight:600}
+.planche-stamp{
+  color:var(--muted);
+  padding:4px 10px;
+  border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);
+  transform:rotate(-1.2deg);
+}
+body[data-theme="dark"] .planche{background:#1a1a19;border-color:color-mix(in srgb,var(--cream) 12%,transparent)}
+@media(max-width:720px){
+  .planche{margin:60px 16px 20px;padding:22px 16px 16px}
+  .planche-grid{grid-template-columns:repeat(3,1fr);gap:6px}
+  .planche-header,.planche-foot{font-size:9.5px;letter-spacing:.14em;flex-wrap:wrap;gap:8px}
+  .pl-frame::before{font-size:8px}
+}
+
+/* ---------- Bio — grille moderne derrière le portrait ---------- */
+.bio-grid{
+  display:grid;
+  grid-template-columns:minmax(240px,340px) 1fr;
+  gap:44px;
+  align-items:start;
+}
+.bio-photo{
+  position:relative;
+  aspect-ratio:3/4;
+  border-radius:2px;
+  overflow:hidden;
+  isolation:isolate;
+}
+.bio-photo::before{
+  content:"";position:absolute;inset:-14px;z-index:-1;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb,var(--accent) 22%,transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb,var(--accent) 22%,transparent) 1px, transparent 1px);
+  background-size:24px 24px;
+  background-position:-1px -1px;
+  mask-image:radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  pointer-events:none;
+}
+.bio-photo::after{
+  content:"";position:absolute;inset:-14px;z-index:-1;
+  border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);
+  pointer-events:none;
+}
+.bio-photo img,.bio-photo picture{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:contrast(1.04) saturate(.92);
+}
+.bio-text{display:flex;flex-direction:column;gap:18px}
+.bio-quote{
+  font-family:var(--font-display);
+  font-size:clamp(22px,2.4vw,30px);
+  line-height:1.22;letter-spacing:-.015em;
+  color:var(--ink);
+  margin:0;
+}
+.bio-body{
+  font-family:Georgia,serif;
+  font-size:16.5px;line-height:1.7;
+  color:color-mix(in srgb,var(--ink) 85%,transparent);
+  margin:0;
+}
+.bio-meta{
+  list-style:none;padding:0;margin:14px 0 0;
+  display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);
+}
+.bio-meta li{
+  display:flex;justify-content:space-between;gap:14px;
+  padding:6px 0;
+  border-bottom:1px dotted color-mix(in srgb,var(--ink) 18%,transparent);
+}
+.bio-meta strong{color:var(--ink);font-weight:600;letter-spacing:.08em}
+
+@media(max-width:720px){
+  .bio-grid{grid-template-columns:1fr;gap:28px}
+  .bio-photo{max-width:260px;margin:0 auto}
+  .bio-meta{grid-template-columns:1fr}
+}
+
+/* ---------- Colophon footer (signature minimaliste) ---------- */
+.colophon{
+  margin-top:96px;
+  padding:40px clamp(24px,5vw,72px) 36px;
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.colophon-rule{
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,
+    transparent 0%,
+    color-mix(in srgb,var(--ink) 18%,transparent) 30%,
+    color-mix(in srgb,var(--ink) 18%,transparent) 70%,
+    transparent 100%);
+}
+.colo-logo{
+  display:inline-flex;align-items:center;gap:10px;
+  text-decoration:none;color:var(--ink);
+  transition:opacity .25s ease;
+}
+.colo-logo:hover{opacity:.7}
+.colo-eye{
+  width:22px;height:auto;display:block;
+  fill:var(--ink);
+}
+.colo-wordmark{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ink);
+}
+.colo-copy{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+body[data-theme="dark"] .colo-eye{fill:var(--ink)}
+@media(max-width:900px){
+  .colophon{padding:32px 20px 28px;margin-top:72px}
+  .colo-eye{width:20px}
+  .colo-copy{font-size:9.5px}
+}
 </style>
 </head>
 <body data-mode="classic">
@@ -2841,9 +4114,9 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
 <svg id="film-grain" xmlns="http://www.w3.org/2000/svg"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
 
 <div class="eye-label">Contacte-moi</div>
-<button class="eye-bubble" id="eyeBubble" aria-label="Contact">
+<button class="eye-bubble" id="eyeBubble" aria-label="Contact — scroll vers la section">
  <div class="eye-inner">
-  <!-- Rest state: full eye (same as end of intro) with scanning pupil -->
+  <!-- Rest state: œil unifié avec scan de pupille -->
   <svg class="eye-unified" viewBox="0 0 166.06 126.14" xmlns="http://www.w3.org/2000/svg">
     <path class="eye-body" d="M83,0C37.17,0,0,28.24,0,63.07s37.17,63.07,83,63.07,83-28.24,83-63.07S128.89,0,83,0ZM99.21,91.22v-.17a52,52,0,0,1-32.35,0v.17C52.58,86.48,42.59,75.66,42.59,63.07s10-23.41,24.27-28.15v.17a52,52,0,0,1,32.35,0v-.17c14.28,4.74,24.26,15.56,24.26,28.15S113.49,86.48,99.21,91.22Z"/>
     <g class="bubble-pupil">
@@ -2863,30 +4136,6 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
  </div>
 </button>
 
-<!-- Contact drawer -->
-<div class="contact-drawer" id="contactDrawer">
-  <div class="cd-title">Prendre contact</div>
-  <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o." target="_blank" class="cd-link cd-wa">
-    <svg class="cd-wa-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    <div class="cd-wa-text">
-      <span class="cd-lbl">WhatsApp</span>
-      <span>+32 495 92 42 95</span>
-    </div>
-  </a>
-  <a href="/cdn-cgi/l/email-protection#96f5f9e4f3f8e2fff8b8f2f3e0fffafaf3b8f4f3d6f1fbf7fffab8f5f9fb" class="cd-link">
-    <div class="cd-link-inner"><span class="cd-lbl">Email</span><span><span class="__cf_email__" data-cfemail="660509140308120f08480203100f0a0a0348040326010b070f0a4805090b">[email&#160;protected]</span></span></div>
-    <span class="cd-link-arr">→</span>
-  </a>
-  <a href="https://www.instagram.com/corentin.deville" target="_blank" class="cd-link">
-    <div class="cd-link-inner"><span class="cd-lbl">Instagram</span><span>@corentin.deville</span></div>
-    <span class="cd-link-arr">→</span>
-  </a>
-  <a href="https://www.youtube.com/@corentindeville" target="_blank" class="cd-link">
-    <div class="cd-link-inner"><span class="cd-lbl">YouTube</span><span>@corentindeville</span></div>
-    <span class="cd-link-arr">→</span>
-  </a>
-</div>
-
 <div class="scroll-bar" id="scrollBar"></div>
 
 <div class="cdv-egg" id="cdvEgg" onclick="this.classList.remove('on')"><div class="cdv-egg-text">Corentin<br/>Devillé</div></div>
@@ -2897,23 +4146,44 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
 <div class="blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
 <div class="caustics"></div>
 <div class="grain"></div>
+
+<!-- SMPTE COLOR BARS — ruban net + halo diffusé en dessous pour unifier avec la topbar -->
+<div class="smpte-bars" aria-hidden="true">
+  <span style="background:#c0c0c0"></span>
+  <span style="background:#c0c000"></span>
+  <span style="background:#00c0c0"></span>
+  <span style="background:#00c000"></span>
+  <span style="background:#c000c0"></span>
+  <span style="background:#c00000"></span>
+  <span style="background:#0000c0"></span>
+</div>
+<div class="smpte-mist" aria-hidden="true"></div>
+
 <!-- TOP BAR -->
 <header class="topbar">
-  <div class="brand">
-    <span class="rec-dot-solo"></span>
-    <a href="#contact" style="font-family:var(--font-body);font-size:15px;font-weight:500;letter-spacing:.01em;color:inherit;text-decoration:none" class="brand-name">Corentin Devillé</a>
-  </div>
+  <a href="#top" class="brand brand-logo" aria-label="CD Studio — Corentin Devillé">
+    <svg class="cd-mono" viewBox="0 0 181 136.23" fill="currentColor" aria-hidden="true">
+      <!-- C officiel -->
+      <path class="cd-c" d="M68.13,118.42c0,5.13,0,10.26,0,15.39,0,2.17,0,2.29-2.15,2.19-11.8-.54-22.93-3.51-33-9.75-17.26-10.68-28.3-25.93-31.78-46C-3,56.18,3.91,35.33,21.6,18.35,32.44,7.94,45.6,2.19,60.5.41c2.07-.24,4.16.1,6.23-.36,1-.21,1.42.22,1.42,1.29q0,16.23,0,32.47c0,1.25-.7,1.31-1.62,1.34A31,31,0,0,0,44.17,45.24c-9,9.65-11.63,21-7.3,33.5C41.15,91.05,50.15,98.25,63,100.52a17.43,17.43,0,0,0,3.53.31c1.28,0,1.63.47,1.62,1.7C68.1,107.83,68.13,113.13,68.13,118.42Z"/>
+      <!-- D officiel : barre verticale + courbe (glisse vers le C au hover) -->
+      <g class="cd-d">
+        <rect width="32.35" height="136.23"/>
+        <path d="M29.43,17.81c0-5.13,0-10.26,0-15.39,0-2.17,0-2.29,2.15-2.19,11.8.54,22.93,3.52,33,9.75,17.26,10.68,28.3,25.93,31.78,46,4.19,24.1-2.72,45-20.41,61.93C65.12,128.3,52,134,37.06,135.82c-2.07.25-4.16-.1-6.23.36-.95.21-1.42-.22-1.42-1.29q0-16.23,0-32.47c0-1.25.7-1.3,1.62-1.34A31,31,0,0,0,53.39,91c9-9.65,11.63-21,7.3-33.49S47.41,38,34.55,35.71A18.17,18.17,0,0,0,31,35.4c-1.28,0-1.63-.47-1.62-1.7C29.46,28.4,29.43,23.11,29.43,17.81Z"/>
+      </g>
+    </svg>
+    <span class="brand-wordmark">
+      <span class="brand-wordmark-top">Studio</span>
+      <span class="brand-wordmark-sub">Corentin Devillé</span>
+    </span>
+  </a>
   <nav class="section-nav" id="sectionNav" aria-label="Sections">
     <span class="nav-pill" id="navPill"></span>
     <a href="#projets" data-target="projets">Projets</a>
     <a href="#services" data-target="services">Services</a>
+    <a href="#tarifs" data-target="tarifs">Tarifs</a>
     <a href="#apropos" data-target="apropos">À propos</a>
     <a href="#contact" data-target="contact">Contact</a>
   </nav>
-  <div class="topbar-spec">
-    <span class="spec-badge">4K</span>
-    <span class="spec-badge">60fps</span>
-  </div>
   <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobMenu"><span></span><span></span></button>
 </header>
 
@@ -2939,11 +4209,19 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
           <span class="hero-cta-label">Voir les projets</span>
           <span class="hero-cta-arrow" aria-hidden="true">→</span>
         </a>
-        <a class="hero-cta hero-cta--ghost" href="#contact">
+        <a class="hero-cta hero-cta--ghost" href="#apropos">
           <span class="hero-cta-label">Discuter d'un projet</span>
           <span class="hero-cta-arrow" aria-hidden="true">↓</span>
         </a>
       </div>
+
+      <!-- SIGNATURE FOCUS-PULL — petit texte qui fait "le point" comme un objectif caméra.
+           Flou + aberration chromatique qui se résout en net. Apparaît après le reveal du hero. -->
+      <p class="hero-epigraph" aria-hidden="true">
+        <span class="epi-dot" aria-hidden="true"></span>
+        <span class="epi-text" data-text="Un cadre, un tempo, une intention.">Un cadre, un tempo, une intention.</span>
+        <span class="epi-sign">— C.D.</span>
+      </p>
 
     </div>
   </section>
@@ -3086,14 +4364,42 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
         </div>
       </article>
 
-      <!-- ============ 03 — LUCID DREAMS ============ -->
-      <article class="chap" data-num="03" data-slug="lucid">
+      <!-- ============ 03 — REEL SCOUT (vertical 9:16) ============ -->
+      <article class="chap" data-num="03" data-slug="scout-reel">
         <span class="chap-tab" aria-hidden="true">
           <span class="chap-tab-num">N°03</span>
-          <span class="chap-tab-cat">Music</span>
+          <span class="chap-tab-cat">Reel · 9:16</span>
         </span>
         <button class="chap-head" aria-expanded="false" aria-controls="chap-body-03" type="button">
           <span class="chap-num" aria-hidden="true">03</span>
+          <span class="chap-titlewrap">
+            <span class="chap-title">Reel Scout</span>
+            <span class="chap-meta">Événementiel · Teaser · 2026 · 9:16</span>
+          </span>
+          <span class="chap-chevron" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="chap-body" id="chap-body-03" role="region" aria-label="Reel Scout — médias">
+          <div class="chap-body-inner">
+            <span class="chap-ghost" aria-hidden="true">03</span>
+            <div class="chap-carousel chap-carousel--single" id="carousel-scout-reel" data-format="9x16">
+              <div class="reel-stage">
+                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/scout-reel-1.mp4" muted loop playsinline preload="none"></video></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ============ 04 — LUCID DREAMS ============ -->
+      <article class="chap" data-num="04" data-slug="lucid">
+        <span class="chap-tab" aria-hidden="true">
+          <span class="chap-tab-num">N°04</span>
+          <span class="chap-tab-cat">Music</span>
+        </span>
+        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-04" type="button">
+          <span class="chap-num" aria-hidden="true">04</span>
           <span class="chap-titlewrap">
             <span class="chap-title">Lucid Dreams</span>
             <span class="chap-meta">Music · Clip · 9:16</span>
@@ -3102,9 +4408,9 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </button>
-        <div class="chap-body" id="chap-body-03" role="region" aria-label="Lucid Dreams — médias">
+        <div class="chap-body" id="chap-body-04" role="region" aria-label="Lucid Dreams — médias">
           <div class="chap-body-inner">
-            <span class="chap-ghost" aria-hidden="true">03</span>
+            <span class="chap-ghost" aria-hidden="true">04</span>
             <div class="chap-carousel" id="carousel-lucid" data-format="9x16">
               <div class="reel-stage">
                 <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/lucid-clip-1.mp4" muted loop playsinline preload="none"></video></div>
@@ -3127,14 +4433,14 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
         </div>
       </article>
 
-      <!-- ============ 04 — SCOUT FESTIVAL ============ -->
-      <article class="chap" data-num="04" data-slug="scout">
+      <!-- ============ 05 — SCOUT FESTIVAL ============ -->
+      <article class="chap" data-num="05" data-slug="scout">
         <span class="chap-tab" aria-hidden="true">
-          <span class="chap-tab-num">N°04</span>
+          <span class="chap-tab-num">N°05</span>
           <span class="chap-tab-cat">Aftermovie</span>
         </span>
-        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-04" type="button">
-          <span class="chap-num" aria-hidden="true">04</span>
+        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-05" type="button">
+          <span class="chap-num" aria-hidden="true">05</span>
           <span class="chap-titlewrap">
             <span class="chap-title">Scout Festival</span>
             <span class="chap-meta">Événementiel · Aftermovie · 2026 · 16:9</span>
@@ -3143,9 +4449,9 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </button>
-        <div class="chap-body" id="chap-body-04" role="region" aria-label="Scout Festival — médias">
+        <div class="chap-body" id="chap-body-05" role="region" aria-label="Scout Festival — médias">
           <div class="chap-body-inner">
-            <span class="chap-ghost" aria-hidden="true">04</span>
+            <span class="chap-ghost" aria-hidden="true">05</span>
             <div class="chap-carousel chap-carousel--single" id="carousel-scout" data-format="16x9">
               <div class="reel-stage">
                 <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/aftermovie-scout.mp4" muted loop playsinline preload="none"></video></div>
@@ -3159,17 +4465,17 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
         </div>
       </article>
 
-      <!-- ============ 05 — AUTRES TRAVAUX (archives) ============ -->
+      <!-- ============ 06 — AUTRES TRAVAUX (archives) ============ -->
       <!-- TODO Corentin : remplace les data-ghost par tes vraies vidéos quand tu les as.
            Dupliquer un <a class="more-card">…</a> pour ajouter un slot. Le lien par défaut
            renvoie vers #contact. Ajoute data-open-drawer="slug" si tu veux un drawer. -->
-      <article class="chap chap--autres" data-num="05" data-slug="autres">
+      <article class="chap chap--autres" data-num="06" data-slug="autres">
         <span class="chap-tab" aria-hidden="true">
-          <span class="chap-tab-num">N°05</span>
+          <span class="chap-tab-num">N°06</span>
           <span class="chap-tab-cat">Archives</span>
         </span>
-        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-05" type="button">
-          <span class="chap-num" aria-hidden="true">05</span>
+        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-06" type="button">
+          <span class="chap-num" aria-hidden="true">06</span>
           <span class="chap-titlewrap">
             <span class="chap-title">Autres travaux</span>
             <span class="chap-meta">Mariage · Corporate · Documentaire · sur demande</span>
@@ -3178,9 +4484,9 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </button>
-        <div class="chap-body" id="chap-body-05" role="region" aria-label="Autres travaux — archives">
+        <div class="chap-body" id="chap-body-06" role="region" aria-label="Autres travaux — archives">
           <div class="chap-body-inner">
-            <span class="chap-ghost" aria-hidden="true">05</span>
+            <span class="chap-ghost" aria-hidden="true">06</span>
             <div class="chap-autres-grid">
               <a class="more-card" href="#contact" aria-label="Projet supplémentaire — Mariage">
                 <div class="more-card-media" data-ghost="true" aria-hidden="true"></div>
@@ -3210,6 +4516,45 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
       </article>
     </div>
 
+      <!-- ============================================================
+           PLANCHE CONTACT — référence 35mm / contact sheet argentique.
+           12 vignettes 16:9 (3 lignes × 4 colonnes) avec une case
+           entourée au "crayon gras rouge" (cercle SVG main levée) —
+           comme un monteur/directeur photo qui marque la sélection.
+           Hyper cinéphile, tatoue l'identité vidéo sans alourdir.
+           ============================================================ -->
+      <div class="planche reveal" aria-label="Planche contact — marquage de sélection">
+        <div class="planche-header">
+          <span class="planche-k">Planche contact</span>
+          <span class="planche-v">Nº 04 · Printemps 2026 · 48 exp.</span>
+        </div>
+        <div class="planche-grid">
+          <span class="pl-frame" data-fr="01"></span>
+          <span class="pl-frame" data-fr="02"></span>
+          <span class="pl-frame pl-frame--mark" data-fr="03">
+            <svg class="pl-circle" viewBox="0 0 100 62" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M 8 14 Q 4 6, 20 4 Q 40 2, 65 3 Q 88 5, 94 14 Q 98 28, 96 42 Q 94 56, 80 59 Q 55 62, 32 60 Q 10 58, 5 46 Q 3 30, 8 14 Z"
+                    fill="none" stroke="#E43D12" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round"
+                    stroke-dasharray="1 0"/>
+            </svg>
+          </span>
+          <span class="pl-frame" data-fr="04"></span>
+          <span class="pl-frame" data-fr="05"></span>
+          <span class="pl-frame" data-fr="06"></span>
+          <span class="pl-frame" data-fr="07"></span>
+          <span class="pl-frame" data-fr="08"></span>
+          <span class="pl-frame" data-fr="09"></span>
+          <span class="pl-frame" data-fr="10"></span>
+          <span class="pl-frame" data-fr="11"></span>
+          <span class="pl-frame" data-fr="12"></span>
+        </div>
+        <div class="planche-foot">
+          <span class="planche-mark-note">↑ Sélection retenue — Wenda Aftermovie, pose 03</span>
+          <span class="planche-stamp">REEL № 47 · BXL</span>
+        </div>
+      </div>
+
       <!-- Sceau de fermeture -->
       <div class="section-seal section-seal--close reveal" aria-hidden="true">
         <span class="seal-meta">Fin du dossier · retour aux services ↓</span>
@@ -3220,244 +4565,265 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     </div><!-- /.section-body -->
   </section>
 
-  <!-- SERVICES — detaillee en bref, emphase montage/video -->
-  <section class="section wrap" id="services" data-section-label="§ 02 — Services">
+  <!-- SERVICES — Timeline Premiere Pro (+ Tarifs / A propos en Inspector tabs)
+       Un "projet .prproj" sombre pose au milieu de la page editoriale cream.
+       3 tabs : Timeline | Effects Controls (Rates) | Project Info (A propos).
+       Tarifs + A propos restent fermes par defaut (clique pour ouvrir). -->
+  <section class="section wrap section--pp" id="services" data-section-label="§ 02 — Services">
     <div class="section-head reveal">
       <div class="idx">§ 02 / Ce que je fais</div>
       <h2>Services</h2>
       <div class="sub">Montage &amp; vidéo<br/>au cœur du métier</div>
     </div>
 
-    <!-- DOSSIER UNIFIE — meme langage que § 01 : rail vermillon + sceaux en bornes.
-         Dedans : menu-list de 5 items typographiques (1 ouvert a la fois),
-         ordre pense pour mettre montage & video en premier. -->
     <div class="section-body">
 
       <!-- Sceau d'ouverture -->
       <div class="section-seal section-seal--open reveal" aria-hidden="true">
-        <span class="seal-mark">§ 02 · Offre</span>
+        <span class="seal-mark">§ 02 · Sommaire</span>
         <span class="seal-rule"></span>
-        <span class="seal-meta">5 prestations · montage &amp; vidéo</span>
+        <span class="seal-meta">5 services · accordéon · cliquer pour ouvrir</span>
       </div>
 
-      <!-- Manifeste bref au-dessus de la liste, en appui sur montage/video -->
+      <!-- Manifeste bref au-dessus du sommaire -->
       <p class="services-lead reveal">
         Je <em>conçois, filme et monte</em> des histoires. Le montage est le cœur du métier —
         trouver le bon rythme, la bonne lumière, le détail qui fait image.
       </p>
 
-      <!-- MENU-LIST — 5 items, montage en 01 -->
-      <ul class="menu-list reveal" role="list">
+      <!-- =========================================================
+           SOMMAIRE ÉDITORIAL — 5 services en accordéon.
+           Pattern .menu-list déjà stylé : typo display, rail vermillon,
+           chevron + qui devient × au clic. JS exclusif : 1 seul ouvert
+           à la fois.
+           ========================================================= -->
+      <ul class="menu-list reveal" role="list" id="services-menu">
 
-        <li class="menu-item menu-item--feature" data-menu="montage">
-          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-montage" type="button">
-            <span class="menu-num">01</span>
+        <!-- § 02.1 · Montage vidéo (feature) -->
+        <li class="menu-item menu-item--feature" data-key="montage">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.1</span>
             <span class="menu-title">Montage vidéo</span>
             <span class="menu-meta">Cœur du métier</span>
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
-          <div class="menu-body" id="menu-body-montage">
-            <div class="menu-body-inner">
-              <p class="menu-desc">Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro &amp; DaVinci. Tout format, du reel 9:16 au court-métrage.</p>
-              <ul class="menu-tags" role="list">
-                <li>Premiere Pro</li><li>DaVinci</li><li>Étalonnage</li><li>Sound design</li><li>Tout format</li>
-              </ul>
-            </div>
-          </div>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro &amp; DaVinci. Tout format, du reel 9:16 au court-métrage.</p>
+            <ul class="menu-tags" role="list">
+              <li>Premiere Pro</li><li>DaVinci</li><li>Étalonnage</li><li>Sound design</li><li>Tout format</li>
+            </ul>
+          </div></div>
         </li>
 
-        <li class="menu-item" data-menu="clips">
-          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-clips" type="button">
-            <span class="menu-num">02</span>
-            <span class="menu-title">Clips &amp; Reels</span>
-            <span class="menu-meta">Formats courts, rythme serré</span>
+        <!-- § 02.2 · Shooting · caméra & drone -->
+        <li class="menu-item" data-key="shooting">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.2</span>
+            <span class="menu-title">Shooting · caméra &amp; drone</span>
+            <span class="menu-meta">Captation terrain · 4K</span>
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
-          <div class="menu-body" id="menu-body-clips">
-            <div class="menu-body-inner">
-              <p class="menu-desc">Clips musicaux pour artistes, reels pour marques — captation multi-caméra, découpage nerveux, rendu cinéma. De l'idée au master.</p>
-              <ul class="menu-tags" role="list">
-                <li>Multi-cam</li><li>4K</li><li>Artistes</li><li>Brand content</li>
-              </ul>
-            </div>
-          </div>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Tournage terrain — caméra 4K pour l'intention, drone pour les vues aériennes. Multi-cam si besoin, éclairage maîtrisé, repérages inclus. De la prod légère au dispositif plus costaud.</p>
+            <ul class="menu-tags" role="list">
+              <li>Caméra 4K</li><li>Drone</li><li>Multi-cam</li><li>Éclairage</li><li>Repérages</li>
+            </ul>
+          </div></div>
         </li>
 
-        <li class="menu-item" data-menu="aftermovies">
-          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-aftermovies" type="button">
-            <span class="menu-num">03</span>
+        <!-- § 02.3 · Aftermovies -->
+        <li class="menu-item" data-key="after">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.3</span>
             <span class="menu-title">Aftermovies</span>
             <span class="menu-meta">Festivals &amp; événements</span>
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
-          <div class="menu-body" id="menu-body-aftermovies">
-            <div class="menu-body-inner">
-              <p class="menu-desc">Capter l'énergie d'un événement — de la captation live au montage final. Drone, grand angle, proximité. Livrables teaser + full.</p>
-              <ul class="menu-tags" role="list">
-                <li>Festivals</li><li>Events</li><li>Drone</li><li>Live</li>
-              </ul>
-            </div>
-          </div>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Capter l'énergie d'un événement — de la captation live au montage final. Drone, grand angle, proximité. Livrables teaser + full.</p>
+            <ul class="menu-tags" role="list">
+              <li>Festivals</li><li>Events</li><li>Drone</li><li>Live</li>
+            </ul>
+          </div></div>
         </li>
 
-        <li class="menu-item" data-menu="brand">
-          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-brand" type="button">
-            <span class="menu-num">04</span>
-            <span class="menu-title">Brand films &amp; Tournage</span>
-            <span class="menu-meta">Direction artistique · 4K</span>
+        <!-- § 02.4 · Brand films & Clips -->
+        <li class="menu-item" data-key="brandclips">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.4</span>
+            <span class="menu-title">Brand films &amp; Clips</span>
+            <span class="menu-meta">Films de marque · reels · clips</span>
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
-          <div class="menu-body" id="menu-body-brand">
-            <div class="menu-body-inner">
-              <p class="menu-desc">Films de marque, capsules sociales, contenus identitaires — écriture, direction artistique, tournage 4K, drone si besoin. Identité forte, narration ciblée.</p>
-              <ul class="menu-tags" role="list">
-                <li>Brand films</li><li>DA</li><li>Tournage 4K</li><li>Drone</li>
-              </ul>
-            </div>
-          </div>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Films de marque, capsules sociales, clips musicaux, reels — écriture, direction artistique, tournage 4K, drone si besoin. Identité forte, narration ciblée, rythme pensé pour le format.</p>
+            <ul class="menu-tags" role="list">
+              <li>Brand films</li><li>Clips</li><li>Reels</li><li>DA</li><li>Social</li>
+            </ul>
+          </div></div>
         </li>
 
-        <li class="menu-item" data-menu="formation">
-          <button class="menu-head" aria-expanded="false" aria-controls="menu-body-formation" type="button">
-            <span class="menu-num">05</span>
+        <!-- § 02.5 · Formation Premiere Pro -->
+        <li class="menu-item" data-key="formation">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.5</span>
             <span class="menu-title">Formation Premiere Pro</span>
-            <span class="menu-meta">Cours particuliers</span>
+            <span class="menu-meta">Cours particuliers · remote / Bruxelles</span>
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
-          <div class="menu-body" id="menu-body-formation">
-            <div class="menu-body-inner">
-              <p class="menu-desc">Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à Bruxelles. Projet réel comme support pédagogique.</p>
-              <ul class="menu-tags" role="list">
-                <li>Premiere Pro</li><li>Initiation</li><li>Perfectionnement</li><li>Remote</li>
-              </ul>
-            </div>
-          </div>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à Bruxelles. Projet réel comme support pédagogique.</p>
+            <ul class="menu-tags" role="list">
+              <li>Premiere Pro</li><li>Initiation</li><li>Perfectionnement</li><li>Remote</li>
+            </ul>
+          </div></div>
         </li>
 
       </ul>
 
       <!-- Sceau de fermeture -->
       <div class="section-seal section-seal--close reveal" aria-hidden="true">
-        <span class="seal-meta">Fin du dossier · tarifs &amp; à propos ↓</span>
+        <span class="seal-meta">Fin du sommaire · tarifs ↓</span>
         <span class="seal-rule"></span>
-        <span class="seal-mark seal-mark--close">§ 02 · Archivé</span>
+        <span class="seal-mark seal-mark--close">§ 02 · Fin</span>
       </div>
 
     </div><!-- /.section-body -->
   </section>
 
-  <!-- INFOS — zone discrete : deux fold-cards (Tarifs + A propos), fermees par defaut -->
-  <section class="section wrap section--infos" id="infos" aria-label="Informations complémentaires">
-    <div class="infos-head reveal">
-      <span class="infos-kicker">§ 03 · Informations</span>
-      <span class="infos-rule" aria-hidden="true"></span>
-      <span class="infos-meta">Clique pour déplier</span>
+  <!-- =============================================================
+       § 03 — TARIFS
+       Grille éditoriale simple : kicker + titre + 3 lignes (service · type · prix).
+       Pas de chrome, pas d'accordéon — lecture directe.
+       ============================================================= -->
+  <section class="section wrap section--rates" id="tarifs" data-section-label="§ 03 — Tarifs">
+    <div class="section-head reveal">
+      <div class="idx">§ 03 / Tarifs</div>
+      <h2>Tarifs</h2>
+      <div class="sub">Grille indicative<br/>devis gratuit</div>
     </div>
 
-    <div class="fold-group reveal">
+    <div class="section-body">
 
-      <!-- Tarifs -->
-      <article class="fold-card" id="tarifs" data-fold="tarifs">
-        <button class="fold-head" aria-expanded="false" aria-controls="fold-body-tarifs" type="button">
-          <span class="fold-num">§ 03.1</span>
-          <span class="fold-title">Tarifs</span>
-          <span class="fold-meta">3 prestations · ~ 20€ — 25€ / h</span>
-          <span class="fold-chev" aria-hidden="true">+</span>
-        </button>
-        <div class="fold-body" id="fold-body-tarifs">
-          <div class="fold-body-inner">
-            <p class="fold-lead">Grille indicative — tarif horaire, devis gratuit. Printemps 2026.</p>
-            <ul class="price-list" role="list">
-              <li class="price-row">
-                <span class="price-num">01</span>
-                <span class="price-name">Montage — Reels, Clips, Aftermovies</span>
-                <span class="price-val"><em>~ 20€</em><span>/h</span></span>
+      <!-- Pliable : même pattern que § 02, 1 seul item qui s'ouvre sur la grille -->
+      <ul class="menu-list reveal" role="list">
+        <li class="menu-item">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 03.1</span>
+            <span class="menu-title">Grille tarifaire</span>
+            <span class="menu-meta">3 lignes · tarif /h · devis au forfait</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body"><div class="menu-body-inner">
+
+            <p class="menu-desc">
+              Tarif <em>horaire</em> pour le courant. Les projets lourds — brand films, aftermovies full — sont devisés au <em>forfait</em>. WhatsApp pour un chiffrage rapide, réponse sous 24 h.
+            </p>
+
+            <ul class="rates-grid" role="list">
+              <li class="rates-row">
+                <span class="rates-num">01</span>
+                <span class="rates-name">Montage</span>
+                <span class="rates-desc">Reels · Clips · Aftermovies</span>
+                <span class="rates-price"><em>~ 20 €</em><span>/h</span></span>
               </li>
-              <li class="price-row">
-                <span class="price-num">02</span>
-                <span class="price-name">Tournage &amp; Drone</span>
-                <span class="price-val"><em>~ 25€</em><span>/h</span></span>
+              <li class="rates-row">
+                <span class="rates-num">02</span>
+                <span class="rates-name">Tournage</span>
+                <span class="rates-desc">Caméra &amp; drone · 4K</span>
+                <span class="rates-price"><em>~ 25 €</em><span>/h</span></span>
               </li>
-              <li class="price-row">
-                <span class="price-num">03</span>
-                <span class="price-name">Formation Premiere Pro</span>
-                <span class="price-val"><em>~ 20€</em><span>/h</span></span>
+              <li class="rates-row">
+                <span class="rates-num">03</span>
+                <span class="rates-name">Formation</span>
+                <span class="rates-desc">Premiere Pro · particulier</span>
+                <span class="rates-price"><em>~ 20 €</em><span>/h</span></span>
               </li>
             </ul>
-            <p class="fold-note">Les projets lourds (brand films, aftermovies full) sont devisés au forfait — WhatsApp pour un chiffrage.</p>
-          </div>
-        </div>
-      </article>
 
-      <!-- A propos -->
-      <article class="fold-card" id="apropos" data-fold="apropos" data-section-label="§ 03.2 — À propos">
-        <button class="fold-head" aria-expanded="false" aria-controls="fold-body-apropos" type="button">
-          <span class="fold-num">§ 03.2</span>
-          <span class="fold-title">À propos</span>
-          <span class="fold-meta">Étudiant · Vidéaste · BE</span>
-          <span class="fold-chev" aria-hidden="true">+</span>
-        </button>
-        <div class="fold-body" id="fold-body-apropos">
-          <div class="fold-body-inner">
-            <div class="apropos-intro">
-              <div class="apropos-photo">
+          </div></div>
+        </li>
+      </ul>
+
+    </div><!-- /.section-body -->
+  </section>
+
+  <!-- =============================================================
+       § 04 — À PROPOS
+       Portrait + bio + meta. Pas de chrome, cream éditorial.
+       ============================================================= -->
+  <section class="section wrap section--bio" id="apropos" data-section-label="§ 04 — À propos">
+    <div class="section-head reveal">
+      <div class="idx">§ 04 / À propos</div>
+      <h2>À propos</h2>
+      <div class="sub">Corentin Devillé<br/>Bruxelles · BE</div>
+    </div>
+
+    <div class="section-body">
+
+      <!-- Pliable : 1 seul item qui s'ouvre sur portrait + bio + contact -->
+      <ul class="menu-list reveal" role="list">
+        <li class="menu-item">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 04.1</span>
+            <span class="menu-title">Corentin Devillé</span>
+            <span class="menu-meta">Vidéaste · Bruxelles · Disponible</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body"><div class="menu-body-inner">
+
+            <!-- Portrait + bio + meta -->
+            <div class="bio-grid">
+              <div class="bio-photo">
                 <picture>
                   <source type="image/avif"
                           srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w, assets/portrait-1200.avif 1200w"
-                          sizes="(max-width: 700px) 80vw, (max-width: 1200px) 40vw, 380px">
+                          sizes="(max-width: 700px) 80vw, 360px">
                   <img src="assets/portrait-800.jpg"
                        srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w, assets/portrait-1200.jpg 1200w"
-                       sizes="(max-width: 700px) 80vw, (max-width: 1200px) 40vw, 380px"
+                       sizes="(max-width: 700px) 80vw, 360px"
                        width="800" height="1200"
                        loading="lazy" decoding="async"
-                       alt="Corentin Devillé, vidéaste, portrait en lumière naturelle chaude, regard tourné vers hors-champ." />
+                       alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
                 </picture>
               </div>
-              <div class="apropos-text">
-                <p class="apropos-quote">Étudiant passionné, je donne vie à vos projets visuels — <em>brand design</em>, aftermovies, clips et contenus digitaux.</p>
-                <p class="apropos-body">De l'écriture au montage, je cherche le bon rythme, la bonne lumière, le détail qui fait basculer une image en souvenir. Marques ou collectifs, formats courts ou films longs — même exigence : une narration honnête et une image soignée.</p>
-                <ul class="apropos-facts" role="list">
-                  <li><strong>Basé à Bruxelles</strong> · disponible Belgique &amp; Europe</li>
-                  <li><strong>Vidéaste &amp; formateur</strong> · double casquette</li>
-                  <li><strong>40+ projets livrés</strong> · 2020 — 2026</li>
+              <div class="bio-text">
+                <p class="bio-quote">Étudiant passionné, je donne vie à vos projets visuels — <em>brand design</em>, aftermovies, clips et contenus digitaux.</p>
+                <p class="bio-body">De l'écriture au montage, je cherche le bon rythme, la bonne lumière, le détail qui fait basculer une image en souvenir. Marques ou collectifs, formats courts ou films longs — même exigence : une narration honnête et une image soignée.</p>
+                <ul class="bio-meta" role="list">
+                  <li><span class="bio-k">Director</span><span class="bio-v">Corentin Devillé</span></li>
+                  <li><span class="bio-k">DOP · Editor</span><span class="bio-v">Corentin Devillé</span></li>
+                  <li><span class="bio-k">Based in</span><span class="bio-v">Bruxelles · BE</span></li>
+                  <li><span class="bio-k">Available</span><span class="bio-v">Belgique &amp; Europe</span></li>
+                  <li><span class="bio-k">Projects</span><span class="bio-v">40+ livrés · 2020 — 2026</span></li>
                 </ul>
               </div>
             </div>
-          </div>
-        </div>
-      </article>
 
-    </div>
+          </div></div>
+        </li>
+      </ul>
+
+    </div><!-- /.section-body -->
   </section>
 
-  <!-- MID-CTA BAND — dernier appel avant Contact -->
-  <section class="midcta-band" aria-label="Contact rapide">
-    <div class="midcta-inner">
-      <div class="midcta-idx">§ Passons à l'action</div>
-      <h2 class="midcta-title">Un projet en tête ?</h2>
-      <p class="midcta-body">Devis gratuit · Réponse sous 24h · Belgique &amp; Europe</p>
-      <a href="https://wa.me/32495924295" class="midcta-wa" target="_blank">WhatsApp · <span>+32 495 92 42 95</span> →</a>
-    </div>
-  </section>
-
-  <!-- CONTACT — section simplifiée, colonne unique -->
-  <section class="section wrap" id="contact" data-section-label="§ 04 — Contact">
+  <!-- ═══ § 05 — CONTACT — section dédiée, visible inline (pas un drawer) ═══ -->
+  <section class="section wrap" id="contact" data-section-label="§ 05 — Contact">
     <div class="section-head reveal">
-      <div class="idx">§ 04 / Prendre contact</div>
-      <h2>Contact</h2>
-      <div class="sub">Répond dans la journée<br/>Bruxelles · Remote</div>
+      <div class="idx">§ 05 / On se parle ?</div>
+      <h2>Une idée<br/>en tête&nbsp;?</h2>
+      <div class="sub">Réponse sous 24 h · Bruxelles<br/>Disponible Belgique &amp; Europe</div>
     </div>
 
-    <div class="contact-grid contact-grid--simple reveal">
-      <!-- Contact content column -->
-      <div class="contact-content contact-col-text">
+    <div class="section-body">
+      <div class="contact-content contact-content--simple reveal">
         <p class="contact-lede">Un projet vidéo, une question sur une formation, ou juste une idée — écris-moi, je réponds dans la journée.</p>
 
         <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o." target="_blank" class="contact-wa-btn">
           <span class="contact-wa-icon">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           </span>
-          <span class="contact-wa-label"><span class="contact-wa-top">WhatsApp</span><span class="contact-wa-sub">+32 495 92 42 95</span></span>
+          <span class="contact-wa-label"><span class="contact-wa-top">WhatsApp — direct</span><span class="contact-wa-sub">+32 495 92 42 95</span></span>
           <span class="contact-wa-arrow">→</span>
         </a>
 
@@ -3482,9 +4848,16 @@ h1.hero-name{margin:0;padding:0;font-weight:inherit}
     </div>
   </section>
 
-  <footer class="site-footer">
-    <span>© 2026 Corentin Devillé — CD Studio — Tous droits réservés</span>
-    <a href="#top" class="footer-top">Haut ↑</a>
+  <!-- COLOPHON — signature minimaliste -->
+  <footer class="colophon" role="contentinfo">
+    <div class="colophon-rule" aria-hidden="true"></div>
+    <a href="#top" class="colo-logo" aria-label="CD Studio — retour en haut">
+      <svg class="colo-eye" viewBox="0 0 166.06 126.14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M83,0C37.17,0,0,28.24,0,63.07s37.17,63.07,83,63.07,83-28.24,83-63.07S128.89,0,83,0ZM42.59,63.07c0-12.59,10-23.41,24.27-28.15v56.3C52.58,86.48,42.59,75.66,42.59,63.07ZM99.21,91.22V34.92c14.28,4.74,24.26,15.56,24.26,28.15S113.49,86.48,99.21,91.22Z"/>
+      </svg>
+      <span class="colo-wordmark">CD Studio</span>
+    </a>
+    <span class="colo-copy">© 2026 · Corentin Devillé · Bruxelles</span>
   </footer>
 
   <!-- Mobile-only sticky WhatsApp FAB -->
@@ -3549,8 +4922,11 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
   const nameEl = document.getElementById('heroName');
   if(!nameEl) return;
   const words = nameEl.querySelectorAll('.word');
-  /* Start just after the curtain begins lifting (filmReveal @ 3.4s) */
-  let delay = 3500;
+  /* Le rideau se ferme top-dernier (clip-path bottom grandit).
+     Le haut de viewport (hero) n'est pleinement dévoilé qu'à ~4.0s.
+     Démarre les mots 100 ms avant pour qu'ils apparaissent en même temps
+     que la barre s'allume → sensation de synchro visuelle. */
+  let delay = 3900;
   words.forEach((w, wi) => {
     const text = w.dataset.word;
     w.textContent = ''; /* clear the static fallback text before injecting animated chars */
@@ -3809,58 +5185,233 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   });
 })();
 
-/* ========== FOLD-CARD — Tarifs + A propos (independants, non-exclusifs) ==========
-   Chaque fold-card est autonome : cliquer le head toggle son is-open.
-   Bonus : si le hash de l'URL matche une card (#tarifs, #apropos), on l'ouvre
-   automatiquement et on scroll dedans. Pareil au click sur un lien #tarifs
-   ou #apropos dans le mob-menu ou ailleurs. */
+/* ========== LIVE TIMECODE — BXL timezone, tabular mono display ========== */
 (function(){
-  const cards = document.querySelectorAll('.fold-card');
-  if(!cards.length) return;
-
-  function openCard(card){
-    if(card.classList.contains('is-open')) return;
-    card.classList.add('is-open');
-    const head = card.querySelector('.fold-head');
-    if(head) head.setAttribute('aria-expanded','true');
-  }
-  function closeCard(card){
-    card.classList.remove('is-open');
-    const head = card.querySelector('.fold-head');
-    if(head) head.setAttribute('aria-expanded','false');
-  }
-
-  cards.forEach(card => {
-    const head = card.querySelector('.fold-head');
-    if(!head) return;
-    head.addEventListener('click', (e) => {
-      e.preventDefault();
-      if(card.classList.contains('is-open')) closeCard(card);
-      else openCard(card);
-    });
+  const el = document.getElementById('navTc');
+  if(!el) return;
+  const fmt = new Intl.DateTimeFormat('fr-BE', {
+    timeZone:'Europe/Brussels',
+    hour:'2-digit', minute:'2-digit', second:'2-digit',
+    hour12:false
   });
-
-  // Auto-open sur hash (au chargement + sur click lien interne)
-  function openByHash(){
-    const hash = window.location.hash;
-    if(!hash) return;
-    const target = document.querySelector(hash);
-    if(target && target.classList.contains('fold-card')){
-      openCard(target);
-    }
+  function tick(){
+    const parts = fmt.formatToParts(new Date());
+    const h = parts.find(p=>p.type==='hour')?.value || '00';
+    const m = parts.find(p=>p.type==='minute')?.value || '00';
+    const s = parts.find(p=>p.type==='second')?.value || '00';
+    el.textContent = `BXL · ${h}:${m}:${s}`;
   }
-  openByHash();
-  window.addEventListener('hashchange', openByHash);
-  // Click sur un <a href="#xxx"> qui pointe sur une fold-card : ouvrir puis scroller
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ========== HASH ROUTING — auto-open accordion on deep-link ==========
+   Ex : /#contact scroll vers #apropos ET ouvre le menu-item qui contient
+   le sous-bloc id="contact". Idem pour tout hash qui pointe dans un
+   .menu-item fermé. */
+(function(){
+  function openAccordionFor(hash){
+    if(!hash || hash === '#') return;
+    let target;
+    try { target = document.querySelector(hash); } catch(e){ return; }
+    if(!target) return;
+    const item = target.closest('.menu-item');
+    if(!item) return;
+    const head = item.querySelector('.menu-head');
+    if(item.classList.contains('is-open')) return;
+    // Close siblings in same list
+    const list = item.closest('.menu-list');
+    if(list){
+      list.querySelectorAll('.menu-item.is-open').forEach(it => {
+        it.classList.remove('is-open');
+        const h = it.querySelector('.menu-head');
+        if(h) h.setAttribute('aria-expanded','false');
+      });
+    }
+    item.classList.add('is-open');
+    if(head) head.setAttribute('aria-expanded','true');
+    // Scroll into view after layout settles
+    setTimeout(() => {
+      const host = target.id === item.id ? item : target;
+      host.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 120);
+  }
+  // Au chargement
+  if(location.hash) {
+    // Petit délai pour laisser reveals + menu-list JS se cabler
+    setTimeout(() => openAccordionFor(location.hash), 300);
+  }
+  // Sur changement de hash (clic depuis menu mobile, pill-nav, etc.)
+  window.addEventListener('hashchange', () => openAccordionFor(location.hash));
+  // Sur clic d'un lien interne vers une ancre dans un menu-item
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if(!a) return;
     const href = a.getAttribute('href');
-    if(!href || href.length < 2) return;
-    const target = document.querySelector(href);
-    if(target && target.classList.contains('fold-card')){
-      openCard(target);
+    if(!href || href === '#') return;
+    // Laisser le hashchange natif gérer, mais déclencher aussi si c'est le même hash
+    if(location.hash === href){
+      openAccordionFor(href);
     }
+  });
+})();
+
+/* ========== PREMIERE PRO — timeline + inspector tabs ==========
+   - Title bar + 3 tabs (Timeline / Rates / Project Info)
+   - Timeline : playhead rouge qui suit la souris sur le hover du panneau
+   - Timecode (titlebar + ruler header) mis a jour live pendant le scrub
+   - Click sur un clip = fiche detaillee sous la timeline (tags, desc)
+   - Hash #tarifs = tab Rates, #apropos = tab Project Info (compatibilite
+     avec le mob-menu et les liens internes) */
+(function(){
+  const proj = document.getElementById('pp-project');
+  if(!proj) return;
+
+  // ── Donnees des clips (injectees dans la fiche detaillee) ──
+  const CLIPS = {
+    montage: {
+      num:'§ 02.1', name:'Montage vidéo',
+      desc:"Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro & DaVinci. Tout format, du reel 9:16 au court-métrage.",
+      tags:['Premiere Pro','DaVinci','Étalonnage','Sound design','Tout format']
+    },
+    shooting: {
+      num:'§ 02.2', name:'Shooting · caméra & drone',
+      desc:"Tournage terrain — caméra 4K pour l'intention, drone pour les vues aériennes. Multi-cam si besoin, éclairage maîtrisé, repérages inclus. De la prod légère au dispositif plus costaud.",
+      tags:['Caméra 4K','Drone','Multi-cam','Éclairage','Repérages']
+    },
+    after: {
+      num:'§ 02.3', name:'Aftermovies',
+      desc:"Capter l'énergie d'un événement — de la captation live au montage final. Drone, grand angle, proximité. Livrables teaser + full.",
+      tags:['Festivals','Events','Drone','Live']
+    },
+    brandclips: {
+      num:'§ 02.4', name:'Brand films & Clips',
+      desc:"Films de marque, capsules sociales, clips musicaux, reels — écriture, direction artistique, tournage 4K, drone si besoin. Identité forte, narration ciblée, rythme pensé pour le format.",
+      tags:['Brand films','Clips','Reels','DA','Social']
+    },
+    formation: {
+      num:'§ 02.5', name:'Formation Premiere Pro',
+      desc:"Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à Bruxelles. Projet réel comme support pédagogique.",
+      tags:['Premiere Pro','Initiation','Perfectionnement','Remote']
+    }
+  };
+
+  // ── Tabs (Timeline / Rates / Project Info) ──
+  const tabs   = [...proj.querySelectorAll('.pp-tab')];
+  const panels = [...proj.querySelectorAll('.pp-panel')];
+  function showPanel(name){
+    tabs.forEach(t => {
+      const on = t.dataset.ppTab === name;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    panels.forEach(p => {
+      const on = p.id === 'pp-panel-' + name;
+      p.classList.toggle('is-active', on);
+      if(on) p.removeAttribute('hidden'); else p.setAttribute('hidden','');
+    });
+  }
+  tabs.forEach(t => t.addEventListener('click', () => showPanel(t.dataset.ppTab)));
+
+  // ── Timeline : playhead + timecode ──
+  // Layout : [ lane (1fr) | section-column (section-w) ] sur desktop.
+  // Sur mobile (<780px) la section passe sous la lane → la lane occupe
+  // toute la largeur de la timeline. On lit la largeur de la 1ere .pp-lane
+  // pour être 100% sûr, plutôt que de dupliquer les breakpoints JS ↔ CSS.
+  const tl       = proj.querySelector('.pp-tl');
+  const playhead = proj.querySelector('.pp-playhead');
+  const tcEls    = proj.querySelectorAll('[data-tc]');
+  const sampleLane = proj.querySelector('.pp-row:not(.pp-row--ruler) .pp-lane');
+
+  function laneBox(){
+    // renvoie {left, width} de la zone "lane" par rapport a .pp-tl
+    if(!sampleLane) return { left:0, width:0 };
+    const tlRect  = tl.getBoundingClientRect();
+    const lnRect  = sampleLane.getBoundingClientRect();
+    return { left: lnRect.left - tlRect.left, width: lnRect.width };
+  }
+  function fmtTC(pct, short){
+    const total = (pct/100) * 180;           // 3 min timeline
+    const m = Math.floor(total/60).toString().padStart(2,'0');
+    const s = Math.floor(total%60).toString().padStart(2,'0');
+    if(short) return `${m}:${s}`;
+    const f = Math.floor((total*25)%25).toString().padStart(2,'0');
+    return `00:${m}:${s}:${f}`;
+  }
+  function setPlayhead(pct){
+    const { left, width } = laneBox();
+    if(width <= 0) return;
+    playhead.style.left = (left + (pct/100) * width) + 'px';
+    playhead.dataset.pct = pct;
+    tcEls.forEach(el => {
+      el.textContent = fmtTC(pct, el.classList.contains('pp-tc-small'));
+    });
+  }
+  setPlayhead(0);
+
+  tl.addEventListener('mousemove', (e) => {
+    const { left, width } = laneBox();
+    if(width <= 0) return;
+    const x = e.clientX - tl.getBoundingClientRect().left - left;
+    if(x < 0 || x > width) return;
+    setPlayhead(Math.max(0, Math.min(100, (x/width)*100)));
+  });
+  window.addEventListener('resize', () => {
+    const cur = parseFloat(playhead.dataset.pct || '0');
+    setPlayhead(cur);
+  });
+
+  // ── Click clip OU section → fiche detaillee ; la row entiere devient
+  //    .is-active pour synchroniser clip + section column visuellement.
+  const detail     = proj.querySelector('#pp-detail');
+  const detailNum  = detail.querySelector('[data-field="num"]');
+  const detailName = detail.querySelector('[data-field="name"]');
+  const detailDesc = detail.querySelector('[data-field="desc"]');
+  const detailTags = detail.querySelector('[data-field="tags"]');
+  const clipEls    = [...proj.querySelectorAll('.pp-clip')];
+  const rowEls     = [...proj.querySelectorAll('.pp-row:not(.pp-row--ruler)')];
+  const triggers   = [...proj.querySelectorAll('[data-clip]')];
+
+  function showClip(key){
+    const data = CLIPS[key]; if(!data) return;
+    clipEls.forEach(c => c.classList.toggle('is-selected', c.dataset.clip === key));
+    rowEls .forEach(r => r.classList.toggle('is-active', r.dataset.track === key));
+    detailNum.textContent  = data.num;
+    detailName.textContent = data.name;
+    detailDesc.textContent = data.desc;
+    detailTags.innerHTML   = data.tags.map(t => `<li>${t}</li>`).join('');
+    detail.hidden = false;
+  }
+  function hideClip(){
+    clipEls.forEach(c => c.classList.remove('is-selected'));
+    rowEls .forEach(r => r.classList.remove('is-active'));
+    detail.hidden = true;
+  }
+  triggers.forEach(t => t.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const key = t.dataset.clip;
+    const row = t.closest('.pp-row');
+    if(row && row.classList.contains('is-active')) hideClip();
+    else showClip(key);
+  }));
+  detail.querySelector('.pp-detail-close').addEventListener('click', hideClip);
+
+  // ── Hash → tab matching (#tarifs / #apropos) ──
+  function handleHash(){
+    const h = (location.hash || '').replace('#','');
+    if(h === 'tarifs')      showPanel('rates');
+    else if(h === 'apropos') showPanel('project');
+  }
+  window.addEventListener('hashchange', handleHash);
+  handleHash();
+
+  // Click sur <a href="#tarifs"> / <a href="#apropos"> → switch tab puis scroll
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if(!a) return;
+    const href = a.getAttribute('href');
+    if(href === '#tarifs')       showPanel('rates');
+    else if(href === '#apropos') showPanel('project');
   });
 })();
 
@@ -4106,35 +5657,29 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
 
 /* ========== MOUSE-REACTIVE HERO TITLE — disabled ========== */
 
-/* ========== EYE BUBBLE CONTACT ========== */
+/* ========== EYE BUBBLE — smooth scroll vers la section Contact ========== */
 (function(){
   const btn = document.getElementById('eyeBubble');
-  const drawer = document.getElementById('contactDrawer');
   const _lbl2 = document.querySelector('.eye-label');
   if(_lbl2){
     /* Label "Contacte-moi" affiché en permanence après le loader */
     setTimeout(()=>_lbl2.classList.add('show'), 4200);
   }
-  if(!btn||!drawer) return;
-  let open = false;
+  if(!btn) return;
   const label = document.querySelector('.eye-label');
   btn.addEventListener('mouseenter',()=>label&&label.classList.add('show'));
   btn.addEventListener('mouseleave',()=>label&&label.classList.remove('show'));
   btn.addEventListener('click', ()=>{
-    open = !open;
-    drawer.classList.toggle('open', open);
-    btn.classList.toggle('open', open); /* triggers spread on mobile, persists on desktop */
-    btn.style.transform = open ? 'scale(.92)' : '';
-    setTimeout(()=>{ if(!open) btn.style.transform=''; }, 150);
-    /* Trigger wink + pupil pop animation */
+    /* Wink animation pour feedback */
     btn.classList.remove('clicked');
-    void btn.offsetWidth; /* reflow to restart animation */
+    void btn.offsetWidth;
     btn.classList.add('clicked');
     setTimeout(()=>btn.classList.remove('clicked'), 650);
-  });
-  document.addEventListener('click', e=>{
-    if(open && !btn.contains(e.target) && !drawer.contains(e.target)){
-      open=false; drawer.classList.remove('open'); btn.classList.remove('open');
+    /* Scroll vers la section Contact (visible inline, pas de drawer) */
+    const target = document.getElementById('contact');
+    if(target){
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+      history.replaceState(null,'','#contact');
     }
   });
 })();

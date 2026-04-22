@@ -3406,8 +3406,8 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
          2. IntersectionObserver détecte l'entrée (threshold .25, once:true).
          3. Swap .is-piling → .is-deploying : chaque cahier glisse avec un stagger
             (0/140/280/420ms, durée .85s).
-         4. ~1.4s après, nettoie les classes. Lance le teaser one-shot :
-            ouvre le 1er cahier, le referme après ~1.4s si user inactif.
+         4. ~1.4s après, nettoie les classes et ouvre le 1er cahier (Wenda)
+            — il reste ouvert. L'user ferme/ouvre ensuite à son rythme.
   */
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(!REDUCED && 'IntersectionObserver' in window){
@@ -3419,16 +3419,11 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
         stack.classList.remove('is-piling');
         stack.classList.add('is-deploying');
         // Durée totale : dernier stagger (420ms) + transition (.85s) ≈ 1270ms.
-        // On attend 1400ms pour être safe avant de nettoyer + teaser.
+        // On attend 1400ms pour être safe avant de nettoyer + ouvrir Wenda.
         setTimeout(() => {
           stack.classList.remove('is-deploying');
-          if(userActed) return; // user a déjà cliqué, on skippe le teaser
-          if(!chaps[0]) return;
-          openChap(chaps[0]);
-          setTimeout(() => {
-            if(userActed) return;
-            if(chaps[0].classList.contains('is-open')) closeChap(chaps[0]);
-          }, 1400);
+          if(userActed) return; // user a déjà cliqué, on respecte son choix
+          if(chaps[0]) openChap(chaps[0]);
         }, 1400);
       });
     }, { threshold: 0.25 });

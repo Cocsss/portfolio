@@ -688,11 +688,13 @@ body[data-mode="glass"] .hero-reel{
   letter-spacing:-.04em;
 }
 .proj-hook-num{
-  font-size:clamp(96px,17vw,220px);
+  /* Eye-catcher au-dessus de l'accordion — plus raisonnable (176 au lieu de 220)
+     pour rester en scale avec les chap-num (104px) en-dessous. */
+  font-size:clamp(80px,13vw,176px);
   display:inline-block;
 }
 .proj-hook-plus{
-  font-size:clamp(40px,7vw,96px);color:var(--accent);
+  font-size:clamp(36px,6vw,80px);color:var(--accent);
   margin-left:.1em;margin-top:.12em;
   animation:hookPlusPulse 2.8s cubic-bezier(.22,1,.36,1) infinite;
 }
@@ -706,8 +708,8 @@ body[data-mode="glass"] .hero-reel{
 }
 .proj-hook-lede{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(22px,2.3vw,34px);line-height:1.25;letter-spacing:-.01em;
-  color:var(--ink);max-width:28ch;
+  font-size:clamp(20px,2vw,30px);line-height:1.3;letter-spacing:-.008em;
+  color:var(--ink);max-width:30ch;
 }
 .proj-hook-lede strong{font-weight:400;color:var(--accent-text,#C43C00)}
 .proj-hook-arrow{
@@ -828,7 +830,8 @@ body[data-mode="glass"] .hero-reel{
   color:var(--chap-ink-cover);
   border:1px solid rgba(240,238,233,.14);border-bottom:none;
   border-radius:3px 3px 0 0;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  font-family:var(--font-mono);
+  font-size:clamp(11px,.8vw,13px);letter-spacing:.24em;text-transform:uppercase;
   box-shadow:0 -4px 10px -4px rgba(0,0,0,.35);
   transform:translateY(0);
   transition:
@@ -852,8 +855,10 @@ body[data-mode="glass"] .hero-reel{
 /* ── HEAD cliquable ── */
 .chap-head{
   all:unset;
-  display:grid;grid-template-columns:auto 1fr auto;gap:clamp(20px,4vw,64px);align-items:center;
-  width:100%;padding:clamp(36px,4.5vw,56px) clamp(28px,3.2vw,44px) clamp(28px,3.5vw,40px);
+  /* Gap resserré (48 au lieu de 64) : la hiérarchie num(104) > title(44) n'a plus
+     besoin d'autant d'air pour respirer. */
+  display:grid;grid-template-columns:auto 1fr auto;gap:clamp(18px,3vw,48px);align-items:center;
+  width:100%;padding:clamp(32px,4vw,52px) clamp(28px,3.2vw,44px) clamp(28px,3.5vw,40px);
   cursor:pointer;box-sizing:border-box;position:relative;z-index:1;
   transition:padding-left .45s cubic-bezier(.22,1,.36,1), background .35s;
 }
@@ -862,7 +867,7 @@ body[data-mode="glass"] .hero-reel{
 
 .chap-num{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(44px,6.5vw,96px);line-height:.82;letter-spacing:-.03em;
+  font-size:clamp(40px,6vw,104px);line-height:.82;letter-spacing:-.03em;
   color:rgba(240,238,233,.32);
   transition:color .5s cubic-bezier(.22,1,.36,1), transform .4s cubic-bezier(.22,1,.36,1);
   font-variant-numeric:tabular-nums;
@@ -871,11 +876,14 @@ body[data-mode="glass"] .hero-reel{
 .chap.is-open .chap-num{color:var(--accent);transform:translateY(-2px)}
 
 .chap-titlewrap{
-  display:flex;flex-direction:column;gap:10px;min-width:0;
+  display:flex;flex-direction:column;gap:8px;min-width:0;
 }
 .chap-title{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(32px,5vw,72px);line-height:.95;letter-spacing:-.025em;
+  /* Convention éditoriale : titre d'accordéon ≈ 40% du H2 section (qui peut aller à 240px).
+     Ici on cadre à 44px max pour rester scannable sans concurrencer le section title.
+     Le .chap-num à 104px porte la hiérarchie visuelle (ratio ~2.3x). */
+  font-size:clamp(24px,2.6vw,44px);line-height:1.05;letter-spacing:-.02em;
   color:var(--chap-ink-cover);
   display:inline-block;position:relative;
   transition:letter-spacing .4s cubic-bezier(.22,1,.36,1), color .5s cubic-bezier(.22,1,.36,1);
@@ -891,7 +899,8 @@ body[data-mode="glass"] .hero-reel{
 .chap.is-open .chap-title::after{transform:scaleX(1)}
 
 .chap-meta{
-  font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  font-family:var(--font-mono);
+  font-size:clamp(11px,.85vw,13px);letter-spacing:.2em;text-transform:uppercase;
   color:var(--chap-dim-cover);
   transition:color .5s cubic-bezier(.22,1,.36,1);
 }
@@ -927,7 +936,9 @@ body[data-mode="glass"] .hero-reel{
   position:absolute;pointer-events:none;user-select:none;
   top:-.12em;left:-.04em;z-index:0;
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(200px,28vw,460px);line-height:1;letter-spacing:-.05em;
+  /* Décoratif ghost — proportionné au chap-num (104px) et au chap-title (44px).
+     Max 380px : assez pour exister comme texture sans écraser le contenu. */
+  font-size:clamp(180px,22vw,380px);line-height:1;letter-spacing:-.05em;
   color:transparent;
   -webkit-text-stroke:1.5px rgba(26,26,26,.16);
   font-variant-numeric:tabular-nums;
@@ -1165,17 +1176,20 @@ body[data-mode="glass"] .hero-reel{
 
 .drawer-head{margin:12px 0 36px;max-width:60ch}
 .drawer-idx{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  font-family:var(--font-mono);
+  font-size:clamp(11px,.8vw,13px);letter-spacing:.22em;text-transform:uppercase;
   color:var(--muted);display:block;margin-bottom:18px;
 }
 .drawer-title{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(44px,6vw,86px);line-height:.92;letter-spacing:-.025em;
+  /* Titre de drawer ≈ section H2 d'une page. Cap à 64px au lieu de 86 pour
+     rester scannable dans un panel étroit (34vw / max 760px). */
+  font-size:clamp(36px,4.5vw,64px);line-height:.98;letter-spacing:-.02em;
   color:var(--ink);margin:0 0 20px;
 }
 .drawer-lede{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(18px,1.5vw,22px);line-height:1.35;letter-spacing:-.005em;
+  font-size:clamp(17px,1.35vw,21px);line-height:1.4;letter-spacing:-.005em;
   color:var(--ink);opacity:.82;
 }
 
@@ -1186,11 +1200,13 @@ body[data-mode="glass"] .hero-reel{
 }
 .drawer-meta div{display:flex;flex-direction:column;gap:4px}
 .drawer-meta dt{
-  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  font-family:var(--font-mono);
+  font-size:clamp(10px,.75vw,12px);letter-spacing:.22em;text-transform:uppercase;
   color:var(--muted);margin:0;
 }
 .drawer-meta dd{
-  font-family:var(--font-display);font-size:17px;letter-spacing:-.005em;
+  font-family:var(--font-display);
+  font-size:clamp(15px,1.2vw,18px);letter-spacing:-.005em;
   color:var(--ink);margin:0;
 }
 
@@ -1206,11 +1222,13 @@ body[data-mode="glass"] .hero-reel{
   padding-top:22px;border-top:1px solid var(--rule);
 }
 .drawer-credits-lbl{
-  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  font-family:var(--font-mono);
+  font-size:clamp(10px,.75vw,12px);letter-spacing:.22em;text-transform:uppercase;
   color:var(--muted);
 }
 .drawer-credits-val{
-  font-family:var(--font-body);font-size:14px;color:var(--ink);
+  font-family:var(--font-body);
+  font-size:clamp(14px,1vw,16px);color:var(--ink);
 }
 
 /* Lock body scroll when drawer open */

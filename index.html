@@ -2960,6 +2960,57 @@ body[data-theme="dark"] .menu-tags li{ background:rgba(240,238,233,.08); }
 .menu-tags li:hover{ background:var(--ink);color:var(--bg); }
 
 /* ═══════════════════════════════════════════════════════════════ */
+/*  SERVICES — repli par défaut (on ne montre que Montage + Shooting) */
+/*  Bouton "Voir tout" déploie les 3 autres postes.                 */
+/* ═══════════════════════════════════════════════════════════════ */
+#services-menu .menu-item[data-svc-more]{
+  display:none;
+}
+#services-menu.is-expanded .menu-item[data-svc-more]{
+  display:block;
+  animation:svcFadeIn .45s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes svcFadeIn{
+  from{ opacity:0;transform:translateY(-4px); }
+  to{ opacity:1;transform:translateY(0); }
+}
+
+.svc-more{
+  margin:clamp(14px,1.8vw,22px) 0 0;
+  display:flex;justify-content:center;
+}
+.svc-more-btn{
+  all:unset;cursor:pointer;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 20px 13px;
+  border:1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius:999px;
+  background:color-mix(in srgb, var(--bg) 70%, transparent);
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink);font-weight:600;
+  transition:background .25s, color .25s, border-color .25s, transform .2s;
+}
+.svc-more-btn:hover{
+  background:var(--ink);color:var(--bg);border-color:var(--ink);
+  transform:translateY(-1px);
+}
+.svc-more-btn:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px;
+}
+.svc-more-count{
+  font-size:10px;letter-spacing:.12em;
+  color:var(--accent-text);font-weight:700;
+}
+.svc-more-btn:hover .svc-more-count{ color:var(--accent); }
+.svc-more-chev{
+  display:inline-block;font-size:12px;line-height:1;
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+}
+.svc-more-btn[aria-expanded="true"] .svc-more-chev{
+  transform:rotate(180deg);
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
 /*  PRICE-BLOCK — sous-bloc discret dans Services (Tarifs fusionnés)*/
 /* ═══════════════════════════════════════════════════════════════ */
 .price-block{
@@ -3438,98 +3489,78 @@ body[data-theme="dark"] .fold-card.is-open{
   color:var(--ink);margin:4px 0 0;
   padding-bottom:12px;border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
-/* Tampon date/TC — pill éditorial en haut du ticket */
-.rc-stamp{
-  display:inline-flex;align-items:center;gap:10px;align-self:flex-start;
-  padding:6px 10px 7px;
-  border:1px solid color-mix(in srgb, var(--ink) 30%, transparent);
-  border-radius:2px;
-  background:color-mix(in srgb, var(--bg) 60%, transparent);
-}
-.rc-stamp-k{
-  font-family:var(--font-mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;
-  color:var(--accent-text);font-weight:700;
-}
-.rc-stamp-v{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
-  color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;
-}
-
-/* LIGNES DE TICKET — quantité · article · prix · description
-   Vocabulaire "ticket de caisse" mais typographie éditoriale */
-.rc-items{ list-style:none;margin:4px 0 0;padding:0; }
-.rc-item{
-  display:grid;
-  grid-template-columns:32px 1fr auto;
-  column-gap:12px;row-gap:4px;
-  align-items:baseline;
-  padding:12px 0 13px;
+/* Carte des services — 3 blocs éditoriaux numérotés 01 / 02 / 03
+   Vocabulaire de brochure imprimée plutôt que ticket de caisse :
+   gros chiffre mono accent + display serif pour le nom de service
+   + description italique serif + note tarifaire mono en bas. */
+.rc-svc{ list-style:none;margin:4px 0 0;padding:0; }
+.rc-svc-item{
+  display:grid;grid-template-columns:34px 1fr;column-gap:14px;
+  align-items:start;
+  padding:15px 0 16px;
   border-top:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
-.rc-item:last-child{ border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
-.rc-item-q{
-  grid-row:1;grid-column:1;
-  font-family:var(--font-mono);font-size:12px;font-weight:700;
-  color:var(--accent-text);font-variant-numeric:tabular-nums;
+.rc-svc-item:last-child{ border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.rc-svc-n{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.24em;
+  color:var(--accent-text);font-weight:700;padding-top:5px;
 }
-.rc-item-n{
-  grid-row:1;grid-column:2;
+.rc-svc-body{ display:flex;flex-direction:column;gap:5px;min-width:0; }
+.rc-svc-name{
   font-family:var(--font-display);font-weight:400;
-  font-size:18px;line-height:1;letter-spacing:-.01em;color:var(--ink);
+  font-size:22px;line-height:1;letter-spacing:-.015em;
+  color:var(--ink);margin:0;
 }
-.rc-item-n em{
-  font-family:var(--font-mono);font-style:normal;font-weight:500;
-  font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;
-  margin-left:4px;
-}
-.rc-item-p{
-  grid-row:1;grid-column:3;
-  font-family:var(--font-display);font-weight:400;
-  font-size:19px;letter-spacing:-.01em;color:var(--accent-text);
-  font-variant-numeric:tabular-nums;white-space:nowrap;
-}
-.rc-item-d{
-  grid-row:2;grid-column:2 / 4;
+.rc-svc-desc{
   font-family:Georgia, "Times New Roman", serif;font-style:italic;
-  font-size:12.5px;line-height:1.4;color:var(--muted);
+  font-size:13.5px;line-height:1.45;color:var(--ink);margin:0;
+  opacity:.85;
 }
-
-/* Total — bandeau fort entre double filet */
-.rc-total{
-  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
-  padding:14px 0 12px;margin-top:8px;
-  border-top:3px double var(--ink);
-  border-bottom:3px double var(--ink);
+.rc-svc-price{
+  display:inline-flex;align-items:baseline;gap:6px;
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin-top:3px;
 }
-.rc-total-k{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
-  color:var(--ink);font-weight:700;
-}
-.rc-total-v{
-  font-family:var(--font-display);font-weight:400;
-  font-size:24px;letter-spacing:-.015em;
+.rc-svc-price strong{
+  font-family:var(--font-display);font-weight:400;font-style:normal;
+  font-size:15px;letter-spacing:-.005em;text-transform:none;
   color:var(--accent-text);
 }
 
-.rc-thx{
-  font-family:Georgia, "Times New Roman", serif;font-style:italic;
-  font-size:13.5px;line-height:1.45;color:var(--ink);
-  text-align:center;margin:4px 0 0;
+/* Encart devis — CTA final en bloc accent léger */
+.rc-quote{
+  margin-top:14px;padding:14px 14px 16px;
+  background:color-mix(in srgb, var(--accent) 7%, transparent);
+  border:1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  border-radius:2px;
+  display:flex;flex-direction:column;gap:6px;
 }
+.rc-quote-k{
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--accent-text);font-weight:700;margin:0;
+}
+.rc-quote-h{
+  font-family:var(--font-display);font-weight:400;
+  font-size:19px;line-height:1.1;letter-spacing:-.015em;
+  color:var(--ink);margin:0;
+}
+.rc-quote-body{
+  font-family:Georgia, "Times New Roman", serif;font-style:italic;
+  font-size:13px;line-height:1.45;color:var(--ink);margin:0;opacity:.85;
+}
+.rc-quote-cta{
+  align-self:flex-start;margin-top:4px;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent-text);font-weight:700;text-decoration:none;
+  border-bottom:1px solid currentColor;padding-bottom:1px;
+  transition:color .2s;
+}
+.rc-quote-cta:hover{ color:var(--accent); }
+
 .rc-signature{
   font-family:var(--font-hand);font-weight:500;
   font-size:30px;text-align:right;color:var(--ink);
-  margin-top:4px;
-}
-
-/* Code-barres stylisé (discret, aligné éditorial) */
-.rc-barcode{
-  height:34px;margin-top:8px;
-  background-image:repeating-linear-gradient(to right,
-    var(--ink) 0 1px, transparent 1px 3px,
-    var(--ink) 3px 4px, transparent 4px 7px,
-    var(--ink) 7px 9px, transparent 9px 12px);
-  opacity:.82;
+  margin-top:2px;
 }
 
 .rc-foot{
@@ -5719,7 +5750,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </li>
 
         <!-- § 02.1.3 — Aftermovies -->
-        <li class="menu-item" data-key="after">
+        <li class="menu-item" data-key="after" data-svc-more>
           <button class="menu-head" type="button" aria-expanded="false">
             <span class="menu-num">§ 02.1.3</span>
             <span class="menu-title">Aftermovies</span>
@@ -5735,7 +5766,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </li>
 
         <!-- § 02.1.4 — Brand films & Clips -->
-        <li class="menu-item" data-key="brandclips">
+        <li class="menu-item" data-key="brandclips" data-svc-more>
           <button class="menu-head" type="button" aria-expanded="false">
             <span class="menu-num">§ 02.1.4</span>
             <span class="menu-title">Brand films &amp; Clips</span>
@@ -5751,7 +5782,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </li>
 
         <!-- § 02.1.5 — Formation Premiere Pro -->
-        <li class="menu-item" data-key="formation">
+        <li class="menu-item" data-key="formation" data-svc-more>
           <button class="menu-head" type="button" aria-expanded="false">
             <span class="menu-num">§ 02.1.5</span>
             <span class="menu-title">Formation Premiere Pro</span>
@@ -5767,6 +5798,18 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </li>
 
       </ul>
+
+      <!-- Bouton "Voir tout" — dévoile les 3 postes repliés par défaut -->
+      <div class="svc-more">
+        <button class="svc-more-btn" type="button"
+                aria-expanded="false"
+                aria-controls="services-menu"
+                data-svc-more-btn>
+          <span class="svc-more-label">Voir tous les services</span>
+          <span class="svc-more-count" aria-hidden="true">+3</span>
+          <span class="svc-more-chev" aria-hidden="true">▼</span>
+        </button>
+      </div>
     </div>
 
     <!-- ─────────── Tarifs + Bio — deux objets posés après les services (pas un nouveau titre de section) ─────────── -->
@@ -5806,44 +5849,44 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         <div class="receipt-body" id="receipt-body-tarifs">
           <div class="receipt-body-inner">
             <article class="rc-article">
-              <span class="rc-deck-k">Ticket · Tarifs Studio CD</span>
-              <p class="rc-deck-lead">Trois postes actifs à l'heure. Projets lourds chiffrés au forfait — réponse sous 24 h.</p>
+              <span class="rc-deck-k">Carte · Services &amp; Honoraires</span>
+              <p class="rc-deck-lead">Chaque projet est unique. Voici comment je le chiffre — pour qu'on parle clairement, sans surprise.</p>
 
-              <div class="rc-stamp">
-                <span class="rc-stamp-k">Émis le</span>
-                <span class="rc-stamp-v">23.04.2026 · TC 14:37</span>
-              </div>
-
-              <ul class="rc-items" role="list">
-                <li class="rc-item">
-                  <span class="rc-item-q">1×</span>
-                  <span class="rc-item-n">Montage <em>(h)</em></span>
-                  <span class="rc-item-p">20.00 €</span>
-                  <span class="rc-item-d">Reels · clips · aftermovies — livrables 16:9 / 9:16, master 4K.</span>
+              <ol class="rc-svc" role="list">
+                <li class="rc-svc-item">
+                  <span class="rc-svc-n">01</span>
+                  <div class="rc-svc-body">
+                    <h4 class="rc-svc-name">Montage</h4>
+                    <p class="rc-svc-desc">Reels, clips, aftermovies. De l'étalonnage au sound-design, livré en 16:9 &amp; 9:16.</p>
+                    <span class="rc-svc-price">Dès <strong>20 €/h</strong></span>
+                  </div>
                 </li>
-                <li class="rc-item">
-                  <span class="rc-item-q">1×</span>
-                  <span class="rc-item-n">Tournage <em>(h)</em></span>
-                  <span class="rc-item-p">25.00 €</span>
-                  <span class="rc-item-d">Caméra 4K &amp; drone — direction artistique incluse.</span>
+                <li class="rc-svc-item">
+                  <span class="rc-svc-n">02</span>
+                  <div class="rc-svc-body">
+                    <h4 class="rc-svc-name">Tournage</h4>
+                    <p class="rc-svc-desc">Caméra 4K &amp; drone. De l'écriture aux repérages — direction artistique incluse.</p>
+                    <span class="rc-svc-price">Dès <strong>25 €/h</strong></span>
+                  </div>
                 </li>
-                <li class="rc-item">
-                  <span class="rc-item-q">1×</span>
-                  <span class="rc-item-n">Formation <em>(h)</em></span>
-                  <span class="rc-item-p">20.00 €</span>
-                  <span class="rc-item-d">Premiere Pro · particulier — en ligne ou à BW.</span>
+                <li class="rc-svc-item">
+                  <span class="rc-svc-n">03</span>
+                  <div class="rc-svc-body">
+                    <h4 class="rc-svc-name">Formation</h4>
+                    <p class="rc-svc-desc">Premiere Pro — particulier ou petit groupe, en ligne ou à BW.</p>
+                    <span class="rc-svc-price">Dès <strong>20 €/h</strong></span>
+                  </div>
                 </li>
-              </ul>
+              </ol>
 
-              <div class="rc-total">
-                <span class="rc-total-k">Total</span>
-                <span class="rc-total-v">Sur devis</span>
-              </div>
+              <aside class="rc-quote">
+                <span class="rc-quote-k">Projets lourds</span>
+                <h4 class="rc-quote-h">Forfait sur devis</h4>
+                <p class="rc-quote-body">Films, clips, aftermovies d'envergure — chiffrés au forfait après brief, réponse sous 24 h.</p>
+                <a class="rc-quote-cta" href="#contact">Demander un devis →</a>
+              </aside>
 
-              <p class="rc-thx">Merci de votre confiance — chaque projet est chiffré au plus juste.</p>
               <div class="rc-signature">— CD.</div>
-
-              <div class="rc-barcode" aria-hidden="true"></div>
               <div class="rc-foot"><span>CD · STUDIO · BW</span><span>TK · 01 / 2026</span></div>
             </article>
           </div>
@@ -6460,6 +6503,31 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
         else openItem(item);
       });
     });
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   SERVICES — toggle "Voir tout" (plie 3 postes par défaut)
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  const btn  = document.querySelector('[data-svc-more-btn]');
+  const list = document.getElementById('services-menu');
+  if(!btn || !list) return;
+
+  const label = btn.querySelector('.svc-more-label');
+  const count = btn.querySelector('.svc-more-count');
+  const hidden = list.querySelectorAll('.menu-item[data-svc-more]').length;
+
+  function setState(expanded){
+    list.classList.toggle('is-expanded', expanded);
+    btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    if(label) label.textContent = expanded ? 'Masquer les autres services' : 'Voir tous les services';
+    if(count) count.textContent = expanded ? '−' + hidden : '+' + hidden;
+  }
+
+  btn.addEventListener('click', () => {
+    const next = btn.getAttribute('aria-expanded') !== 'true';
+    setState(next);
   });
 })();
 

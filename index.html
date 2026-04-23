@@ -3236,13 +3236,13 @@ body[data-theme="dark"] .fold-card.is-open{
 .studio-kicker-sep{ color:var(--accent); }
 
 .studio-cards{
-  list-style:none;margin:clamp(22px,2.4vw,30px) 0 0;padding:0;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:clamp(32px,4vw,64px);
-  align-items:start;justify-items:center;
+  list-style:none;margin:clamp(22px,2.4vw,30px) auto 0;padding:0;
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;
+  gap:clamp(20px,2.4vw,36px);
+  max-width:780px;
 }
 @media (max-width:760px){
-  .studio-cards{ grid-template-columns:1fr;gap:48px; }
+  .studio-cards{ gap:40px; }
 }
 
 /* ─────────────────────────────────────────────
@@ -3450,40 +3450,45 @@ body[data-theme="dark"] .fold-card.is-open{
 }
 .mag-cover:focus-visible{ outline:2px solid var(--accent);outline-offset:4px; }
 
-/* Portrait en COULEUR — object-position top pour GARDER LA TÊTE visible */
+/* Fond stylisé derrière le portrait détouré — dégradé crème + halo + grain */
 .mag-portrait{
   position:absolute;top:34px;left:14px;right:14px;bottom:56px;z-index:0;
-  background:#e7dfc9;overflow:hidden;
+  overflow:hidden;
+  background:
+    /* Halo lumineux derrière la tête */
+    radial-gradient(ellipse 70% 55% at 50% 30%, rgba(255,255,255,.9) 0%, rgba(255,249,235,.5) 40%, transparent 75%),
+    /* Touche accent très légère en haut à droite */
+    radial-gradient(ellipse 60% 50% at 85% 15%, color-mix(in srgb, var(--accent) 20%, transparent) 0%, transparent 55%),
+    /* Dégradé chaud diagonal */
+    linear-gradient(160deg, #f6f0e1 0%, #eadfc4 55%, #d9cba7 100%);
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);
 }
+/* Grain imprimé sur le fond */
+.mag-portrait::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,.12) 1px, transparent 1.5px),
+    repeating-linear-gradient(135deg, transparent 0 6px, rgba(0,0,0,.03) 6px 7px);
+  background-size: 3px 3px, auto;
+  mix-blend-mode:multiply;
+  opacity:.6;
+}
+/* Voile vignette très léger en bas pour fondre avec le bandeau titre */
+.mag-portrait::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:
+    linear-gradient(180deg, transparent 62%, rgba(242,235,220,.35) 88%, rgba(242,235,220,.7) 100%);
+}
 .mag-portrait img{
+  position:relative;z-index:3;
   width:100%;height:100%;display:block;
-  object-fit:cover;object-position:center top;
-  /* COULEUR — plus de grayscale, juste un léger boost éditorial */
-  filter:contrast(1.06) saturate(1.08) brightness(1.02);
+  object-fit:contain;object-position:center top;
+  filter:contrast(1.04) saturate(1.08) drop-shadow(0 6px 10px rgba(0,0,0,.18));
   transform:scale(1.02);
+  transform-origin:center top;
   transition:transform .8s cubic-bezier(.22,1,.36,1), filter .6s;
 }
-.mag:hover .mag-portrait img{ transform:scale(1.05); filter:contrast(1.1) saturate(1.15); }
-
-/* Voile chaleureux léger — on garde la couleur, on ajoute juste un côté "imprimé" */
-.mag-portrait::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    linear-gradient(180deg, transparent 55%, rgba(242,235,220,.25) 85%, rgba(242,235,220,.55) 100%),
-    linear-gradient(135deg, rgba(255,79,0,.05), transparent 45%);
-  mix-blend-mode:multiply;
-}
-
-/* Grain imprimé subtil sur tout le portrait */
-.mag-portrait::before{
-  content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(0,0,0,.1) 1px, transparent 1.5px);
-  background-size: 3px 3px;
-  mix-blend-mode:multiply;
-  opacity:.35;
-}
+.mag:hover .mag-portrait img{ transform:scale(1.05); filter:contrast(1.1) saturate(1.15) drop-shadow(0 10px 14px rgba(0,0,0,.22)); }
 
 /* Registration marks (marques d'imprimerie aux coins de la carte crème) */
 .mag-regmark{
@@ -5570,19 +5575,12 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       <!-- Bio — magazine cover éditorial qui se déroule vers le bas -->
       <li class="mag" id="apropos" data-key="apropos">
         <button class="mag-cover" type="button" aria-expanded="false" aria-controls="mag-body-apropos">
-          <!-- Portrait duotone (tête visible en haut) -->
+          <!-- Portrait détouré (PNG transparent) sur fond stylisé crème -->
           <span class="mag-portrait">
-            <picture>
-              <source type="image/avif"
-                      srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w"
-                      sizes="320px">
-              <img src="assets/portrait-800.jpg"
-                   srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w"
-                   sizes="320px"
-                   width="800" height="1000"
-                   loading="lazy" decoding="async"
-                   alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
-            </picture>
+            <img src="assets/portrait.png"
+                 width="800" height="1000"
+                 loading="lazy" decoding="async"
+                 alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
           </span>
 
           <!-- Masthead : bandeau du haut -->

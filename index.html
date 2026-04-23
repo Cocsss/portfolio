@@ -3222,9 +3222,9 @@ body[data-theme="dark"] .fold-card.is-open{
 .rates-lede em{ font-style:italic;color:var(--accent); }
 
 /* ═══════════════════════════════════════════════════════════════
-   STUDIO — deux cartes distinctes (Tarifs = ticket / Bio = polaroid)
+   STUDIO — deux cartes distinctes (Tarifs = ticket / Bio = magazine)
    Tarifs → ticket de caisse thermique qui se déroule au clic.
-   Bio → polaroid handwritten qui flip 3D au clic.
+   Bio → magazine cover éditorial qui se déroule vers le bas au clic.
    ═══════════════════════════════════════════════════════════════ */
 .section--studio{ padding-top:clamp(28px,5vw,64px); padding-bottom:clamp(56px,7vw,100px); }
 .studio-kicker{
@@ -3419,127 +3419,240 @@ body[data-theme="dark"] .fold-card.is-open{
 }
 
 /* ─────────────────────────────────────────────
-   POLAROID — bio handwritten, flip 3D
+   MAG — magazine cover éditoriale (À propos)
+   Portrait en fond duotone + masthead + titre display +
+   overlay print (grain, registration marks, color bar).
+   S'ouvre vers le bas comme un magazine : une "page
+   intérieure" glisse sous la couv pour révéler la bio.
    ───────────────────────────────────────────── */
-.polaroid{
-  position:relative;width:100%;max-width:280px;
-  perspective:1400px;
-  transform:rotate(-2.4deg);
+.mag{
+  position:relative;width:100%;max-width:320px;
+  /* Fond papier crème — plus de fond noir */
+  background:#f2ebdc;color:#1a1a1a;
+  border-radius:3px;overflow:hidden;
+  transform:rotate(-1.4deg);
   transition:transform .45s cubic-bezier(.2,.85,.2,1);
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.04)) drop-shadow(0 18px 36px rgba(0,0,0,.22));
+  /* Texture papier subtile */
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,.55) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(0,0,0,.04) 0%, transparent 55%);
 }
-.polaroid:hover{ transform:rotate(-0.8deg) translateY(-4px); }
-.polaroid.is-open{ transform:rotate(0deg); }
+.mag:hover{ transform:rotate(-0.3deg) translateY(-3px); }
+.mag.is-open{ transform:rotate(0deg); }
 
-.polaroid-flip{
+.mag-cover{
   all:unset;box-sizing:border-box;cursor:pointer;display:block;
-  width:100%;aspect-ratio:4/5;
-  position:relative;
+  width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;
+  /* Cadre crème autour du portrait */
+  padding:34px 14px 56px;
+  background:transparent;
 }
-.polaroid-flip:focus-visible{ outline:2px solid var(--accent);outline-offset:6px; }
+.mag-cover:focus-visible{ outline:2px solid var(--accent);outline-offset:4px; }
 
-.polaroid-inner{
-  position:absolute;inset:0;
-  transform-style:preserve-3d;
-  transition:transform 1s cubic-bezier(.22,1,.36,1);
+/* Portrait en COULEUR — object-position top pour GARDER LA TÊTE visible */
+.mag-portrait{
+  position:absolute;top:34px;left:14px;right:14px;bottom:56px;z-index:0;
+  background:#e7dfc9;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);
 }
-.polaroid.is-open .polaroid-inner{ transform:rotateY(180deg); }
+.mag-portrait img{
+  width:100%;height:100%;display:block;
+  object-fit:cover;object-position:center top;
+  /* COULEUR — plus de grayscale, juste un léger boost éditorial */
+  filter:contrast(1.06) saturate(1.08) brightness(1.02);
+  transform:scale(1.02);
+  transition:transform .8s cubic-bezier(.22,1,.36,1), filter .6s;
+}
+.mag:hover .mag-portrait img{ transform:scale(1.05); filter:contrast(1.1) saturate(1.15); }
 
-.polaroid-face{
-  position:absolute;inset:0;
-  background:#faf7ee;
-  box-shadow:0 2px 0 rgba(0,0,0,.04), 0 18px 38px -14px rgba(0,0,0,.28);
-  padding:14px 14px 52px;
-  display:flex;flex-direction:column;
-  -webkit-backface-visibility:hidden;
-  backface-visibility:hidden;
-}
-/* petit grain papier */
-.polaroid-face::after{
+/* Voile chaleureux léger — on garde la couleur, on ajoute juste un côté "imprimé" */
+.mag-portrait::after{
   content:"";position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,.015) 2px 3px);
+  background:
+    linear-gradient(180deg, transparent 55%, rgba(242,235,220,.25) 85%, rgba(242,235,220,.55) 100%),
+    linear-gradient(135deg, rgba(255,79,0,.05), transparent 45%);
   mix-blend-mode:multiply;
 }
 
-/* FACE AVANT — portrait + caption manuscrite */
-.polaroid-face--front{}
-.polaroid-photo{
-  position:relative;flex:1;display:block;
-  overflow:hidden;background:#1a1a1a;
-}
-.polaroid-photo img{
-  width:100%;height:100%;display:block;object-fit:cover;
-  filter:grayscale(.08) contrast(1.04) saturate(.9);
-}
-.polaroid-photo::after{
-  /* léger vignettage */
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.25) 110%);
-}
-.polaroid-caption{
-  position:absolute;left:0;right:0;bottom:10px;
-  text-align:center;
-  font-family:var(--font-hand);font-weight:500;
-  font-size:26px;line-height:1;letter-spacing:.01em;
-  color:#2a2a2a;
-  transform:rotate(-1.2deg);
-}
-.polaroid-corner{
-  position:absolute;top:10px;right:10px;
-  font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;
-  color:rgba(0,0,0,.4);
-  background:rgba(255,255,255,.6);
-  padding:3px 7px;border:1px solid rgba(0,0,0,.1);border-radius:2px;
-  transform:rotate(3deg);
+/* Grain imprimé subtil sur tout le portrait */
+.mag-portrait::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,.1) 1px, transparent 1.5px);
+  background-size: 3px 3px;
+  mix-blend-mode:multiply;
+  opacity:.35;
 }
 
-/* FACE ARRIÈRE — bio */
-.polaroid-face--back{
-  transform:rotateY(180deg);
-  padding:22px 20px 20px;
-  gap:10px;
-  overflow:auto;
+/* Registration marks (marques d'imprimerie aux coins de la carte crème) */
+.mag-regmark{
+  position:absolute;width:12px;height:12px;z-index:3;
+  pointer-events:none;color:rgba(0,0,0,.5);
+  border:1px solid currentColor;border-radius:50%;
 }
-.polaroid-face--back .polaroid-k{
-  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--accent);
-  padding-bottom:6px;border-bottom:1px dashed rgba(0,0,0,.2);
-  margin-bottom:4px;
+.mag-regmark::before,.mag-regmark::after{
+  content:"";position:absolute;background:currentColor;
 }
-.polaroid-quote{
-  font-family:var(--font-hand);font-weight:500;
-  font-size:22px;line-height:1.2;letter-spacing:.005em;
-  color:var(--ink);
-  margin:6px 0 0;
+.mag-regmark::before{ top:50%;left:-2px;right:-2px;height:1px;transform:translateY(-50%); }
+.mag-regmark::after{ left:50%;top:-2px;bottom:-2px;width:1px;transform:translateX(-50%); }
+.mag-regmark--tr{ top:10px;right:4px; }
+.mag-regmark--bl{ bottom:60px;left:4px; }
+
+/* Color bar CMYK en marge droite (décor print) */
+.mag-cmyk{
+  position:absolute;right:4px;top:84px;z-index:3;
+  display:flex;flex-direction:column;gap:2px;
+  pointer-events:none;
 }
-.polaroid-body{
-  font-family:var(--font-body);font-size:12.5px;line-height:1.55;
-  color:var(--muted);margin:0;
+.mag-cmyk i{
+  display:block;width:5px;height:22px;border-radius:1px;
+  box-shadow:0 0 0 .5px rgba(0,0,0,.12);
 }
-.polaroid-tags{
-  list-style:none;margin:6px 0 0;padding:0;
-  display:flex;flex-wrap:wrap;gap:5px;
-}
-.polaroid-tags li{
-  font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted);
-  border:1px solid rgba(0,0,0,.18);padding:3px 7px;border-radius:2px;
-}
-.polaroid-meta{
-  margin-top:auto;
+.mag-cmyk i:nth-child(1){ background:#00AEEF; }
+.mag-cmyk i:nth-child(2){ background:#EC008C; }
+.mag-cmyk i:nth-child(3){ background:#FFF200; }
+.mag-cmyk i:nth-child(4){ background:#1a1a1a; }
+
+/* Masthead top — bande crème sur la carte */
+.mag-masthead{
+  position:absolute;top:0;left:0;right:0;z-index:3;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 18px 10px;
+  border-bottom:1px solid rgba(0,0,0,.12);
   font-family:var(--font-mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--muted);
-  padding-top:8px;border-top:1px dashed rgba(0,0,0,.2);
 }
-.polaroid-flipback{
-  font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;
-  color:var(--accent);text-transform:uppercase;
-  text-align:center;padding-top:4px;
-  opacity:.7;
+.mag-issue{ color:var(--accent);font-weight:700; }
+.mag-name{ color:#1a1a1a;font-weight:700;letter-spacing:.28em; }
+.mag-ed{ color:rgba(0,0,0,.55); }
+
+/* Title block — bandeau papier en bas du portrait, pas sur la tête */
+.mag-title{
+  position:absolute;left:14px;right:14px;bottom:56px;z-index:3;
+  padding:10px 12px 12px;
+  background:linear-gradient(180deg, rgba(242,235,220,.86) 0%, #f2ebdc 40%);
+  border-top:2px solid #1a1a1a;
+  display:flex;flex-direction:column;gap:3px;
+}
+.mag-title-k{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;
+}
+.mag-title-h{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(28px,3.8vw,36px);line-height:.9;letter-spacing:-.025em;
+  color:#1a1a1a;margin:0;
+}
+.mag-title-sub{
+  font-family:var(--font-body);font-size:11.5px;line-height:1.3;font-style:italic;
+  color:rgba(0,0,0,.62);margin-top:2px;
+}
+
+/* Teasers intégrés au bandeau titre : petite rangée de pills sous le titre */
+.mag-teasers{
+  display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;
+}
+.mag-teasers span{
+  font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;
+  padding:2px 6px 3px;
+  border:1px solid rgba(0,0,0,.35);border-radius:2px;
+  color:#1a1a1a;background:rgba(255,255,255,.5);
+}
+
+/* Hint bottom — accent band */
+.mag-hint{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  padding:9px 0 10px;
+  background:var(--accent);color:#fff;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.3em;
+  text-align:center;font-weight:700;
+  animation:magBlink 2.6s ease-in-out infinite;
+  transition:background .3s;
+}
+.mag.is-open .mag-hint{
+  background:#e8ddc4;color:rgba(0,0,0,.55);
+  animation:none;
+}
+@keyframes magBlink{
+  0%,100%{ opacity:1; }
+  50%{ opacity:.78; }
+}
+
+/* BODY — article intérieur qui glisse vers le bas */
+.mag-body{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .9s cubic-bezier(.22,1,.36,1);
+  background:#faf7ee;color:#1a1a1a;
+  position:relative;z-index:1;
+}
+.mag.is-open > .mag-body{ grid-template-rows:1fr; }
+.mag-body-inner{
+  overflow:hidden;min-height:0;
+  padding:0 20px;
+}
+.mag.is-open > .mag-body > .mag-body-inner{
+  padding:20px 20px 24px;
+  border-top:4px double #1a1a1a;
+}
+.mag-body-inner > *{
+  opacity:0;transform:translateY(-8px);
+  transition:opacity .55s .2s ease, transform .6s .2s cubic-bezier(.22,1,.36,1);
+}
+.mag.is-open .mag-body-inner > *{ opacity:1;transform:none; }
+
+.mag-article{ display:flex;flex-direction:column;gap:12px; }
+.mag-deck-k{
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;
+}
+.mag-deck-lead{
+  font-family:Georgia, "Times New Roman", serif;font-weight:400;font-style:italic;
+  font-size:15px;line-height:1.35;
+  color:#1a1a1a;margin:4px 0 0;
+  padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,.15);
+}
+.mag-col{
+  font-family:var(--font-body);font-size:13px;line-height:1.6;
+  color:#3a3a3a;margin:0;
+}
+.mag-col::first-letter{
+  font-family:var(--font-display);font-weight:400;
+  font-size:38px;line-height:.85;
+  float:left;padding:4px 8px 0 0;
+  color:var(--accent);
+}
+.mag-specs{
+  list-style:none;margin:2px 0;padding:0;
+}
+.mag-specs-row{
+  display:grid;grid-template-columns:94px 1fr;gap:14px;
+  padding:7px 0;
+  border-bottom:1px dotted rgba(0,0,0,.18);
+}
+.mag-specs-row:first-child{ border-top:1px dashed rgba(0,0,0,.2); }
+.mag-specs-row:last-child{ border-bottom:1px dashed rgba(0,0,0,.2); }
+.mag-specs-k{
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:#777;
+}
+.mag-specs-v{
+  font-family:var(--font-body);font-size:12.5px;color:#1a1a1a;
+}
+.mag-signature{
+  font-family:var(--font-hand);font-weight:500;
+  font-size:26px;text-align:right;color:#1a1a1a;
+  margin-top:2px;
+}
+.mag-foot{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding-top:8px;border-top:1px solid rgba(0,0,0,.15);
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:#777;
 }
 
 @media (max-width:760px){
   .receipt{ max-width:300px; }
-  .polaroid{ max-width:250px; }
+  .mag{ max-width:280px; }
 }
 
 .rates-grid{
@@ -5454,42 +5567,67 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </div></div>
       </li>
 
-      <!-- Bio — polaroid flip 3D -->
-      <li class="polaroid" id="apropos" data-key="apropos">
-        <button class="polaroid-flip" type="button" aria-expanded="false" aria-controls="polaroid-back-apropos">
-          <span class="polaroid-inner">
-            <!-- Face avant : portrait + caption manuscrite -->
-            <span class="polaroid-face polaroid-face--front">
-              <span class="polaroid-corner" aria-hidden="true">N°02</span>
-              <span class="polaroid-photo">
-                <picture>
-                  <source type="image/avif"
-                          srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w"
-                          sizes="280px">
-                  <img src="assets/portrait-800.jpg"
-                       srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w"
-                       sizes="280px"
-                       width="800" height="1000"
-                       loading="lazy" decoding="async"
-                       alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
-                </picture>
-              </span>
-              <span class="polaroid-caption">Bruxelles · CD</span>
-            </span>
+      <!-- Bio — magazine cover éditorial qui se déroule vers le bas -->
+      <li class="mag" id="apropos" data-key="apropos">
+        <button class="mag-cover" type="button" aria-expanded="false" aria-controls="mag-body-apropos">
+          <!-- Portrait duotone (tête visible en haut) -->
+          <span class="mag-portrait">
+            <picture>
+              <source type="image/avif"
+                      srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w"
+                      sizes="320px">
+              <img src="assets/portrait-800.jpg"
+                   srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w"
+                   sizes="320px"
+                   width="800" height="1000"
+                   loading="lazy" decoding="async"
+                   alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
+            </picture>
+          </span>
 
-            <!-- Face arrière : bio -->
-            <span class="polaroid-face polaroid-face--back" id="polaroid-back-apropos">
-              <span class="polaroid-k">About · CD Studio · 2026</span>
-              <p class="polaroid-quote">Je donne vie à tes projets visuels — aftermovies, clips, brand films.</p>
-              <p class="polaroid-body">De l'écriture au montage, je cherche le bon rythme et le détail qui fait image.</p>
-              <ul class="polaroid-tags" role="list">
-                <li>Montage</li><li>Tournage 4K</li><li>Drone</li><li>DA</li>
-              </ul>
-              <span class="polaroid-meta">2020 — 2026 · Belgique &amp; Europe</span>
-              <span class="polaroid-flipback">↺ clic pour retourner</span>
+          <!-- Masthead : bandeau du haut -->
+          <span class="mag-masthead">
+            <span class="mag-issue">N° 02</span>
+            <span class="mag-name">CD · STUDIO</span>
+            <span class="mag-ed">ÉD. 2026</span>
+          </span>
+
+          <!-- Marques d'imprimerie -->
+          <span class="mag-regmark mag-regmark--tr" aria-hidden="true"></span>
+          <span class="mag-regmark mag-regmark--bl" aria-hidden="true"></span>
+          <span class="mag-cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+
+          <!-- Bloc titre avec teasers intégrés -->
+          <span class="mag-title">
+            <span class="mag-title-k">Featuring</span>
+            <span class="mag-title-h">Corentin<br/>Devillé</span>
+            <span class="mag-title-sub">Vidéaste à Bruxelles · 2020 — 26</span>
+            <span class="mag-teasers" aria-hidden="true">
+              <span>Aftermovies</span><span>Clips</span><span>Brand&nbsp;films</span>
             </span>
           </span>
+
+          <!-- Barre d'appel à ouverture -->
+          <span class="mag-hint">▼ OUVRIR LE NUMÉRO ▼</span>
         </button>
+
+        <!-- Contenu — se déroule vers le bas -->
+        <div class="mag-body" id="mag-body-apropos">
+          <div class="mag-body-inner">
+            <article class="mag-article">
+              <span class="mag-deck-k">Entretien · Studio CD</span>
+              <p class="mag-deck-lead">De l'écriture au montage, le bruxellois cherche le bon rythme et le détail qui fait image.</p>
+              <p class="mag-col">Je donne vie à tes projets visuels — aftermovies, clips, brand films. J'aime partir de l'idée, comprendre le pourquoi, puis construire un rythme qui te ressemble. Caméra, drone, direction artistique, montage : un même fil, du premier repérage au master final.</p>
+              <ul class="mag-specs" role="list">
+                <li class="mag-specs-row"><span class="mag-specs-k">Disponible</span><span class="mag-specs-v">Belgique &amp; Europe</span></li>
+                <li class="mag-specs-row"><span class="mag-specs-k">Expertise</span><span class="mag-specs-v">Montage · Tournage 4K · Drone · DA</span></li>
+                <li class="mag-specs-row"><span class="mag-specs-k">Période</span><span class="mag-specs-v">2020 — 2026</span></li>
+              </ul>
+              <div class="mag-signature">— Corentin D.</div>
+              <div class="mag-foot"><span>CD · STUDIO · BXL</span><span>N° 02 / 2026</span></div>
+            </article>
+          </div>
+        </div>
       </li>
 
     </ul>
@@ -5978,10 +6116,10 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   }
 })();
 
-/* ========== STUDIO CARDS — receipt (unroll) + polaroid (flip 3D) ==========
+/* ========== STUDIO CARDS — receipt (unroll) + mag (unroll éditorial) ==========
    Tarifs : ticket de caisse — clic sur le head => le body se déroule (0fr→1fr).
-   Bio    : polaroid — clic sur la carte => rotateY 180° pour flip 3D.
-   Toggle independant, pas d'exclusivité. */
+   Bio    : magazine cover — clic sur la couv => le body éditorial se déroule
+   vers le bas (même pattern grid-rows). Toggle indépendant. */
 (function(){
   // Receipt
   document.querySelectorAll('.receipt').forEach(rec => {
@@ -5993,13 +6131,13 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
       head.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   });
-  // Polaroid
-  document.querySelectorAll('.polaroid').forEach(p => {
-    const btn = p.querySelector('.polaroid-flip');
+  // Mag (bio)
+  document.querySelectorAll('.mag').forEach(m => {
+    const btn = m.querySelector('.mag-cover');
     if(!btn) return;
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      const open = p.classList.toggle('is-open');
+      const open = m.classList.toggle('is-open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   });
@@ -6099,12 +6237,12 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     let target;
     try { target = document.querySelector(hash); } catch(e){ return; }
     if(!target) return;
-    // Studio cards : receipt (Tarifs) ou polaroid (Bio)
-    const studioCard = target.closest('.receipt, .polaroid');
+    // Studio cards : receipt (Tarifs) ou mag (Bio)
+    const studioCard = target.closest('.receipt, .mag');
     if(studioCard){
       if(!studioCard.classList.contains('is-open')){
         studioCard.classList.add('is-open');
-        const trigger = studioCard.querySelector('.receipt-head, .polaroid-flip');
+        const trigger = studioCard.querySelector('.receipt-head, .mag-cover');
         if(trigger) trigger.setAttribute('aria-expanded','true');
       }
       setTimeout(() => studioCard.scrollIntoView({behavior:'smooth', block:'center'}), 120);

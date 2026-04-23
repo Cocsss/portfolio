@@ -3249,6 +3249,10 @@ body[data-theme="dark"] .fold-card.is-open{
   .studio-cards .receipt{ max-width:380px;transform:rotate(1.4deg); }
   .studio-cards .receipt:hover{ transform:rotate(.3deg) translateY(-3px); }
   .studio-cards .receipt.is-open{ transform:rotate(0deg); }
+  .studio-cards .receipt-title-h{ font-size:42px;letter-spacing:-.03em; }
+  .studio-cards .receipt-title-k{ font-size:10px; }
+  .studio-cards .receipt-title-sub{ font-size:13px; }
+  .studio-cards .receipt-masthead{ font-size:10.5px;padding:13px 22px 12px; }
   .studio-cards .mag{ max-width:380px;transform:rotate(-1.6deg); }
   .studio-cards .mag:hover{ transform:rotate(-.3deg) translateY(-3px); }
   .studio-cards .mag.is-open{ transform:rotate(0deg); }
@@ -3263,176 +3267,231 @@ body[data-theme="dark"] .fold-card.is-open{
 }
 
 /* ─────────────────────────────────────────────
-   RECEIPT — ticket de caisse thermique
+   RECEIPT — ticket éditorial moderne
+   Même langage que .mag (masthead, display serif,
+   marques d'imprimerie, CMYK, pills, bande accent)
+   sur un format ticket (bord dentelé haut).
    ───────────────────────────────────────────── */
 .receipt{
-  --rc-paper: var(--bg);
-  --rc-ink: var(--ink);
-  --rc-dim: var(--muted);
-  --rc-accent: var(--accent-text);
-  position:relative;width:100%;max-width:340px;
-  color:var(--rc-ink);
-  background:var(--rc-paper);
-  font-family:var(--font-mono);
-  transform:rotate(1.2deg);
-  transition:transform .4s cubic-bezier(.2,.85,.2,1);
-  filter:drop-shadow(0 2px 0 rgba(0,0,0,.04)) drop-shadow(0 14px 30px rgba(0,0,0,.22));
-  /* Bord dentelé en HAUT uniquement — 32 dents */
+  position:relative;width:100%;max-width:320px;
+  background:var(--bg);color:var(--ink);
+  border-radius:3px;overflow:hidden;
+  transform:rotate(1.4deg);
+  transition:transform .45s cubic-bezier(.2,.85,.2,1);
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.04)) drop-shadow(0 14px 28px rgba(0,0,0,.16));
+  /* Bord dentelé en haut — signature ticket */
   clip-path: polygon(
-    0 7px,
-    3.125% 0, 6.25% 7px, 9.375% 0, 12.5% 7px,
-    15.625% 0, 18.75% 7px, 21.875% 0, 25% 7px,
-    28.125% 0, 31.25% 7px, 34.375% 0, 37.5% 7px,
-    40.625% 0, 43.75% 7px, 46.875% 0, 50% 7px,
-    53.125% 0, 56.25% 7px, 59.375% 0, 62.5% 7px,
-    65.625% 0, 68.75% 7px, 71.875% 0, 75% 7px,
-    78.125% 0, 81.25% 7px, 84.375% 0, 87.5% 7px,
-    90.625% 0, 93.75% 7px, 96.875% 0, 100% 7px,
+    0 8px,
+    3.125% 0, 6.25% 8px, 9.375% 0, 12.5% 8px,
+    15.625% 0, 18.75% 8px, 21.875% 0, 25% 8px,
+    28.125% 0, 31.25% 8px, 34.375% 0, 37.5% 8px,
+    40.625% 0, 43.75% 8px, 46.875% 0, 50% 8px,
+    53.125% 0, 56.25% 8px, 59.375% 0, 62.5% 8px,
+    65.625% 0, 68.75% 8px, 71.875% 0, 75% 8px,
+    78.125% 0, 81.25% 8px, 84.375% 0, 87.5% 8px,
+    90.625% 0, 93.75% 8px, 96.875% 0, 100% 8px,
     100% 100%, 0 100%
   );
 }
-.receipt:hover{ transform:rotate(0.2deg) translateY(-3px); }
+.receipt:hover{ transform:rotate(0.3deg) translateY(-3px); }
+.receipt.is-open{ transform:rotate(0deg); }
 
-/* Grain/paper texture subtil */
+/* Grain print subtil — cohérence avec .mag */
 .receipt::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,0,0,.035), transparent 70%),
-    repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,.012) 2px 3px);
-  mix-blend-mode:multiply;
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:4;
+  background-image:radial-gradient(circle at 1px 1px, rgba(0,0,0,.08) 1px, transparent 1.5px);
+  background-size:3px 3px;
+  mix-blend-mode:multiply;opacity:.35;
 }
 
+/* COVER — bouton éditorial, ratio couverture */
 .receipt-head{
   all:unset;box-sizing:border-box;cursor:pointer;display:block;
-  width:100%;
-  padding:24px 22px 18px;
-  text-align:center;
-  position:relative;z-index:1;
+  width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;
+  padding:42px 16px 56px;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 20%, rgba(255,255,255,.45) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 45% at 85% 85%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 60%),
+    var(--bg);
 }
-.receipt-head:focus-visible{ outline:2px solid var(--rc-accent);outline-offset:-6px; }
+.receipt-head:focus-visible{ outline:2px solid var(--accent);outline-offset:4px; }
 
-.receipt-store{
-  font-size:16px;font-weight:700;letter-spacing:.22em;line-height:1.2;
-  margin:0;color:var(--rc-ink);
+/* Masthead — identique en rythme à .mag-masthead */
+.receipt-masthead{
+  position:absolute;top:8px;left:0;right:0;z-index:3;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 18px 10px;
+  border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
 }
-.receipt-sub{
-  font-size:11px;letter-spacing:.16em;color:var(--rc-dim);
-  margin:3px 0 14px;
+.receipt-issue{ color:var(--accent-text);font-weight:700; }
+.receipt-name{ color:var(--ink);font-weight:700;letter-spacing:.28em; }
+.receipt-ed{ color:var(--muted); }
+
+/* Marques d'imprimerie + CMYK — même grammaire que .mag */
+.receipt-regmark{
+  position:absolute;width:12px;height:12px;z-index:3;
+  pointer-events:none;color:rgba(0,0,0,.5);
+  border:1px solid currentColor;border-radius:50%;
 }
-.receipt-meta{
-  display:flex;justify-content:space-between;
-  font-size:11px;letter-spacing:.12em;color:var(--rc-dim);
-  padding:6px 0;
-  border-top:1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
-  border-bottom:1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
-  margin:0 0 16px;
+.receipt-regmark::before,.receipt-regmark::after{
+  content:"";position:absolute;background:currentColor;
 }
-.receipt-preview{
-  display:flex;flex-direction:column;gap:8px;
-  font-size:13px;letter-spacing:.04em;
+.receipt-regmark::before{ top:50%;left:-2px;right:-2px;height:1px;transform:translateY(-50%); }
+.receipt-regmark::after{ left:50%;top:-2px;bottom:-2px;width:1px;transform:translateX(-50%); }
+.receipt-regmark--tr{ top:46px;right:6px; }
+.receipt-regmark--bl{ bottom:64px;left:6px; }
+
+.receipt-cmyk{
+  position:absolute;right:4px;top:120px;z-index:3;
+  display:flex;flex-direction:column;gap:2px;
+  pointer-events:none;
 }
-.receipt-line--head{
-  text-align:center;font-weight:700;letter-spacing:.22em;font-size:12px;
-  color:var(--rc-ink);margin-bottom:4px;
+.receipt-cmyk i{
+  display:block;width:5px;height:22px;border-radius:1px;
+  box-shadow:0 0 0 .5px rgba(0,0,0,.12);
 }
-.receipt-line{
-  display:flex;justify-content:space-between;
-  color:var(--rc-ink);font-weight:500;
+.receipt-cmyk i:nth-child(1){ background:#00AEEF; }
+.receipt-cmyk i:nth-child(2){ background:#EC008C; }
+.receipt-cmyk i:nth-child(3){ background:#FFF200; }
+.receipt-cmyk i:nth-child(4){ background:#1a1a1a; }
+
+/* Bloc titre — display serif (même registre que .mag-title) */
+.receipt-title{
+  position:absolute;left:16px;right:16px;bottom:56px;z-index:3;
+  padding:12px 12px 14px;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 82%, transparent) 0%, var(--bg) 40%);
+  border-top:2px solid var(--ink);
+  display:flex;flex-direction:column;gap:3px;
 }
+.receipt-title-k{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--accent-text);font-weight:700;
+}
+.receipt-title-h{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(32px,4.2vw,40px);line-height:.9;letter-spacing:-.025em;
+  color:var(--ink);margin:0;
+}
+.receipt-title-sub{
+  font-family:var(--font-body);font-size:11.5px;line-height:1.3;font-style:italic;
+  color:var(--muted);margin-top:3px;
+}
+
+/* Teasers pills (même motif que .mag-teasers) */
+.receipt-teasers{
+  display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;
+}
+.receipt-teasers span{
+  font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;
+  padding:2px 6px 3px;
+  border:1px solid color-mix(in srgb, var(--ink) 35%, transparent);border-radius:2px;
+  color:var(--ink);background:color-mix(in srgb, var(--bg) 55%, transparent);
+}
+
+/* Bande accent bas (identique .mag-hint) */
 .receipt-hint{
-  margin:20px 0 0;font-size:10.5px;letter-spacing:.3em;
-  color:var(--rc-accent);font-weight:700;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  animation:rcBlink 2.4s ease-in-out infinite;
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  padding:9px 0 10px;
+  background:var(--accent);color:#fff;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.3em;
+  text-align:center;font-weight:700;
+  animation:magBlink 2.6s ease-in-out infinite;
+  transition:background .3s;
 }
-.receipt.is-open .receipt-hint{ opacity:0;visibility:hidden;height:0;margin:0; }
-@keyframes rcBlink{
-  0%,100%{ opacity:.45; }
-  50%{ opacity:1; }
+.receipt.is-open .receipt-hint{
+  background:#e8ddc4;color:rgba(0,0,0,.55);
+  animation:none;
 }
 
-/* Body — unrolls from top */
+/* BODY — page intérieure qui glisse (même anim que .mag-body) */
 .receipt-body{
   display:grid;grid-template-rows:0fr;
   transition:grid-template-rows .9s cubic-bezier(.22,1,.36,1);
+  background:var(--bg);color:var(--ink);
   position:relative;z-index:1;
 }
 .receipt.is-open > .receipt-body{ grid-template-rows:1fr; }
 .receipt-body-inner{
   overflow:hidden;min-height:0;
   padding:0 22px;
-  font-size:13px;letter-spacing:.03em;
 }
 .receipt.is-open > .receipt-body > .receipt-body-inner{
-  padding:0 22px 22px;
+  padding:22px 22px 26px;
+  border-top:4px double var(--ink);
 }
 .receipt-body-inner > *{
-  opacity:0;transform:translateY(-4px);
-  transition:opacity .5s .25s ease, transform .6s .25s cubic-bezier(.22,1,.36,1);
+  opacity:0;transform:translateY(-8px);
+  transition:opacity .55s .2s ease, transform .6s .2s cubic-bezier(.22,1,.36,1);
 }
 .receipt.is-open .receipt-body-inner > *{ opacity:1;transform:none; }
 
-.receipt-stamp{
-  text-align:center;font-size:11px;letter-spacing:.16em;
-  color:var(--rc-dim);
-  padding:10px 0 12px;
+/* Contenu éditorial (même vocabulaire que .mag-article) */
+.rc-article{ display:flex;flex-direction:column;gap:14px; }
+.rc-deck-k{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--accent-text);font-weight:700;
 }
-.receipt-rule{
-  height:1px;
-  background:repeating-linear-gradient(to right,
-    var(--rc-ink) 0 4px, transparent 4px 8px);
-  margin:4px 0 8px;
+.rc-deck-lead{
+  font-family:Georgia, "Times New Roman", serif;font-weight:400;font-style:italic;
+  font-size:17px;line-height:1.38;
+  color:var(--ink);margin:4px 0 0;
+  padding-bottom:12px;border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
-.receipt-items{ list-style:none;margin:0;padding:0; }
-.receipt-items li{
-  display:grid;grid-template-columns:28px 1fr auto;
-  column-gap:12px;row-gap:3px;align-items:baseline;
-  padding:9px 0;
+.rc-specs{ list-style:none;margin:4px 0;padding:0; }
+.rc-specs-row{
+  display:grid;grid-template-columns:100px 1fr auto;gap:12px;
+  align-items:baseline;
+  padding:11px 0;
+  border-bottom:1px dotted color-mix(in srgb, var(--ink) 22%, transparent);
 }
-.receipt-items .rc-qty{
-  grid-row:1;grid-column:1;
-  font-weight:700;color:var(--rc-accent);font-size:14px;
+.rc-specs-row:first-child{ border-top:1px dashed color-mix(in srgb, var(--ink) 28%, transparent); }
+.rc-specs-row:last-child{ border-bottom:1px dashed color-mix(in srgb, var(--ink) 28%, transparent); }
+.rc-specs-k{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;
 }
-.receipt-items .rc-name{
-  grid-row:1;grid-column:2;
-  text-transform:uppercase;letter-spacing:.08em;font-weight:600;font-size:13px;
+.rc-specs-v{
+  font-family:var(--font-body);font-size:14px;color:var(--ink);font-weight:500;line-height:1.35;
 }
-.receipt-items .rc-price{
-  grid-row:1;grid-column:3;
-  font-weight:700;font-variant-numeric:tabular-nums;font-size:14px;
+.rc-specs-v small{
+  display:block;font-size:11.5px;color:var(--muted);font-weight:400;letter-spacing:0;margin-top:3px;
+  font-style:italic;
 }
-.receipt-items .rc-desc{
-  grid-row:2;grid-column:2/4;
-  font-size:11px;letter-spacing:.02em;color:var(--rc-dim);line-height:1.4;
+.rc-specs-p{
+  font-family:var(--font-display);font-weight:400;
+  font-size:17px;color:var(--accent-text);font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+  white-space:nowrap;
 }
-
-.receipt-total{
-  display:flex;justify-content:space-between;
-  font-size:15px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  padding:12px 0;
-  border-top:2px solid var(--rc-ink);border-bottom:2px solid var(--rc-ink);
-  margin:8px 0 14px;
+.rc-total{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  padding:14px 0 12px;margin-top:6px;
+  border-top:2px solid var(--ink);
 }
-.receipt-total .rc-t-v{ color:var(--rc-accent); }
-.receipt-thx{
-  text-align:center;font-size:13px;letter-spacing:.18em;font-weight:700;
-  margin:14px 0 4px;color:var(--rc-ink);
+.rc-total-k{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink);font-weight:700;
 }
-.receipt-thx-sub{
-  text-align:center;font-size:11px;letter-spacing:.1em;color:var(--rc-dim);
-  margin:0 0 16px;
+.rc-total-v{
+  font-family:var(--font-display);font-weight:400;
+  font-size:22px;letter-spacing:-.015em;
+  color:var(--accent-text);
 }
-.receipt-barcode{
-  height:42px;
-  background-image:repeating-linear-gradient(to right,
-    var(--rc-ink) 0 1px, transparent 1px 3px,
-    var(--rc-ink) 3px 4px, transparent 4px 7px,
-    var(--rc-ink) 7px 9px, transparent 9px 12px);
-  margin:8px 0 8px;
+.rc-thx{
+  font-family:Georgia, "Times New Roman", serif;font-style:italic;
+  font-size:13.5px;line-height:1.45;color:var(--ink);
+  margin:2px 0 0;
 }
-.receipt-num{
-  text-align:center;font-size:11px;letter-spacing:.26em;
-  color:var(--rc-ink);font-weight:600;
+.rc-signature{
+  font-family:var(--font-hand);font-weight:500;
+  font-size:30px;text-align:right;color:var(--ink);
+  margin-top:4px;
+}
+.rc-foot{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding-top:10px;border-top:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);
 }
 
 /* ─────────────────────────────────────────────
@@ -5192,7 +5251,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   </nav>
   <div class="mm-foot">
     <span>CD Studio</span>
-    <span>Bruxelles</span>
+    <span>BW</span>
     <span>2026</span>
   </div>
 </div>
@@ -5278,7 +5337,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       <div class="hero-morph"><span>Je suis —</span><span class="morph-word" id="morphWord">Vidéaste</span></div>
 
       <p class="hero-pitch">
-        Vidéaste à Bruxelles. Je fabrique des <strong>aftermovies, clips &amp; brand films</strong>
+        Vidéaste à BW. Je fabrique des <strong>aftermovies, clips &amp; brand films</strong>
         — des images qui racontent vraiment quelque chose.
       </p>
 
@@ -5651,11 +5710,11 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
           <button class="menu-head" type="button" aria-expanded="false">
             <span class="menu-num">§ 02.1.5</span>
             <span class="menu-title">Formation Premiere Pro</span>
-            <span class="menu-meta">Cours particuliers · remote / Bruxelles</span>
+            <span class="menu-meta">Cours particuliers · remote / BW</span>
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
           <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à Bruxelles. Projet réel comme support pédagogique.</p>
+            <p class="menu-desc">Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à BW. Projet réel comme support pédagogique.</p>
             <ul class="menu-tags" role="list">
               <li>Premiere Pro</li><li>Initiation</li><li>Perfectionnement</li><li>Remote</li>
             </ul>
@@ -5669,55 +5728,71 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     <div class="studio-meta reveal" data-auto-reveal>
     <ul class="studio-cards" role="list">
 
-      <!-- Tarifs — ticket de caisse thermique qui se déroule -->
+      <!-- Tarifs — ticket éditorial moderne (même langage que la mag) -->
       <li class="receipt" id="tarifs" data-key="tarifs">
         <button class="receipt-head" type="button" aria-expanded="false" aria-controls="receipt-body-tarifs">
-          <h3 class="receipt-store">CD STUDIO BXL</h3>
-          <p class="receipt-sub">Montage · Tournage · Drone</p>
-          <div class="receipt-meta">
-            <span>cd-studio.com</span>
-            <span>TK · #2026</span>
-          </div>
-          <div class="receipt-preview">
-            <div class="receipt-line receipt-line--head">— TARIFS 2026 —</div>
-            <div class="receipt-line"><span>3 postes actifs</span><span>€ / h</span></div>
-            <div class="receipt-line"><span>Devis forfait</span><span>sur demande</span></div>
-          </div>
-          <div class="receipt-hint">▼ CLIC · DÉROULER ▼</div>
+          <!-- Masthead : bandeau éditorial -->
+          <span class="receipt-masthead">
+            <span class="receipt-issue">TK · 01</span>
+            <span class="receipt-name">CD · STUDIO</span>
+            <span class="receipt-ed">ÉD. 2026</span>
+          </span>
+
+          <!-- Marques d'imprimerie -->
+          <span class="receipt-regmark receipt-regmark--tr" aria-hidden="true"></span>
+          <span class="receipt-regmark receipt-regmark--bl" aria-hidden="true"></span>
+          <span class="receipt-cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+
+          <!-- Titre display -->
+          <span class="receipt-title">
+            <span class="receipt-title-k">Index / Tarifs</span>
+            <span class="receipt-title-h">Tarifs<br/>2026</span>
+            <span class="receipt-title-sub">3 postes à l'heure · forfait sur devis</span>
+            <span class="receipt-teasers" aria-hidden="true">
+              <span>Montage</span><span>Tournage</span><span>Formation</span>
+            </span>
+          </span>
+
+          <!-- Bande d'ouverture -->
+          <span class="receipt-hint">▼ OUVRIR LE TICKET ▼</span>
         </button>
-        <div class="receipt-body" id="receipt-body-tarifs"><div class="receipt-body-inner">
-          <div class="receipt-stamp">DATE 23/04/2026 · TC 14:37</div>
-          <div class="receipt-rule" aria-hidden="true"></div>
-          <ul class="receipt-items" role="list">
-            <li>
-              <span class="rc-qty">1×</span>
-              <span class="rc-name">Montage (h)</span>
-              <span class="rc-price">20.00</span>
-              <span class="rc-desc">Reels · Clips · Aftermovies</span>
-            </li>
-            <li>
-              <span class="rc-qty">1×</span>
-              <span class="rc-name">Tournage (h)</span>
-              <span class="rc-price">25.00</span>
-              <span class="rc-desc">Caméra 4K &amp; drone</span>
-            </li>
-            <li>
-              <span class="rc-qty">1×</span>
-              <span class="rc-name">Formation (h)</span>
-              <span class="rc-price">20.00</span>
-              <span class="rc-desc">Premiere Pro · particulier</span>
-            </li>
-          </ul>
-          <div class="receipt-rule" aria-hidden="true"></div>
-          <div class="receipt-total">
-            <span>Total</span>
-            <span class="rc-t-v">Sur devis</span>
+
+        <!-- Contenu éditorial intérieur -->
+        <div class="receipt-body" id="receipt-body-tarifs">
+          <div class="receipt-body-inner">
+            <article class="rc-article">
+              <span class="rc-deck-k">Tarification · Studio CD</span>
+              <p class="rc-deck-lead">Trois postes actifs à l'heure. Projets lourds chiffrés au forfait — réponse sous 24 h.</p>
+
+              <ul class="rc-specs" role="list">
+                <li class="rc-specs-row">
+                  <span class="rc-specs-k">Montage</span>
+                  <span class="rc-specs-v">Reels · clips · aftermovies<small>livrables 16:9 / 9:16 · master 4K</small></span>
+                  <span class="rc-specs-p">20 € / h</span>
+                </li>
+                <li class="rc-specs-row">
+                  <span class="rc-specs-k">Tournage</span>
+                  <span class="rc-specs-v">Caméra 4K &amp; drone<small>direction artistique incluse</small></span>
+                  <span class="rc-specs-p">25 € / h</span>
+                </li>
+                <li class="rc-specs-row">
+                  <span class="rc-specs-k">Formation</span>
+                  <span class="rc-specs-v">Premiere Pro · particulier<small>en ligne ou à BW</small></span>
+                  <span class="rc-specs-p">20 € / h</span>
+                </li>
+              </ul>
+
+              <div class="rc-total">
+                <span class="rc-total-k">Projet complet</span>
+                <span class="rc-total-v">Devis sur demande</span>
+              </div>
+
+              <p class="rc-thx">Merci de votre confiance — chaque projet est chiffré au plus juste.</p>
+              <div class="rc-signature">— CD.</div>
+              <div class="rc-foot"><span>CD · STUDIO · BW</span><span>TK · 01 / 2026</span></div>
+            </article>
           </div>
-          <p class="receipt-thx">MERCI DE VOTRE CONFIANCE</p>
-          <p class="receipt-thx-sub">Projets lourds chiffrés au forfait — réponse 24 h</p>
-          <div class="receipt-barcode" aria-hidden="true"></div>
-          <div class="receipt-num">*CD-2026-TAR-V1*</div>
-        </div></div>
+        </div>
       </li>
 
       <!-- Bio — magazine cover éditorial qui se déroule vers le bas -->
@@ -5747,7 +5822,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
           <span class="mag-title">
             <span class="mag-title-k">Featuring</span>
             <span class="mag-title-h">Corentin<br/>Devillé</span>
-            <span class="mag-title-sub">Vidéaste à Bruxelles · 2020 — 26</span>
+            <span class="mag-title-sub">Vidéaste à BW · 2020 — 26</span>
             <span class="mag-teasers" aria-hidden="true">
               <span>Aftermovies</span><span>Clips</span><span>Brand&nbsp;films</span>
             </span>
@@ -5770,7 +5845,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                 <li class="mag-specs-row"><span class="mag-specs-k">Période</span><span class="mag-specs-v">2020 — 2026</span></li>
               </ul>
               <div class="mag-signature">— Corentin D.</div>
-              <div class="mag-foot"><span>CD · STUDIO · BXL</span><span>N° 02 / 2026</span></div>
+              <div class="mag-foot"><span>CD · STUDIO · BW</span><span>N° 02 / 2026</span></div>
             </article>
           </div>
         </div>
@@ -5785,7 +5860,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     <div class="section-head reveal">
       <div class="idx">§ 03 / Contact</div>
       <h2>Un projet en tête&nbsp;?</h2>
-      <div class="sub">Réponse sous 24 h · Bruxelles</div>
+      <div class="sub">Réponse sous 24 h · BW</div>
     </div>
 
     <div class="section-body">
@@ -5797,8 +5872,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
           <ul class="ctk-status" role="list">
             <li><span class="ctk-dot" aria-hidden="true"></span><span class="ctk-k">Ouvert</span><span class="ctk-v">Printemps–Été 2026</span></li>
             <li><span class="ctk-k">Réponse</span><span class="ctk-v">sous 24 h</span></li>
-            <li><span class="ctk-k">Basé</span><span class="ctk-v">Bruxelles · BE</span></li>
-            <li><span class="ctk-k">Horaire</span><span class="ctk-v" id="ctkClock">BXL · --:--</span></li>
+            <li><span class="ctk-k">Basé</span><span class="ctk-v">BW · BE</span></li>
+            <li><span class="ctk-k">Horaire</span><span class="ctk-v" id="ctkClock">BW · --:--</span></li>
           </ul>
         </aside>
 
@@ -5847,7 +5922,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       </svg>
       <span class="colo-wordmark">CD Studio</span>
     </a>
-    <span class="colo-copy">© 2026 · Corentin Devillé · Bruxelles</span>
+    <span class="colo-copy">© 2026 · Corentin Devillé · BW</span>
   </footer>
 
   <!-- Mobile-only sticky WhatsApp FAB -->
@@ -6347,7 +6422,7 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     const h = parts.find(p=>p.type==='hour')?.value || '00';
     const m = parts.find(p=>p.type==='minute')?.value || '00';
     const s = parts.find(p=>p.type==='second')?.value || '00';
-    nodes.forEach(el => { el.textContent = `BXL · ${h}:${m}:${s}`; });
+    nodes.forEach(el => { el.textContent = `BW · ${h}:${m}:${s}`; });
   }
   tick();
   setInterval(tick, 1000);
@@ -6471,7 +6546,7 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     },
     formation: {
       num:'§ 02.5', name:'Formation Premiere Pro',
-      desc:"Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à Bruxelles. Projet réel comme support pédagogique.",
+      desc:"Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à BW. Projet réel comme support pédagogique.",
       tags:['Premiere Pro','Initiation','Perfectionnement','Remote']
     }
   };

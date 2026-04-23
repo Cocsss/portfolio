@@ -3438,55 +3438,100 @@ body[data-theme="dark"] .fold-card.is-open{
   color:var(--ink);margin:4px 0 0;
   padding-bottom:12px;border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
-.rc-specs{ list-style:none;margin:4px 0;padding:0; }
-.rc-specs-row{
-  display:grid;grid-template-columns:100px 1fr auto;gap:12px;
+/* Tampon date/TC — pill éditorial en haut du ticket */
+.rc-stamp{
+  display:inline-flex;align-items:center;gap:10px;align-self:flex-start;
+  padding:6px 10px 7px;
+  border:1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius:2px;
+  background:color-mix(in srgb, var(--bg) 60%, transparent);
+}
+.rc-stamp-k{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--accent-text);font-weight:700;
+}
+.rc-stamp-v{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;
+}
+
+/* LIGNES DE TICKET — quantité · article · prix · description
+   Vocabulaire "ticket de caisse" mais typographie éditoriale */
+.rc-items{ list-style:none;margin:4px 0 0;padding:0; }
+.rc-item{
+  display:grid;
+  grid-template-columns:32px 1fr auto;
+  column-gap:12px;row-gap:4px;
   align-items:baseline;
-  padding:11px 0;
-  border-bottom:1px dotted color-mix(in srgb, var(--ink) 22%, transparent);
+  padding:12px 0 13px;
+  border-top:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
-.rc-specs-row:first-child{ border-top:1px dashed color-mix(in srgb, var(--ink) 28%, transparent); }
-.rc-specs-row:last-child{ border-bottom:1px dashed color-mix(in srgb, var(--ink) 28%, transparent); }
-.rc-specs-k{
-  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--muted);font-weight:600;
+.rc-item:last-child{ border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.rc-item-q{
+  grid-row:1;grid-column:1;
+  font-family:var(--font-mono);font-size:12px;font-weight:700;
+  color:var(--accent-text);font-variant-numeric:tabular-nums;
 }
-.rc-specs-v{
-  font-family:var(--font-body);font-size:14px;color:var(--ink);font-weight:500;line-height:1.35;
-}
-.rc-specs-v small{
-  display:block;font-size:11.5px;color:var(--muted);font-weight:400;letter-spacing:0;margin-top:3px;
-  font-style:italic;
-}
-.rc-specs-p{
+.rc-item-n{
+  grid-row:1;grid-column:2;
   font-family:var(--font-display);font-weight:400;
-  font-size:17px;color:var(--accent-text);font-variant-numeric:tabular-nums;letter-spacing:-.01em;
-  white-space:nowrap;
+  font-size:18px;line-height:1;letter-spacing:-.01em;color:var(--ink);
 }
+.rc-item-n em{
+  font-family:var(--font-mono);font-style:normal;font-weight:500;
+  font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;
+  margin-left:4px;
+}
+.rc-item-p{
+  grid-row:1;grid-column:3;
+  font-family:var(--font-display);font-weight:400;
+  font-size:19px;letter-spacing:-.01em;color:var(--accent-text);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.rc-item-d{
+  grid-row:2;grid-column:2 / 4;
+  font-family:Georgia, "Times New Roman", serif;font-style:italic;
+  font-size:12.5px;line-height:1.4;color:var(--muted);
+}
+
+/* Total — bandeau fort entre double filet */
 .rc-total{
   display:flex;justify-content:space-between;align-items:baseline;gap:12px;
-  padding:14px 0 12px;margin-top:6px;
-  border-top:2px solid var(--ink);
+  padding:14px 0 12px;margin-top:8px;
+  border-top:3px double var(--ink);
+  border-bottom:3px double var(--ink);
 }
 .rc-total-k{
-  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
   color:var(--ink);font-weight:700;
 }
 .rc-total-v{
   font-family:var(--font-display);font-weight:400;
-  font-size:22px;letter-spacing:-.015em;
+  font-size:24px;letter-spacing:-.015em;
   color:var(--accent-text);
 }
+
 .rc-thx{
   font-family:Georgia, "Times New Roman", serif;font-style:italic;
   font-size:13.5px;line-height:1.45;color:var(--ink);
-  margin:2px 0 0;
+  text-align:center;margin:4px 0 0;
 }
 .rc-signature{
   font-family:var(--font-hand);font-weight:500;
   font-size:30px;text-align:right;color:var(--ink);
   margin-top:4px;
 }
+
+/* Code-barres stylisé (discret, aligné éditorial) */
+.rc-barcode{
+  height:34px;margin-top:8px;
+  background-image:repeating-linear-gradient(to right,
+    var(--ink) 0 1px, transparent 1px 3px,
+    var(--ink) 3px 4px, transparent 4px 7px,
+    var(--ink) 7px 9px, transparent 9px 12px);
+  opacity:.82;
+}
+
 .rc-foot{
   display:flex;justify-content:space-between;align-items:baseline;
   padding-top:10px;border-top:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
@@ -5761,34 +5806,44 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         <div class="receipt-body" id="receipt-body-tarifs">
           <div class="receipt-body-inner">
             <article class="rc-article">
-              <span class="rc-deck-k">Tarification · Studio CD</span>
+              <span class="rc-deck-k">Ticket · Tarifs Studio CD</span>
               <p class="rc-deck-lead">Trois postes actifs à l'heure. Projets lourds chiffrés au forfait — réponse sous 24 h.</p>
 
-              <ul class="rc-specs" role="list">
-                <li class="rc-specs-row">
-                  <span class="rc-specs-k">Montage</span>
-                  <span class="rc-specs-v">Reels · clips · aftermovies<small>livrables 16:9 / 9:16 · master 4K</small></span>
-                  <span class="rc-specs-p">20 € / h</span>
+              <div class="rc-stamp">
+                <span class="rc-stamp-k">Émis le</span>
+                <span class="rc-stamp-v">23.04.2026 · TC 14:37</span>
+              </div>
+
+              <ul class="rc-items" role="list">
+                <li class="rc-item">
+                  <span class="rc-item-q">1×</span>
+                  <span class="rc-item-n">Montage <em>(h)</em></span>
+                  <span class="rc-item-p">20.00 €</span>
+                  <span class="rc-item-d">Reels · clips · aftermovies — livrables 16:9 / 9:16, master 4K.</span>
                 </li>
-                <li class="rc-specs-row">
-                  <span class="rc-specs-k">Tournage</span>
-                  <span class="rc-specs-v">Caméra 4K &amp; drone<small>direction artistique incluse</small></span>
-                  <span class="rc-specs-p">25 € / h</span>
+                <li class="rc-item">
+                  <span class="rc-item-q">1×</span>
+                  <span class="rc-item-n">Tournage <em>(h)</em></span>
+                  <span class="rc-item-p">25.00 €</span>
+                  <span class="rc-item-d">Caméra 4K &amp; drone — direction artistique incluse.</span>
                 </li>
-                <li class="rc-specs-row">
-                  <span class="rc-specs-k">Formation</span>
-                  <span class="rc-specs-v">Premiere Pro · particulier<small>en ligne ou à BW</small></span>
-                  <span class="rc-specs-p">20 € / h</span>
+                <li class="rc-item">
+                  <span class="rc-item-q">1×</span>
+                  <span class="rc-item-n">Formation <em>(h)</em></span>
+                  <span class="rc-item-p">20.00 €</span>
+                  <span class="rc-item-d">Premiere Pro · particulier — en ligne ou à BW.</span>
                 </li>
               </ul>
 
               <div class="rc-total">
-                <span class="rc-total-k">Projet complet</span>
-                <span class="rc-total-v">Devis sur demande</span>
+                <span class="rc-total-k">Total</span>
+                <span class="rc-total-v">Sur devis</span>
               </div>
 
               <p class="rc-thx">Merci de votre confiance — chaque projet est chiffré au plus juste.</p>
               <div class="rc-signature">— CD.</div>
+
+              <div class="rc-barcode" aria-hidden="true"></div>
               <div class="rc-foot"><span>CD · STUDIO · BW</span><span>TK · 01 / 2026</span></div>
             </article>
           </div>

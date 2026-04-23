@@ -3669,6 +3669,40 @@ body[data-theme="dark"] .fold-card.is-open{
   .mag{ max-width:300px; }
 }
 
+/* ─────────────────────────────────────────────
+   STUDIO-SERVICES — liste éditoriale sous les cartes
+   Réutilise .menu-list (pattern accordéon partagé),
+   on ne style ici que le head et le spacing.
+   ───────────────────────────────────────────── */
+.studio-services{
+  margin-top:clamp(56px,7vw,96px);
+  padding-top:clamp(32px,4vw,56px);
+  border-top:1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  position:relative;
+}
+.studio-services::before{
+  content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  width:42px;height:3px;background:var(--accent);
+}
+.studio-services-head{
+  max-width:640px;margin:0 auto clamp(28px,3.5vw,44px);text-align:center;
+  display:flex;flex-direction:column;gap:10px;align-items:center;
+}
+.studio-services-k{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--accent-text);font-weight:600;
+}
+.studio-services-h{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(32px,4.2vw,52px);line-height:.95;letter-spacing:-.025em;
+  color:var(--ink);margin:0;
+}
+.studio-services-lede{
+  font-family:var(--font-body);font-size:clamp(14px,1.1vw,16px);
+  line-height:1.55;color:var(--muted);max-width:56ch;margin:4px 0 0;
+}
+.studio-services-lede em{ font-style:italic;color:var(--accent-text);font-weight:500; }
+
 .rates-grid{
   list-style:none;margin:0 0 clamp(28px,3.5vw,40px);padding:0;
   border-top:1px solid var(--ink);
@@ -5526,7 +5560,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
        vers le bas pour révéler le contenu. Ultra-compact, dossier-esque.
        ============================================================= -->
   <section class="section wrap section--studio" id="studio" data-section-label="§ 02 — Studio">
-    <div class="studio-kicker reveal"><span>§ 02</span><span class="studio-kicker-sep" aria-hidden="true">/</span><span>Studio · Tarifs &amp; Bio</span></div>
+    <div class="studio-kicker reveal"><span>§ 02</span><span class="studio-kicker-sep" aria-hidden="true">/</span><span>Studio · Tarifs · Bio · Services</span></div>
 
     <ul class="studio-cards reveal" role="list">
 
@@ -5638,6 +5672,99 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       </li>
 
     </ul>
+
+    <!-- ─────────── Services proposés — sous les deux cartes Studio ─────────── -->
+    <div class="studio-services reveal" data-auto-reveal>
+      <div class="studio-services-head">
+        <span class="studio-services-k">§ 02.3 / Ce que je fais</span>
+        <h3 class="studio-services-h">Services proposés</h3>
+        <p class="studio-services-lede">Je <em>conçois, filme et monte</em> des histoires. Cinq postes, un seul fil — trouver le bon rythme, la bonne lumière, le détail qui fait image.</p>
+      </div>
+
+      <ul class="menu-list" id="services-menu" role="list">
+
+        <!-- § 02.3.1 — Montage vidéo (feature) -->
+        <li class="menu-item menu-item--feature" data-key="montage">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.3.1</span>
+            <span class="menu-title">Montage vidéo</span>
+            <span class="menu-meta">Cœur du métier</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro &amp; DaVinci. Tout format, du reel 9:16 au court-métrage.</p>
+            <ul class="menu-tags" role="list">
+              <li>Premiere Pro</li><li>DaVinci</li><li>Étalonnage</li><li>Sound design</li><li>Tout format</li>
+            </ul>
+          </div></div>
+        </li>
+
+        <!-- § 02.3.2 — Shooting : caméra & drone -->
+        <li class="menu-item" data-key="shooting">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.3.2</span>
+            <span class="menu-title">Shooting · caméra &amp; drone</span>
+            <span class="menu-meta">Captation terrain · 4K</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Tournage terrain — caméra 4K pour l'intention, drone pour les vues aériennes. Multi-cam si besoin, éclairage maîtrisé, repérages inclus. De la prod légère au dispositif plus costaud.</p>
+            <ul class="menu-tags" role="list">
+              <li>Caméra 4K</li><li>Drone</li><li>Multi-cam</li><li>Éclairage</li><li>Repérages</li>
+            </ul>
+          </div></div>
+        </li>
+
+        <!-- § 02.3.3 — Aftermovies -->
+        <li class="menu-item" data-key="after">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.3.3</span>
+            <span class="menu-title">Aftermovies</span>
+            <span class="menu-meta">Festivals &amp; événements</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Capter l'énergie d'un événement — de la captation live au montage final. Drone, grand angle, proximité. Livrables teaser + full.</p>
+            <ul class="menu-tags" role="list">
+              <li>Festivals</li><li>Events</li><li>Drone</li><li>Live</li>
+            </ul>
+          </div></div>
+        </li>
+
+        <!-- § 02.3.4 — Brand films & Clips -->
+        <li class="menu-item" data-key="brandclips">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.3.4</span>
+            <span class="menu-title">Brand films &amp; Clips</span>
+            <span class="menu-meta">Films de marque · reels · clips</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Films de marque, capsules sociales, clips musicaux, reels — écriture, direction artistique, tournage 4K, drone si besoin. Identité forte, narration ciblée, rythme pensé pour le format.</p>
+            <ul class="menu-tags" role="list">
+              <li>Brand films</li><li>Clips</li><li>Reels</li><li>DA</li><li>Social</li>
+            </ul>
+          </div></div>
+        </li>
+
+        <!-- § 02.3.5 — Formation Premiere Pro -->
+        <li class="menu-item" data-key="formation">
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.3.5</span>
+            <span class="menu-title">Formation Premiere Pro</span>
+            <span class="menu-meta">Cours particuliers · remote / Bruxelles</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à Bruxelles. Projet réel comme support pédagogique.</p>
+            <ul class="menu-tags" role="list">
+              <li>Premiere Pro</li><li>Initiation</li><li>Perfectionnement</li><li>Remote</li>
+            </ul>
+          </div></div>
+        </li>
+
+      </ul>
+    </div>
   </section>
 
   <!-- ═══ § 03 — CONTACT — direct, éditorial, pas d'accordéon ═══ -->

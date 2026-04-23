@@ -3489,42 +3489,48 @@ body[data-theme="dark"] .fold-card.is-open{
   color:var(--ink);margin:4px 0 0;
   padding-bottom:12px;border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
-/* Carte des services — 3 blocs éditoriaux numérotés 01 / 02 / 03
-   Vocabulaire de brochure imprimée plutôt que ticket de caisse :
-   gros chiffre mono accent + display serif pour le nom de service
-   + description italique serif + note tarifaire mono en bas. */
-.rc-svc{ list-style:none;margin:4px 0 0;padding:0; }
-.rc-svc-item{
-  display:grid;grid-template-columns:34px 1fr;column-gap:14px;
-  align-items:start;
-  padding:15px 0 16px;
+/* Modes tarifaires — 2 blocs distincts (à l'heure / au forfait)
+   pour éviter de dupliquer les services listés au-dessus.
+   Mission du ticket : expliquer COMMENT on chiffre, pas répéter QUOI. */
+.rc-mode{
+  padding:16px 0 6px;
   border-top:1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
-.rc-svc-item:last-child{ border-bottom:1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
-.rc-svc-n{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.24em;
-  color:var(--accent-text);font-weight:700;padding-top:5px;
+.rc-mode:first-of-type{ border-top:none;padding-top:8px; }
+.rc-mode-head{
+  display:flex;align-items:baseline;gap:14px;
+  margin-bottom:4px;
 }
-.rc-svc-body{ display:flex;flex-direction:column;gap:5px;min-width:0; }
-.rc-svc-name{
+.rc-mode-k{
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--accent-text);font-weight:700;
+}
+.rc-mode-h{
   font-family:var(--font-display);font-weight:400;
-  font-size:22px;line-height:1;letter-spacing:-.015em;
+  font-size:24px;line-height:1;letter-spacing:-.02em;
   color:var(--ink);margin:0;
 }
-.rc-svc-desc{
+.rc-mode-desc{
   font-family:Georgia, "Times New Roman", serif;font-style:italic;
-  font-size:13.5px;line-height:1.45;color:var(--ink);margin:0;
-  opacity:.85;
+  font-size:13px;line-height:1.45;color:var(--ink);margin:6px 0 10px;opacity:.85;
 }
-.rc-svc-price{
-  display:inline-flex;align-items:baseline;gap:6px;
-  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--muted);margin-top:3px;
+.rc-mode-list{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;
 }
-.rc-svc-price strong{
-  font-family:var(--font-display);font-weight:400;font-style:normal;
-  font-size:15px;letter-spacing:-.005em;text-transform:none;
-  color:var(--accent-text);
+.rc-mode-list li{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  padding:9px 0;
+  border-top:1px dotted color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.rc-mode-list li:last-child{ border-bottom:1px dotted color-mix(in srgb, var(--ink) 18%, transparent); }
+.rc-mode-list li span{
+  font-family:var(--font-body);font-size:13.5px;color:var(--ink);line-height:1.3;
+}
+.rc-mode-list li strong{
+  font-family:var(--font-display);font-weight:400;
+  font-size:16px;letter-spacing:-.01em;
+  color:var(--accent-text);font-variant-numeric:tabular-nums;white-space:nowrap;
 }
 
 /* Encart devis — CTA final en bloc accent léger */
@@ -5833,11 +5839,11 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 
           <!-- Titre display -->
           <span class="receipt-title">
-            <span class="receipt-title-k">Index / Tarifs</span>
+            <span class="receipt-title-k">Honoraires · 2026</span>
             <span class="receipt-title-h">Tarifs<br/>2026</span>
-            <span class="receipt-title-sub">3 postes à l'heure · forfait sur devis</span>
+            <span class="receipt-title-sub">20 à 25 €/h · forfait sur devis après brief</span>
             <span class="receipt-teasers" aria-hidden="true">
-              <span>Montage</span><span>Tournage</span><span>Formation</span>
+              <span>À l'heure</span><span>Au forfait</span>
             </span>
           </span>
 
@@ -5849,40 +5855,39 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         <div class="receipt-body" id="receipt-body-tarifs">
           <div class="receipt-body-inner">
             <article class="rc-article">
-              <span class="rc-deck-k">Carte · Services &amp; Honoraires</span>
-              <p class="rc-deck-lead">Chaque projet est unique. Voici comment je le chiffre — pour qu'on parle clairement, sans surprise.</p>
+              <span class="rc-deck-k">Ma manière de chiffrer</span>
+              <p class="rc-deck-lead">Je facture <em>à l'heure</em> pour les travaux ciblés, et <em>au forfait</em> pour les projets avec écriture, repérages et livrables complets — pour que tu saches à quoi t'attendre.</p>
 
-              <ol class="rc-svc" role="list">
-                <li class="rc-svc-item">
-                  <span class="rc-svc-n">01</span>
-                  <div class="rc-svc-body">
-                    <h4 class="rc-svc-name">Montage</h4>
-                    <p class="rc-svc-desc">Reels, clips, aftermovies. De l'étalonnage au sound-design, livré en 16:9 &amp; 9:16.</p>
-                    <span class="rc-svc-price">Dès <strong>20 €/h</strong></span>
-                  </div>
-                </li>
-                <li class="rc-svc-item">
-                  <span class="rc-svc-n">02</span>
-                  <div class="rc-svc-body">
-                    <h4 class="rc-svc-name">Tournage</h4>
-                    <p class="rc-svc-desc">Caméra 4K &amp; drone. De l'écriture aux repérages — direction artistique incluse.</p>
-                    <span class="rc-svc-price">Dès <strong>25 €/h</strong></span>
-                  </div>
-                </li>
-                <li class="rc-svc-item">
-                  <span class="rc-svc-n">03</span>
-                  <div class="rc-svc-body">
-                    <h4 class="rc-svc-name">Formation</h4>
-                    <p class="rc-svc-desc">Premiere Pro — particulier ou petit groupe, en ligne ou à BW.</p>
-                    <span class="rc-svc-price">Dès <strong>20 €/h</strong></span>
-                  </div>
-                </li>
-              </ol>
+              <div class="rc-mode">
+                <div class="rc-mode-head">
+                  <span class="rc-mode-k">Mode A</span>
+                  <h4 class="rc-mode-h">À l'heure</h4>
+                </div>
+                <p class="rc-mode-desc">Montage ciblé, session tournage, cours — facturation simple, transparente.</p>
+                <ul class="rc-mode-list" role="list">
+                  <li><span>Montage</span><strong>20 €/h</strong></li>
+                  <li><span>Tournage · 4K + drone</span><strong>25 €/h</strong></li>
+                  <li><span>Formation · Premiere Pro</span><strong>20 €/h</strong></li>
+                </ul>
+              </div>
+
+              <div class="rc-mode">
+                <div class="rc-mode-head">
+                  <span class="rc-mode-k">Mode B</span>
+                  <h4 class="rc-mode-h">Au forfait</h4>
+                </div>
+                <p class="rc-mode-desc">Projets complets — on écrit ensemble, je chiffre après brief. Réponse sous 24 h.</p>
+                <ul class="rc-mode-list" role="list">
+                  <li><span>Clip / reel court</span><strong>sur devis</strong></li>
+                  <li><span>Aftermovie · événement</span><strong>sur devis</strong></li>
+                  <li><span>Brand film · long format</span><strong>sur devis</strong></li>
+                </ul>
+              </div>
 
               <aside class="rc-quote">
-                <span class="rc-quote-k">Projets lourds</span>
-                <h4 class="rc-quote-h">Forfait sur devis</h4>
-                <p class="rc-quote-body">Films, clips, aftermovies d'envergure — chiffrés au forfait après brief, réponse sous 24 h.</p>
+                <span class="rc-quote-k">Étape suivante</span>
+                <h4 class="rc-quote-h">Envoie-moi ton brief</h4>
+                <p class="rc-quote-body">Quelques lignes sur le projet, le format, la date. Je reviens vers toi sous 24 h avec un devis clair.</p>
                 <a class="rc-quote-cta" href="#contact">Demander un devis →</a>
               </aside>
 

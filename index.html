@@ -72,7 +72,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://videos.corentindeville.com">
-<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Dela+Gothic+One&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -88,6 +88,7 @@
   --font-display: "Dela Gothic One", "Impact", "Arial Black", sans-serif;
   --font-body: "Inter", -apple-system, Helvetica, Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-hand: "Caveat", "Bradley Hand", cursive;
 
   --page-pad: clamp(28px, 6vw, 96px);
   --grid-size: 96px;
@@ -2606,6 +2607,115 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
   color:rgba(240,238,233,.7); border-top-color:rgba(240,238,233,.22);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   CTK — Contact kit : layout éditorial à 2 colonnes (lede+statut | actions)
+   S'auto-révèle via IntersectionObserver (data-auto-reveal) : pas besoin
+   de cliquer, la carte s'ouvre / fade-up quand on la croise au scroll.
+   ═══════════════════════════════════════════════════════════════ */
+.ctk{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) minmax(0, 1.15fr);
+  gap:clamp(26px,3vw,56px);
+  align-items:start;
+  padding-top:clamp(26px,3vw,44px);
+  opacity:0;transform:translateY(22px);
+  transition:opacity .8s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+}
+.ctk.is-live{ opacity:1;transform:none; }
+
+/* Col gauche : lede + statut */
+.ctk-aside{
+  display:flex;flex-direction:column;gap:clamp(22px,2.4vw,32px);
+  padding-right:clamp(0px,2vw,22px);
+  border-right:1px solid rgba(240,238,233,.14);
+}
+@media(max-width:900px){
+  .ctk-aside{ border-right:0;padding-right:0;border-bottom:1px solid rgba(240,238,233,.14);padding-bottom:26px; }
+}
+.ctk-lede{
+  margin:0;
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(22px,2.4vw,34px);line-height:1.25;letter-spacing:-.01em;
+  color:var(--bg);max-width:24ch;
+}
+.ctk-lede em{ font-style:italic;color:var(--accent); }
+
+.ctk-status{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;
+  border-top:1px dashed rgba(240,238,233,.22);
+}
+.ctk-status li{
+  display:grid;grid-template-columns:auto 90px 1fr;gap:14px;align-items:baseline;
+  padding:10px 0;
+  border-bottom:1px dashed rgba(240,238,233,.16);
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+}
+.ctk-status li:first-child{ grid-template-columns:auto 90px 1fr; }
+.ctk-status li:not(:first-child){ grid-template-columns:14px 90px 1fr; }
+.ctk-status li:not(:first-child)::before{ content:"";display:block; }
+.ctk-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#5be37d;
+  box-shadow:0 0 0 0 rgba(91,227,125,.55);
+  animation:ctkPulse 2.4s ease-out infinite;
+  justify-self:center;
+  margin-top:2px;
+}
+@keyframes ctkPulse{
+  0%{ box-shadow:0 0 0 0 rgba(91,227,125,.55); }
+  70%{ box-shadow:0 0 0 8px rgba(91,227,125,0); }
+  100%{ box-shadow:0 0 0 0 rgba(91,227,125,0); }
+}
+.ctk-k{ color:rgba(240,238,233,.55); }
+.ctk-v{ color:var(--bg);font-family:var(--font-body);font-size:14px;letter-spacing:0;text-transform:none; }
+#ctkClock{ font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-variant-numeric:tabular-nums; }
+
+/* Col droite : stack CTA */
+.ctk-stack{ display:flex;flex-direction:column;gap:18px; }
+
+.ctk-wa{
+  /* Extend les règles .contact-wa-btn existantes — juste quelques ajustements */
+  border-radius:16px;
+}
+
+.ctk-links{
+  display:flex;flex-direction:column;gap:0;
+  border-top:1px solid rgba(240,238,233,.2);
+}
+.ctk-link{
+  display:grid;grid-template-columns:110px 1fr auto;gap:18px;align-items:center;
+  padding:16px 0;text-decoration:none;color:#F0EEE9;
+  border-bottom:1px solid rgba(240,238,233,.16);
+  transition:padding-left .35s cubic-bezier(.22,1,.36,1), background .25s ease, color .25s;
+}
+.ctk-link:hover{ padding-left:14px; background:rgba(240,238,233,.04); color:#fff; }
+.ctk-link-k{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(240,238,233,.6);
+}
+.ctk-link-v{
+  font-family:var(--font-display);font-size:clamp(17px,1.5vw,22px);
+  letter-spacing:-.005em;color:#F0EEE9;
+}
+.ctk-link-arr{
+  font-family:var(--font-mono);font-size:15px;color:rgba(240,238,233,.55);
+  transition:transform .3s, color .3s;
+  justify-self:end;
+}
+.ctk-link:hover .ctk-link-arr{ color:#F0EEE9;transform:translate(4px,-4px); }
+
+@media(max-width:900px){
+  .ctk{ grid-template-columns:1fr;gap:24px; }
+  .ctk-link{ grid-template-columns:88px 1fr auto;gap:14px; }
+  .ctk-link:hover{ padding-left:10px; }
+}
+@media(max-width:600px){
+  .ctk-lede{ font-size:19px; }
+  .ctk-link{ padding:14px 0;grid-template-columns:80px 1fr auto; }
+  .ctk-link-v{ font-size:15px; }
+}
+
 /* Contact layout — variant --simple is the only live one (see below) */
 .contact-content{ display:flex;flex-direction:column;gap:28px; }
 .contact-lede{
@@ -3112,146 +3222,324 @@ body[data-theme="dark"] .fold-card.is-open{
 .rates-lede em{ font-style:italic;color:var(--accent); }
 
 /* ═══════════════════════════════════════════════════════════════
-   STUDIO — fiches pelliculées compactes (Tarifs + À propos)
-   Deux "bandeaux 35mm" côte à côte : bord perforé, numéro de pose,
-   titre, teaser. Clic = la fiche se déroule vers le bas pour révéler
-   le contenu. Pattern grid-rows 0fr → 1fr, même logique que menu-body.
+   STUDIO — deux cartes distinctes (Tarifs = ticket / Bio = polaroid)
+   Tarifs → ticket de caisse thermique qui se déroule au clic.
+   Bio → polaroid handwritten qui flip 3D au clic.
    ═══════════════════════════════════════════════════════════════ */
-.section--studio{ padding-top:clamp(28px,5vw,64px); padding-bottom:clamp(40px,6vw,80px); }
+.section--studio{ padding-top:clamp(28px,5vw,64px); padding-bottom:clamp(56px,7vw,100px); }
 .studio-kicker{
   font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
   color:var(--muted);
   display:inline-flex;gap:10px;align-items:center;
-  margin-bottom:clamp(18px,2vw,28px);
+  margin-bottom:clamp(28px,3vw,40px);
 }
 .studio-kicker-sep{ color:var(--accent); }
 
-.fiches{
-  list-style:none;margin:0;padding:0;
+.studio-cards{
+  list-style:none;margin:clamp(22px,2.4vw,30px) 0 0;padding:0;
   display:grid;grid-template-columns:1fr 1fr;
-  gap:clamp(14px,1.6vw,22px);
+  gap:clamp(32px,4vw,64px);
+  align-items:start;justify-items:center;
 }
-.fiche{
-  position:relative;
-  background:var(--paper,#f6f2e8);
-  border:1px solid var(--ink);
-  border-radius:4px;
-  overflow:hidden;
-  transition:transform .35s cubic-bezier(.2,.85,.2,1), box-shadow .35s;
-  box-shadow:0 1px 0 var(--ink), 0 8px 0 -4px rgba(0,0,0,.04);
+@media (max-width:760px){
+  .studio-cards{ grid-template-columns:1fr;gap:48px; }
 }
-body[data-theme="dark"] .fiche{ background:#1a1a18; }
-.fiche.is-open{
-  box-shadow:0 1px 0 var(--ink), 0 18px 46px -22px rgba(0,0,0,.35);
-  transform:translateY(-1px);
+
+/* ─────────────────────────────────────────────
+   RECEIPT — ticket de caisse thermique
+   ───────────────────────────────────────────── */
+.receipt{
+  --rc-paper: #faf7ee;
+  --rc-ink: #1a1a1a;
+  --rc-dim: #7a7a74;
+  --rc-accent: var(--accent);
+  position:relative;width:100%;max-width:340px;
+  color:var(--rc-ink);
+  background:var(--rc-paper);
+  font-family:var(--font-mono);
+  transform:rotate(1.2deg);
+  transition:transform .4s cubic-bezier(.2,.85,.2,1);
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.04)) drop-shadow(0 14px 30px rgba(0,0,0,.22));
+  /* Bord dentelé en HAUT uniquement — 32 dents */
+  clip-path: polygon(
+    0 7px,
+    3.125% 0, 6.25% 7px, 9.375% 0, 12.5% 7px,
+    15.625% 0, 18.75% 7px, 21.875% 0, 25% 7px,
+    28.125% 0, 31.25% 7px, 34.375% 0, 37.5% 7px,
+    40.625% 0, 43.75% 7px, 46.875% 0, 50% 7px,
+    53.125% 0, 56.25% 7px, 59.375% 0, 62.5% 7px,
+    65.625% 0, 68.75% 7px, 71.875% 0, 75% 7px,
+    78.125% 0, 81.25% 7px, 84.375% 0, 87.5% 7px,
+    90.625% 0, 93.75% 7px, 96.875% 0, 100% 7px,
+    100% 100%, 0 100%
+  );
 }
-.fiche-head{
-  all:unset; box-sizing:border-box; cursor:pointer;
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  grid-template-areas:
-    "perf perf perf"
-    "num title chev"
-    "tease tease tease";
-  gap:6px 14px;
-  padding:12px 18px 14px;
+.receipt:hover{ transform:rotate(0.2deg) translateY(-3px); }
+
+/* Grain/paper texture subtil */
+.receipt::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,0,0,.035), transparent 70%),
+    repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,.012) 2px 3px);
+  mix-blend-mode:multiply;
+}
+
+.receipt-head{
+  all:unset;box-sizing:border-box;cursor:pointer;display:block;
   width:100%;
-  transition:background .22s;
+  padding:24px 22px 18px;
+  text-align:center;
+  position:relative;z-index:1;
 }
-.fiche-head:hover{ background:color-mix(in srgb,var(--accent) 6%,transparent); }
-.fiche-head:focus-visible{ outline:2px solid var(--accent); outline-offset:-3px; }
-/* Bord perforé façon film 35mm */
-.fiche-perf{
-  grid-area:perf;
+.receipt-head:focus-visible{ outline:2px solid var(--rc-accent);outline-offset:-6px; }
+
+.receipt-store{
+  font-size:14px;font-weight:700;letter-spacing:.24em;line-height:1.2;
+  margin:0;
+}
+.receipt-sub{
+  font-size:9.5px;letter-spacing:.18em;color:var(--rc-dim);
+  margin:2px 0 12px;
+}
+.receipt-meta{
   display:flex;justify-content:space-between;
-  padding:4px 2px 8px;
-  border-bottom:1px dashed color-mix(in srgb,var(--ink) 30%,transparent);
+  font-size:9.5px;letter-spacing:.14em;color:var(--rc-dim);
+  padding:5px 0;
+  border-top:1px dashed rgba(0,0,0,.35);
+  border-bottom:1px dashed rgba(0,0,0,.35);
+  margin:0 0 14px;
 }
-.fiche-perf i{
-  width:10px;height:6px;border-radius:2px;
-  background:color-mix(in srgb,var(--ink) 18%,transparent);
-  display:block;
+.receipt-preview{
+  display:flex;flex-direction:column;gap:6px;
+  font-size:11px;letter-spacing:.06em;
 }
-.fiche-num{
-  grid-area:num;
-  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--accent);font-weight:600;
-  align-self:center;
+.receipt-line--head{
+  text-align:center;font-weight:700;letter-spacing:.22em;font-size:10px;
+  color:var(--rc-ink);margin-bottom:2px;
 }
-.fiche-title{
-  grid-area:title;
-  font-family:var(--font-display);font-weight:400;
-  font-size:clamp(22px,2.6vw,30px);line-height:1;letter-spacing:-.02em;
-  color:var(--ink);
+.receipt-line{
+  display:flex;justify-content:space-between;
+  color:var(--rc-ink);
 }
-.fiche-teaser{
-  grid-area:tease;
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);
-  padding-top:2px;
+.receipt-hint{
+  margin:18px 0 0;font-size:9px;letter-spacing:.32em;
+  color:var(--rc-accent);font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  animation:rcBlink 2.4s ease-in-out infinite;
 }
-.fiche-chev{
-  grid-area:chev;
-  align-self:center;
-  width:26px;height:26px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;
-  border:1px solid var(--ink);
-  color:var(--ink);
-  transition:transform .45s cubic-bezier(.3,.9,.2,1), background .22s, color .22s;
+.receipt.is-open .receipt-hint{ opacity:0;visibility:hidden;height:0;margin:0; }
+@keyframes rcBlink{
+  0%,100%{ opacity:.45; }
+  50%{ opacity:1; }
 }
-.fiche-head:hover .fiche-chev{ background:var(--ink); color:var(--bg); }
-.fiche.is-open .fiche-chev{ transform:rotate(180deg); background:var(--accent); border-color:var(--accent); color:var(--bg); }
-/* Body : même pattern grid-rows que menu-body */
-.fiche-body{
-  display:grid;
-  grid-template-rows:0fr;
-  transition:grid-template-rows .55s cubic-bezier(.22,1,.36,1);
+
+/* Body — unrolls from top */
+.receipt-body{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .9s cubic-bezier(.22,1,.36,1);
+  position:relative;z-index:1;
 }
-.fiche-body-inner{
+.receipt.is-open > .receipt-body{ grid-template-rows:1fr; }
+.receipt-body-inner{
   overflow:hidden;min-height:0;
-  padding:0 18px;
+  padding:0 22px;
+  font-size:11px;letter-spacing:.05em;
 }
-.fiche.is-open > .fiche-body{ grid-template-rows:1fr; }
-.fiche.is-open > .fiche-body > .fiche-body-inner{
-  padding:8px 18px 20px;
-  border-top:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+.receipt.is-open > .receipt-body > .receipt-body-inner{
+  padding:0 22px 22px;
 }
-.fiche-body-inner > *{ opacity:0; transform:translateY(6px); transition:opacity .4s .1s ease, transform .5s .1s cubic-bezier(.2,.85,.2,1); }
-.fiche.is-open .fiche-body-inner > *{ opacity:1; transform:none; }
-.fiche-note{
-  font-family:var(--font-body);font-size:13px;line-height:1.55;
-  color:var(--muted);font-style:italic;
-  margin:14px 0 0;
+.receipt-body-inner > *{
+  opacity:0;transform:translateY(-4px);
+  transition:opacity .5s .25s ease, transform .6s .25s cubic-bezier(.22,1,.36,1);
 }
-/* Compact overrides pour les grilles internes à la fiche */
-.fiche-body-inner .rates-grid{ margin:0; border-top:0; }
-.fiche-body-inner .rates-row{
-  grid-template-columns:auto 1fr auto;
-  grid-template-areas:"num name price" "num desc price";
-  gap:4px 14px;
-  padding:12px 2px;
+.receipt.is-open .receipt-body-inner > *{ opacity:1;transform:none; }
+
+.receipt-stamp{
+  text-align:center;font-size:9.5px;letter-spacing:.18em;
+  color:var(--rc-dim);
+  padding:8px 0 10px;
 }
-.fiche-body-inner .rates-num{ grid-area:num; font-size:10px; }
-.fiche-body-inner .rates-name{ grid-area:name; font-size:clamp(18px,2vw,22px); }
-.fiche-body-inner .rates-desc{ grid-area:desc; justify-self:start; text-align:left; font-size:10px; max-width:none; }
-.fiche-body-inner .rates-price{ grid-area:price; min-width:90px; }
-.fiche-body-inner .rates-price em{ font-size:18px; }
-.fiche-body-inner .bio-grid{
-  grid-template-columns:110px 1fr;
-  gap:18px;
-  border-top:0;padding-top:0;
-  align-items:start;
+.receipt-rule{
+  height:1px;
+  background:repeating-linear-gradient(to right,
+    var(--rc-ink) 0 4px, transparent 4px 8px);
+  margin:4px 0 8px;
 }
-.fiche-body-inner .bio-photo img{ border-radius:3px; }
-.fiche-body-inner .bio-quote{ font-size:clamp(15px,2vw,18px); line-height:1.35; margin:0 0 8px; }
-.fiche-body-inner .bio-body{ font-size:13px; line-height:1.55; color:var(--muted); margin:0; }
+.receipt-items{ list-style:none;margin:0;padding:0; }
+.receipt-items li{
+  display:grid;grid-template-columns:26px 1fr auto;
+  column-gap:10px;row-gap:2px;align-items:baseline;
+  padding:7px 0;
+}
+.receipt-items .rc-qty{
+  grid-row:1;grid-column:1;
+  font-weight:700;color:var(--rc-accent);
+}
+.receipt-items .rc-name{
+  grid-row:1;grid-column:2;
+  text-transform:uppercase;letter-spacing:.08em;font-weight:500;
+}
+.receipt-items .rc-price{
+  grid-row:1;grid-column:3;
+  font-weight:700;font-variant-numeric:tabular-nums;
+}
+.receipt-items .rc-desc{
+  grid-row:2;grid-column:2/4;
+  font-size:9.5px;letter-spacing:.04em;color:var(--rc-dim);
+}
+
+.receipt-total{
+  display:flex;justify-content:space-between;
+  font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  padding:10px 0;
+  border-top:2px solid var(--rc-ink);border-bottom:2px solid var(--rc-ink);
+  margin:6px 0 12px;
+}
+.receipt-total .rc-t-v{ color:var(--rc-accent); }
+.receipt-thx{
+  text-align:center;font-size:11px;letter-spacing:.2em;font-weight:600;
+  margin:12px 0 2px;
+}
+.receipt-thx-sub{
+  text-align:center;font-size:9.5px;letter-spacing:.12em;color:var(--rc-dim);
+  margin:0 0 14px;
+}
+.receipt-barcode{
+  height:38px;
+  background-image:repeating-linear-gradient(to right,
+    var(--rc-ink) 0 1px, transparent 1px 3px,
+    var(--rc-ink) 3px 4px, transparent 4px 7px,
+    var(--rc-ink) 7px 9px, transparent 9px 12px);
+  margin:6px 0 6px;
+}
+.receipt-num{
+  text-align:center;font-size:9.5px;letter-spacing:.28em;
+  color:var(--rc-ink);
+}
+
+/* ─────────────────────────────────────────────
+   POLAROID — bio handwritten, flip 3D
+   ───────────────────────────────────────────── */
+.polaroid{
+  position:relative;width:100%;max-width:280px;
+  perspective:1400px;
+  transform:rotate(-2.4deg);
+  transition:transform .45s cubic-bezier(.2,.85,.2,1);
+}
+.polaroid:hover{ transform:rotate(-0.8deg) translateY(-4px); }
+.polaroid.is-open{ transform:rotate(0deg); }
+
+.polaroid-flip{
+  all:unset;box-sizing:border-box;cursor:pointer;display:block;
+  width:100%;aspect-ratio:4/5;
+  position:relative;
+}
+.polaroid-flip:focus-visible{ outline:2px solid var(--accent);outline-offset:6px; }
+
+.polaroid-inner{
+  position:absolute;inset:0;
+  transform-style:preserve-3d;
+  transition:transform 1s cubic-bezier(.22,1,.36,1);
+}
+.polaroid.is-open .polaroid-inner{ transform:rotateY(180deg); }
+
+.polaroid-face{
+  position:absolute;inset:0;
+  background:#faf7ee;
+  box-shadow:0 2px 0 rgba(0,0,0,.04), 0 18px 38px -14px rgba(0,0,0,.28);
+  padding:14px 14px 52px;
+  display:flex;flex-direction:column;
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
+}
+/* petit grain papier */
+.polaroid-face::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,.015) 2px 3px);
+  mix-blend-mode:multiply;
+}
+
+/* FACE AVANT — portrait + caption manuscrite */
+.polaroid-face--front{}
+.polaroid-photo{
+  position:relative;flex:1;display:block;
+  overflow:hidden;background:#1a1a1a;
+}
+.polaroid-photo img{
+  width:100%;height:100%;display:block;object-fit:cover;
+  filter:grayscale(.08) contrast(1.04) saturate(.9);
+}
+.polaroid-photo::after{
+  /* léger vignettage */
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.25) 110%);
+}
+.polaroid-caption{
+  position:absolute;left:0;right:0;bottom:10px;
+  text-align:center;
+  font-family:var(--font-hand);font-weight:500;
+  font-size:26px;line-height:1;letter-spacing:.01em;
+  color:#2a2a2a;
+  transform:rotate(-1.2deg);
+}
+.polaroid-corner{
+  position:absolute;top:10px;right:10px;
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;
+  color:rgba(0,0,0,.4);
+  background:rgba(255,255,255,.6);
+  padding:3px 7px;border:1px solid rgba(0,0,0,.1);border-radius:2px;
+  transform:rotate(3deg);
+}
+
+/* FACE ARRIÈRE — bio */
+.polaroid-face--back{
+  transform:rotateY(180deg);
+  padding:22px 20px 20px;
+  gap:10px;
+  overflow:auto;
+}
+.polaroid-face--back .polaroid-k{
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);
+  padding-bottom:6px;border-bottom:1px dashed rgba(0,0,0,.2);
+  margin-bottom:4px;
+}
+.polaroid-quote{
+  font-family:var(--font-hand);font-weight:500;
+  font-size:22px;line-height:1.2;letter-spacing:.005em;
+  color:var(--ink);
+  margin:6px 0 0;
+}
+.polaroid-body{
+  font-family:var(--font-body);font-size:12.5px;line-height:1.55;
+  color:var(--muted);margin:0;
+}
+.polaroid-tags{
+  list-style:none;margin:6px 0 0;padding:0;
+  display:flex;flex-wrap:wrap;gap:5px;
+}
+.polaroid-tags li{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);
+  border:1px solid rgba(0,0,0,.18);padding:3px 7px;border-radius:2px;
+}
+.polaroid-meta{
+  margin-top:auto;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);
+  padding-top:8px;border-top:1px dashed rgba(0,0,0,.2);
+}
+.polaroid-flipback{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;
+  color:var(--accent);text-transform:uppercase;
+  text-align:center;padding-top:4px;
+  opacity:.7;
+}
 
 @media (max-width:760px){
-  .fiches{ grid-template-columns:1fr; gap:12px; }
-  .fiche-head{ padding:10px 14px 12px; }
-  .fiche-title{ font-size:clamp(20px,6vw,26px); }
-  .fiche-body-inner .bio-grid{ grid-template-columns:80px 1fr; gap:14px; }
-  .fiche-body-inner .rates-row{ grid-template-columns:auto 1fr auto; padding:10px 2px; }
+  .receipt{ max-width:300px; }
+  .polaroid{ max-width:250px; }
 }
 
 .rates-grid{
@@ -4728,8 +5016,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <nav>
     <a href="#projets" class="mm-link" data-n="01" data-target="projets">Projets</a>
     <a href="#tarifs" class="mm-link" data-n="02" data-target="tarifs">Tarifs</a>
-    <a href="#apropos" class="mm-link" data-n="03" data-target="apropos">À propos</a>
-    <a href="#contact" class="mm-link" data-n="04" data-target="contact">Contact</a>
+    <a href="#apropos" class="mm-link" data-n="02" data-target="apropos">À propos</a>
+    <a href="#contact" class="mm-link" data-n="03" data-target="contact">Contact</a>
   </nav>
   <div class="mm-foot">
     <span>CD Studio</span>
@@ -4800,8 +5088,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <nav class="section-nav" id="sectionNav" aria-label="Sections">
     <a href="#projets" data-target="projets" data-num="§ 01">Projets</a>
     <a href="#tarifs" data-target="tarifs" data-num="§ 02">Tarifs</a>
-    <a href="#apropos" data-target="apropos" data-num="§ 03">À propos</a>
-    <a href="#contact" data-target="contact" data-num="§ 04">Contact</a>
+    <a href="#apropos" data-target="apropos" data-num="§ 02">À propos</a>
+    <a href="#contact" data-target="contact" data-num="§ 03">Contact</a>
   </nav>
   <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobMenu"><span></span><span></span></button>
 </header>
@@ -5098,13 +5386,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       </article>
     </div>
 
-      <!-- Outro Next section — § 01 → § 02 Tarifs -->
-      <a class="section-outro reveal" href="#tarifs" aria-label="Section suivante — Tarifs">
-        <span class="section-outro-k">Suivant</span>
-        <span class="section-outro-v">§ 02 — Tarifs</span>
-        <span class="section-outro-arr" aria-hidden="true">↓</span>
-      </a>
-
     </div><!-- /.section-body -->
   </section>
 
@@ -5120,124 +5401,155 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <section class="section wrap section--studio" id="studio" data-section-label="§ 02 — Studio">
     <div class="studio-kicker reveal"><span>§ 02</span><span class="studio-kicker-sep" aria-hidden="true">/</span><span>Studio · Tarifs &amp; Bio</span></div>
 
-    <ul class="fiches reveal" role="list">
+    <ul class="studio-cards reveal" role="list">
 
-      <!-- Fiche 01 · Tarifs -->
-      <li class="fiche" id="tarifs" data-key="tarifs">
-        <button class="fiche-head" type="button" aria-expanded="false">
-          <span class="fiche-perf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-          <span class="fiche-num">P. 01</span>
-          <span class="fiche-title">Tarifs</span>
-          <span class="fiche-teaser">~20 €/h · devis forfait</span>
-          <span class="fiche-chev" aria-hidden="true">
-            <svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 7l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
+      <!-- Tarifs — ticket de caisse thermique qui se déroule -->
+      <li class="receipt" id="tarifs" data-key="tarifs">
+        <button class="receipt-head" type="button" aria-expanded="false" aria-controls="receipt-body-tarifs">
+          <h3 class="receipt-store">CD STUDIO BXL</h3>
+          <p class="receipt-sub">Montage · Tournage · Drone</p>
+          <div class="receipt-meta">
+            <span>cd-studio.com</span>
+            <span>TK · #2026</span>
+          </div>
+          <div class="receipt-preview">
+            <div class="receipt-line receipt-line--head">— TARIFS 2026 —</div>
+            <div class="receipt-line"><span>3 postes actifs</span><span>€ / h</span></div>
+            <div class="receipt-line"><span>Devis forfait</span><span>sur demande</span></div>
+          </div>
+          <div class="receipt-hint">▼ CLIC · DÉROULER ▼</div>
         </button>
-        <div class="fiche-body"><div class="fiche-body-inner">
-          <ul class="rates-grid" role="list">
-            <li class="rates-row">
-              <span class="rates-num">01</span>
-              <span class="rates-name">Montage</span>
-              <span class="rates-desc">Reels · Clips · Aftermovies</span>
-              <span class="rates-price"><em>~ 20 €</em><span>/h</span></span>
+        <div class="receipt-body" id="receipt-body-tarifs"><div class="receipt-body-inner">
+          <div class="receipt-stamp">DATE 23/04/2026 · TC 14:37</div>
+          <div class="receipt-rule" aria-hidden="true"></div>
+          <ul class="receipt-items" role="list">
+            <li>
+              <span class="rc-qty">1×</span>
+              <span class="rc-name">Montage (h)</span>
+              <span class="rc-price">20.00</span>
+              <span class="rc-desc">Reels · Clips · Aftermovies</span>
             </li>
-            <li class="rates-row">
-              <span class="rates-num">02</span>
-              <span class="rates-name">Tournage</span>
-              <span class="rates-desc">Caméra &amp; drone · 4K</span>
-              <span class="rates-price"><em>~ 25 €</em><span>/h</span></span>
+            <li>
+              <span class="rc-qty">1×</span>
+              <span class="rc-name">Tournage (h)</span>
+              <span class="rc-price">25.00</span>
+              <span class="rc-desc">Caméra 4K &amp; drone</span>
             </li>
-            <li class="rates-row">
-              <span class="rates-num">03</span>
-              <span class="rates-name">Formation</span>
-              <span class="rates-desc">Premiere Pro · particulier</span>
-              <span class="rates-price"><em>~ 20 €</em><span>/h</span></span>
+            <li>
+              <span class="rc-qty">1×</span>
+              <span class="rc-name">Formation (h)</span>
+              <span class="rc-price">20.00</span>
+              <span class="rc-desc">Premiere Pro · particulier</span>
             </li>
           </ul>
-          <p class="fiche-note">Projets lourds (brand films, aftermovies full) devisés au forfait. WhatsApp pour un chiffrage — 24 h.</p>
+          <div class="receipt-rule" aria-hidden="true"></div>
+          <div class="receipt-total">
+            <span>Total</span>
+            <span class="rc-t-v">Sur devis</span>
+          </div>
+          <p class="receipt-thx">MERCI DE VOTRE CONFIANCE</p>
+          <p class="receipt-thx-sub">Projets lourds chiffrés au forfait — réponse 24 h</p>
+          <div class="receipt-barcode" aria-hidden="true"></div>
+          <div class="receipt-num">*CD-2026-TAR-V1*</div>
         </div></div>
       </li>
 
-      <!-- Fiche 02 · À propos -->
-      <li class="fiche" id="apropos" data-key="apropos">
-        <button class="fiche-head" type="button" aria-expanded="false">
-          <span class="fiche-perf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-          <span class="fiche-num">P. 02</span>
-          <span class="fiche-title">À propos</span>
-          <span class="fiche-teaser">Bruxelles · BE · 2020→26</span>
-          <span class="fiche-chev" aria-hidden="true">
-            <svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 7l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <!-- Bio — polaroid flip 3D -->
+      <li class="polaroid" id="apropos" data-key="apropos">
+        <button class="polaroid-flip" type="button" aria-expanded="false" aria-controls="polaroid-back-apropos">
+          <span class="polaroid-inner">
+            <!-- Face avant : portrait + caption manuscrite -->
+            <span class="polaroid-face polaroid-face--front">
+              <span class="polaroid-corner" aria-hidden="true">N°02</span>
+              <span class="polaroid-photo">
+                <picture>
+                  <source type="image/avif"
+                          srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w"
+                          sizes="280px">
+                  <img src="assets/portrait-800.jpg"
+                       srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w"
+                       sizes="280px"
+                       width="800" height="1000"
+                       loading="lazy" decoding="async"
+                       alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
+                </picture>
+              </span>
+              <span class="polaroid-caption">Bruxelles · CD</span>
+            </span>
+
+            <!-- Face arrière : bio -->
+            <span class="polaroid-face polaroid-face--back" id="polaroid-back-apropos">
+              <span class="polaroid-k">About · CD Studio · 2026</span>
+              <p class="polaroid-quote">Je donne vie à tes projets visuels — aftermovies, clips, brand films.</p>
+              <p class="polaroid-body">De l'écriture au montage, je cherche le bon rythme et le détail qui fait image.</p>
+              <ul class="polaroid-tags" role="list">
+                <li>Montage</li><li>Tournage 4K</li><li>Drone</li><li>DA</li>
+              </ul>
+              <span class="polaroid-meta">2020 — 2026 · Belgique &amp; Europe</span>
+              <span class="polaroid-flipback">↺ clic pour retourner</span>
+            </span>
           </span>
         </button>
-        <div class="fiche-body"><div class="fiche-body-inner">
-          <div class="bio-grid">
-            <div class="bio-photo">
-              <picture>
-                <source type="image/avif"
-                        srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w, assets/portrait-1200.avif 1200w"
-                        sizes="(max-width: 700px) 80vw, 360px">
-                <img src="assets/portrait-800.jpg"
-                     srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w, assets/portrait-1200.jpg 1200w"
-                     sizes="(max-width: 700px) 80vw, 360px"
-                     width="800" height="1200"
-                     loading="lazy" decoding="async"
-                     alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
-              </picture>
-            </div>
-            <div class="bio-text">
-              <p class="bio-quote">Je donne vie à vos projets visuels — aftermovies, clips, brand films.</p>
-              <p class="bio-body">De l'écriture au montage, je cherche le bon rythme et le détail qui fait image. Bruxelles · disponible Belgique &amp; Europe.</p>
-            </div>
-          </div>
-        </div></div>
       </li>
 
     </ul>
   </section>
 
-  <!-- ═══ § 05 — CONTACT — section dédiée, visible inline (pas un drawer) ═══ -->
-  <section class="section wrap" id="contact" data-section-label="§ 04 — Contact">
+  <!-- ═══ § 03 — CONTACT — direct, éditorial, pas d'accordéon ═══ -->
+  <section class="section wrap" id="contact" data-section-label="§ 03 — Contact">
     <div class="section-head reveal">
-      <div class="idx">§ 04 / On se parle ?</div>
+      <div class="idx">§ 03 / On se parle ?</div>
       <h2>Une idée<br/>en tête&nbsp;?</h2>
       <div class="sub">Réponse sous 24 h · Bruxelles</div>
     </div>
 
     <div class="section-body">
-      <ul class="menu-list reveal" role="list">
-        <li class="menu-item">
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 04.1</span>
-            <span class="menu-title">Une idée en tête ?</span>
-            <span class="menu-meta">WhatsApp · IG · YouTube · 24 h</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <div class="contact-content contact-content--simple">
-              <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o." target="_blank" class="contact-wa-btn">
-                <span class="contact-wa-icon">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                </span>
-                <span class="contact-wa-label"><span class="contact-wa-top">WhatsApp — direct</span><span class="contact-wa-sub">+32 495 92 42 95</span></span>
-                <span class="contact-wa-arrow">→</span>
-              </a>
+      <div class="ctk reveal" data-auto-reveal>
+        <!-- Colonne gauche : lede + disponibilité -->
+        <aside class="ctk-aside">
+          <p class="ctk-lede">Aftermovies, clips, brand&nbsp;films — <em>je prends&nbsp;le temps de comprendre ton&nbsp;projet</em> avant de chiffrer.</p>
 
-              <div class="contact-links">
-                <a href="https://www.instagram.com/corentin.deville" target="_blank" class="contact-link">
-                  <span class="contact-link-label">Instagram</span>
-                  <span class="contact-link-val">@corentin.deville</span>
-                  <span class="contact-link-arr">↗</span>
-                </a>
-                <a href="https://www.youtube.com/@corentindeville" target="_blank" class="contact-link">
-                  <span class="contact-link-label">YouTube</span>
-                  <span class="contact-link-val">@corentindeville</span>
-                  <span class="contact-link-arr">↗</span>
-                </a>
-              </div>
-            </div>
-          </div></div>
-        </li>
-      </ul>
+          <ul class="ctk-status" role="list">
+            <li><span class="ctk-dot" aria-hidden="true"></span><span class="ctk-k">Ouvert</span><span class="ctk-v">Printemps–Été 2026</span></li>
+            <li><span class="ctk-k">Réponse</span><span class="ctk-v">sous 24 h</span></li>
+            <li><span class="ctk-k">Basé</span><span class="ctk-v">Bruxelles · BE</span></li>
+            <li><span class="ctk-k">Horaire</span><span class="ctk-v" id="ctkClock">BXL · --:--</span></li>
+          </ul>
+        </aside>
+
+        <!-- Colonne droite : actions -->
+        <div class="ctk-stack">
+          <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o."
+             target="_blank" rel="noopener" class="contact-wa-btn ctk-wa">
+            <span class="contact-wa-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </span>
+            <span class="contact-wa-label">
+              <span class="contact-wa-top">WhatsApp — direct</span>
+              <span class="contact-wa-sub">+32 495 92 42 95</span>
+            </span>
+            <span class="contact-wa-arrow">→</span>
+          </a>
+
+          <div class="ctk-links">
+            <a href="mailto:hello@corentindeville.com" class="ctk-link">
+              <span class="ctk-link-k">Email</span>
+              <span class="ctk-link-v">hello@corentindeville.com</span>
+              <span class="ctk-link-arr" aria-hidden="true">↗</span>
+            </a>
+            <a href="https://www.instagram.com/corentin.deville" target="_blank" rel="noopener" class="ctk-link">
+              <span class="ctk-link-k">Instagram</span>
+              <span class="ctk-link-v">@corentin.deville</span>
+              <span class="ctk-link-arr" aria-hidden="true">↗</span>
+            </a>
+            <a href="https://www.youtube.com/@corentindeville2797" target="_blank" rel="noopener" class="ctk-link">
+              <span class="ctk-link-k">YouTube</span>
+              <span class="ctk-link-v">@corentindeville2797</span>
+              <span class="ctk-link-arr" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -5666,17 +5978,29 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   }
 })();
 
-/* ========== FICHES STUDIO — accordéon indépendant (Tarifs + À propos) ==========
-   Chaque fiche s'ouvre / se ferme indépendamment (pas d'exclusivité entre
-   Tarifs et À propos). Clic ailleurs ne ferme pas. */
+/* ========== STUDIO CARDS — receipt (unroll) + polaroid (flip 3D) ==========
+   Tarifs : ticket de caisse — clic sur le head => le body se déroule (0fr→1fr).
+   Bio    : polaroid — clic sur la carte => rotateY 180° pour flip 3D.
+   Toggle independant, pas d'exclusivité. */
 (function(){
-  document.querySelectorAll('.fiche').forEach(fiche => {
-    const head = fiche.querySelector('.fiche-head');
+  // Receipt
+  document.querySelectorAll('.receipt').forEach(rec => {
+    const head = rec.querySelector('.receipt-head');
     if(!head) return;
     head.addEventListener('click', (e) => {
       e.preventDefault();
-      const open = fiche.classList.toggle('is-open');
+      const open = rec.classList.toggle('is-open');
       head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+  // Polaroid
+  document.querySelectorAll('.polaroid').forEach(p => {
+    const btn = p.querySelector('.polaroid-flip');
+    if(!btn) return;
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const open = p.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   });
 })();
@@ -5726,22 +6050,43 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
 
 /* ========== LIVE TIMECODE — BXL timezone, tabular mono display ========== */
 (function(){
-  const el = document.getElementById('navTc');
-  if(!el) return;
   const fmt = new Intl.DateTimeFormat('fr-BE', {
     timeZone:'Europe/Brussels',
     hour:'2-digit', minute:'2-digit', second:'2-digit',
     hour12:false
   });
+  const nodes = [document.getElementById('navTc'), document.getElementById('ctkClock')].filter(Boolean);
+  if(!nodes.length) return;
   function tick(){
     const parts = fmt.formatToParts(new Date());
     const h = parts.find(p=>p.type==='hour')?.value || '00';
     const m = parts.find(p=>p.type==='minute')?.value || '00';
     const s = parts.find(p=>p.type==='second')?.value || '00';
-    el.textContent = `BXL · ${h}:${m}:${s}`;
+    nodes.forEach(el => { el.textContent = `BXL · ${h}:${m}:${s}`; });
   }
   tick();
   setInterval(tick, 1000);
+})();
+
+/* ========== AUTO-REVEAL — [data-auto-reveal] fade-up on viewport cross ==========
+   Le contact (.ctk) s'ouvre tout seul quand on scrolle dessus — pas besoin
+   de cliquer. Threshold permissif (.2) pour déclencher tôt. */
+(function(){
+  const els = document.querySelectorAll('[data-auto-reveal]');
+  if(!els.length) return;
+  if(!('IntersectionObserver' in window)){
+    els.forEach(el => el.classList.add('is-live'));
+    return;
+  }
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.classList.add('is-live');
+        obs.unobserve(en.target);
+      }
+    });
+  }, { threshold:0.2, rootMargin:'0px 0px -10% 0px' });
+  els.forEach(el => io.observe(el));
 })();
 
 /* ========== HASH ROUTING — auto-open accordion on deep-link ==========
@@ -5754,15 +6099,15 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     let target;
     try { target = document.querySelector(hash); } catch(e){ return; }
     if(!target) return;
-    // Fiche Studio (Tarifs / À propos) — ouvrir la fiche correspondante
-    const fiche = target.closest('.fiche');
-    if(fiche){
-      if(!fiche.classList.contains('is-open')){
-        fiche.classList.add('is-open');
-        const fh = fiche.querySelector('.fiche-head');
-        if(fh) fh.setAttribute('aria-expanded','true');
+    // Studio cards : receipt (Tarifs) ou polaroid (Bio)
+    const studioCard = target.closest('.receipt, .polaroid');
+    if(studioCard){
+      if(!studioCard.classList.contains('is-open')){
+        studioCard.classList.add('is-open');
+        const trigger = studioCard.querySelector('.receipt-head, .polaroid-flip');
+        if(trigger) trigger.setAttribute('aria-expanded','true');
       }
-      setTimeout(() => fiche.scrollIntoView({behavior:'smooth', block:'start'}), 120);
+      setTimeout(() => studioCard.scrollIntoView({behavior:'smooth', block:'center'}), 120);
       return;
     }
     const item = target.closest('.menu-item');

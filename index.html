@@ -679,6 +679,59 @@ body[data-mode="glass"] .topbar{
 .hero-cta--ghost:hover .hero-cta-arrow{ transform: translateY(3px); }
 .hero-cta:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
 
+/* WhatsApp variant — green icon + green hover */
+.hero-cta-wa-icon{
+  width: 18px; height: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #25D366;
+  transition: color .22s;
+}
+.hero-cta-wa-icon svg{ width:100%; height:100%; display:block; }
+.hero-cta--wa:hover{
+  background: #25D366; border-color: #25D366; color: #fff;
+  transform: translateY(-2px);
+}
+.hero-cta--wa:hover .hero-cta-wa-icon{ color: #fff; }
+
+/* ===== Hero showreel — pitch visuel 16:9 directement sous les CTAs ===== */
+.hero-reel{
+  margin-top: 3.2vh;
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0a0a0a;
+  box-shadow: 0 18px 48px -22px rgba(0,0,0,.55), 0 2px 10px -4px rgba(0,0,0,.2);
+  opacity: 0;
+  animation: heroReelIn .9s cubic-bezier(.2,.85,.2,1) 3.6s forwards;
+}
+.hero-reel-video{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero-reel-badge{
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: #fff;
+  padding: 6px 10px;
+  background: rgba(10,10,10,.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+}
+@keyframes heroReelIn{
+  0%{ opacity:0; transform: translateY(14px) scale(.985); }
+  100%{ opacity:1; transform: translateY(0) scale(1); }
+}
+
 /* ===== Hero epigraph — signature vivante (rotation + marquee derrière) ===== */
 .hero-epigraph{
   margin:32px 0 0;padding:18px 0 0;
@@ -2192,6 +2245,9 @@ body.drawer-open{overflow:hidden}
   .hero-pitch{margin-top:22px;font-size:16px;line-height:1.5;max-width:none}
   .hero-ctas{margin-top:20px;gap:10px;flex-direction:column;align-items:stretch}
   .hero-cta{justify-content:space-between;padding:15px 20px;font-size:11px;letter-spacing:.14em}
+  .hero-cta--wa{flex-direction:row-reverse}
+  .hero-reel{margin-top:22px;border-radius:12px;max-width:none}
+  .hero-reel-badge{top:10px;left:10px;font-size:9px;padding:5px 9px}
   .hero-meta{grid-template-columns:1fr;gap:8px;font-size:11px;margin-top:18px;padding-top:14px}
   .hero-meta .col.center,.hero-meta .col.right{justify-content:flex-start}
   /* hero-meta mobile : une ligne par info, sobre */
@@ -3054,6 +3110,149 @@ body[data-theme="dark"] .fold-card.is-open{
   margin:0 0 clamp(28px,3.5vw,48px);
 }
 .rates-lede em{ font-style:italic;color:var(--accent); }
+
+/* ═══════════════════════════════════════════════════════════════
+   STUDIO — fiches pelliculées compactes (Tarifs + À propos)
+   Deux "bandeaux 35mm" côte à côte : bord perforé, numéro de pose,
+   titre, teaser. Clic = la fiche se déroule vers le bas pour révéler
+   le contenu. Pattern grid-rows 0fr → 1fr, même logique que menu-body.
+   ═══════════════════════════════════════════════════════════════ */
+.section--studio{ padding-top:clamp(28px,5vw,64px); padding-bottom:clamp(40px,6vw,80px); }
+.studio-kicker{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);
+  display:inline-flex;gap:10px;align-items:center;
+  margin-bottom:clamp(18px,2vw,28px);
+}
+.studio-kicker-sep{ color:var(--accent); }
+
+.fiches{
+  list-style:none;margin:0;padding:0;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(14px,1.6vw,22px);
+}
+.fiche{
+  position:relative;
+  background:var(--paper,#f6f2e8);
+  border:1px solid var(--ink);
+  border-radius:4px;
+  overflow:hidden;
+  transition:transform .35s cubic-bezier(.2,.85,.2,1), box-shadow .35s;
+  box-shadow:0 1px 0 var(--ink), 0 8px 0 -4px rgba(0,0,0,.04);
+}
+body[data-theme="dark"] .fiche{ background:#1a1a18; }
+.fiche.is-open{
+  box-shadow:0 1px 0 var(--ink), 0 18px 46px -22px rgba(0,0,0,.35);
+  transform:translateY(-1px);
+}
+.fiche-head{
+  all:unset; box-sizing:border-box; cursor:pointer;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  grid-template-areas:
+    "perf perf perf"
+    "num title chev"
+    "tease tease tease";
+  gap:6px 14px;
+  padding:12px 18px 14px;
+  width:100%;
+  transition:background .22s;
+}
+.fiche-head:hover{ background:color-mix(in srgb,var(--accent) 6%,transparent); }
+.fiche-head:focus-visible{ outline:2px solid var(--accent); outline-offset:-3px; }
+/* Bord perforé façon film 35mm */
+.fiche-perf{
+  grid-area:perf;
+  display:flex;justify-content:space-between;
+  padding:4px 2px 8px;
+  border-bottom:1px dashed color-mix(in srgb,var(--ink) 30%,transparent);
+}
+.fiche-perf i{
+  width:10px;height:6px;border-radius:2px;
+  background:color-mix(in srgb,var(--ink) 18%,transparent);
+  display:block;
+}
+.fiche-num{
+  grid-area:num;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;
+  align-self:center;
+}
+.fiche-title{
+  grid-area:title;
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(22px,2.6vw,30px);line-height:1;letter-spacing:-.02em;
+  color:var(--ink);
+}
+.fiche-teaser{
+  grid-area:tease;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);
+  padding-top:2px;
+}
+.fiche-chev{
+  grid-area:chev;
+  align-self:center;
+  width:26px;height:26px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--ink);
+  color:var(--ink);
+  transition:transform .45s cubic-bezier(.3,.9,.2,1), background .22s, color .22s;
+}
+.fiche-head:hover .fiche-chev{ background:var(--ink); color:var(--bg); }
+.fiche.is-open .fiche-chev{ transform:rotate(180deg); background:var(--accent); border-color:var(--accent); color:var(--bg); }
+/* Body : même pattern grid-rows que menu-body */
+.fiche-body{
+  display:grid;
+  grid-template-rows:0fr;
+  transition:grid-template-rows .55s cubic-bezier(.22,1,.36,1);
+}
+.fiche-body-inner{
+  overflow:hidden;min-height:0;
+  padding:0 18px;
+}
+.fiche.is-open > .fiche-body{ grid-template-rows:1fr; }
+.fiche.is-open > .fiche-body > .fiche-body-inner{
+  padding:8px 18px 20px;
+  border-top:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+}
+.fiche-body-inner > *{ opacity:0; transform:translateY(6px); transition:opacity .4s .1s ease, transform .5s .1s cubic-bezier(.2,.85,.2,1); }
+.fiche.is-open .fiche-body-inner > *{ opacity:1; transform:none; }
+.fiche-note{
+  font-family:var(--font-body);font-size:13px;line-height:1.55;
+  color:var(--muted);font-style:italic;
+  margin:14px 0 0;
+}
+/* Compact overrides pour les grilles internes à la fiche */
+.fiche-body-inner .rates-grid{ margin:0; border-top:0; }
+.fiche-body-inner .rates-row{
+  grid-template-columns:auto 1fr auto;
+  grid-template-areas:"num name price" "num desc price";
+  gap:4px 14px;
+  padding:12px 2px;
+}
+.fiche-body-inner .rates-num{ grid-area:num; font-size:10px; }
+.fiche-body-inner .rates-name{ grid-area:name; font-size:clamp(18px,2vw,22px); }
+.fiche-body-inner .rates-desc{ grid-area:desc; justify-self:start; text-align:left; font-size:10px; max-width:none; }
+.fiche-body-inner .rates-price{ grid-area:price; min-width:90px; }
+.fiche-body-inner .rates-price em{ font-size:18px; }
+.fiche-body-inner .bio-grid{
+  grid-template-columns:110px 1fr;
+  gap:18px;
+  border-top:0;padding-top:0;
+  align-items:start;
+}
+.fiche-body-inner .bio-photo img{ border-radius:3px; }
+.fiche-body-inner .bio-quote{ font-size:clamp(15px,2vw,18px); line-height:1.35; margin:0 0 8px; }
+.fiche-body-inner .bio-body{ font-size:13px; line-height:1.55; color:var(--muted); margin:0; }
+
+@media (max-width:760px){
+  .fiches{ grid-template-columns:1fr; gap:12px; }
+  .fiche-head{ padding:10px 14px 12px; }
+  .fiche-title{ font-size:clamp(20px,6vw,26px); }
+  .fiche-body-inner .bio-grid{ grid-template-columns:80px 1fr; gap:14px; }
+  .fiche-body-inner .rates-row{ grid-template-columns:auto 1fr auto; padding:10px 2px; }
+}
 
 .rates-grid{
   list-style:none;margin:0 0 clamp(28px,3.5vw,40px);padding:0;
@@ -4182,6 +4381,23 @@ body:has(.mob-menu.open) .brand-wordmark-sub{
 .brand-logo:hover .cd-mono .cd-c{
   transform:translateX(-2px);
 }
+/* Clin d'œil — le D se recolle au C périodiquement pour former un œil,
+   puis revient. Cycle : repos 5.2s → close 0.55s → hold 1.4s → open 0.55s. */
+@keyframes cdBlink{
+  0%, 70%   { transform: translateX(83px); }
+  78%, 90%  { transform: translateX(68px); }
+  98%, 100% { transform: translateX(83px); }
+}
+@keyframes cdBlinkC{
+  0%, 70%   { transform: translateX(0); }
+  78%, 90%  { transform: translateX(-2px); }
+  98%, 100% { transform: translateX(0); }
+}
+.cd-mono .cd-d{ animation: cdBlink 7.6s cubic-bezier(.55,1.4,.35,1) 4.5s infinite; }
+.cd-mono .cd-c{ animation: cdBlinkC 7.6s cubic-bezier(.55,1.4,.35,1) 4.5s infinite; }
+/* Le hover prend le pas sur l'animation */
+.brand-logo:hover .cd-mono .cd-d,
+.brand-logo:hover .cd-mono .cd-c{ animation: none; }
 body[data-theme="dark"] .brand-logo,
 body[data-theme="dark"] .brand-logo:hover,
 body[data-theme="dark"] .cd-mono{color:var(--cream)}
@@ -4511,10 +4727,9 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <button class="mm-close" id="mmClose">Fermer ×</button>
   <nav>
     <a href="#projets" class="mm-link" data-n="01" data-target="projets">Projets</a>
-    <a href="#services" class="mm-link" data-n="02" data-target="services">Services</a>
-    <a href="#tarifs" class="mm-link" data-n="03" data-target="tarifs">Tarifs</a>
-    <a href="#apropos" class="mm-link" data-n="04" data-target="apropos">À propos</a>
-    <a href="#contact" class="mm-link" data-n="05" data-target="contact">Contact</a>
+    <a href="#tarifs" class="mm-link" data-n="02" data-target="tarifs">Tarifs</a>
+    <a href="#apropos" class="mm-link" data-n="03" data-target="apropos">À propos</a>
+    <a href="#contact" class="mm-link" data-n="04" data-target="contact">Contact</a>
   </nav>
   <div class="mm-foot">
     <span>CD Studio</span>
@@ -4584,10 +4799,9 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   </a>
   <nav class="section-nav" id="sectionNav" aria-label="Sections">
     <a href="#projets" data-target="projets" data-num="§ 01">Projets</a>
-    <a href="#services" data-target="services" data-num="§ 02">Services</a>
-    <a href="#tarifs" data-target="tarifs" data-num="§ 03">Tarifs</a>
-    <a href="#apropos" data-target="apropos" data-num="§ 04">À propos</a>
-    <a href="#contact" data-target="contact" data-num="§ 05">Contact</a>
+    <a href="#tarifs" data-target="tarifs" data-num="§ 02">Tarifs</a>
+    <a href="#apropos" data-target="apropos" data-num="§ 03">À propos</a>
+    <a href="#contact" data-target="contact" data-num="§ 04">Contact</a>
   </nav>
   <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobMenu"><span></span><span></span></button>
 </header>
@@ -4607,36 +4821,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       <p class="hero-pitch">
         Vidéaste à Bruxelles. Je fabrique des <strong>aftermovies, clips &amp; brand films</strong>
         — des images qui racontent vraiment quelque chose.
-      </p>
-
-      <div class="hero-ctas">
-        <a class="hero-cta hero-cta--primary" href="#projets">
-          <span class="hero-cta-label">Voir les projets</span>
-          <span class="hero-cta-arrow" aria-hidden="true">→</span>
-        </a>
-        <a class="hero-cta hero-cta--ghost" href="#apropos">
-          <span class="hero-cta-label">Discuter d'un projet</span>
-          <span class="hero-cta-arrow" aria-hidden="true">↓</span>
-        </a>
-      </div>
-
-      <!-- SIGNATURE VIVANTE — reveal focus-pull + rotation de 4 phrases (slide vertical) +
-           marquee de mots-clés métier qui glisse en arrière-plan pour donner de la profondeur. -->
-      <p class="hero-epigraph" aria-hidden="true">
-        <span class="epi-dot" aria-hidden="true"></span>
-        <span class="epi-viewport">
-          <span class="epi-marquee" aria-hidden="true">
-            <span>CADRE&nbsp;·&nbsp;TEMPO&nbsp;·&nbsp;INTENTION&nbsp;·&nbsp;LUMIÈRE&nbsp;·&nbsp;COUPE&nbsp;·&nbsp;RACCORD&nbsp;·&nbsp;SILENCE&nbsp;·&nbsp;PROFONDEUR&nbsp;·&nbsp;24&nbsp;IMAGES/S&nbsp;·&nbsp;</span>
-            <span>CADRE&nbsp;·&nbsp;TEMPO&nbsp;·&nbsp;INTENTION&nbsp;·&nbsp;LUMIÈRE&nbsp;·&nbsp;COUPE&nbsp;·&nbsp;RACCORD&nbsp;·&nbsp;SILENCE&nbsp;·&nbsp;PROFONDEUR&nbsp;·&nbsp;24&nbsp;IMAGES/S&nbsp;·&nbsp;</span>
-          </span>
-          <span class="epi-rotator" id="epiRotator">
-            <span class="epi-line is-active">Un cadre, un tempo, une intention.</span>
-            <span class="epi-line">Filmer ce qu'on voit, monter ce qu'on veut dire.</span>
-            <span class="epi-line">La bonne image arrive deux prises trop tard.</span>
-            <span class="epi-line">24 fois par seconde, la vérité.</span>
-          </span>
-        </span>
-        <span class="epi-sign">— C.D.</span>
       </p>
 
     </div>
@@ -4914,10 +5098,10 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       </article>
     </div>
 
-      <!-- Outro Next section — § 01 → § 01·5 Planche contact -->
-      <a class="section-outro reveal" href="#planche" aria-label="Section suivante — Planche contact">
+      <!-- Outro Next section — § 01 → § 02 Tarifs -->
+      <a class="section-outro reveal" href="#tarifs" aria-label="Section suivante — Tarifs">
         <span class="section-outro-k">Suivant</span>
-        <span class="section-outro-v">§ 01·5 — Planche contact</span>
+        <span class="section-outro-v">§ 02 — Tarifs</span>
         <span class="section-outro-arr" aria-hidden="true">↓</span>
       </a>
 
@@ -4925,332 +5109,135 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   </section>
 
   <!-- ============================================================
-       § 01·5 — PLANCHE CONTACT — section autonome, respiration
-       éditoriale entre Projets et Services. Référence 35mm /
-       contact sheet argentique avec marquage "crayon gras rouge".
+       Planche contact + Services : retirés — site plus concis.
        ============================================================ -->
-  <section class="section wrap section--planche" id="planche" data-section-label="§ 01·5 — Planche contact">
-    <div class="section-head reveal">
-      <div class="idx">§ 01·5 / Sélection</div>
-      <h2>Planche<br/>contact</h2>
-      <div class="sub">Réf. 35mm · marquage<br/>crayon gras rouge</div>
-    </div>
+  <!-- =============================================================
+       § 02 — STUDIO — 2 mini-fiches pelliculées côte à côte
+       Tarifs + À propos compressés en fiches format 35mm : numéro de
+       pose, titre, teaser, bord perforé. Clic = la fiche se "développe"
+       vers le bas pour révéler le contenu. Ultra-compact, dossier-esque.
+       ============================================================= -->
+  <section class="section wrap section--studio" id="studio" data-section-label="§ 02 — Studio">
+    <div class="studio-kicker reveal"><span>§ 02</span><span class="studio-kicker-sep" aria-hidden="true">/</span><span>Studio · Tarifs &amp; Bio</span></div>
 
-    <div class="section-body">
-      <div class="planche reveal" aria-label="Planche contact — marquage de sélection">
-        <div class="planche-header">
-          <span class="planche-k">Planche contact</span>
-          <span class="planche-v">Nº 04 · Printemps 2026 · 48 exp.</span>
-        </div>
-        <div class="planche-grid">
-          <span class="pl-frame" data-fr="01"></span>
-          <span class="pl-frame" data-fr="02"></span>
-          <span class="pl-frame pl-frame--mark" data-fr="03">
-            <svg class="pl-circle" viewBox="0 0 100 62" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M 8 14 Q 4 6, 20 4 Q 40 2, 65 3 Q 88 5, 94 14 Q 98 28, 96 42 Q 94 56, 80 59 Q 55 62, 32 60 Q 10 58, 5 46 Q 3 30, 8 14 Z"
-                    fill="none" stroke="#E43D12" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    stroke-dasharray="1 0"/>
-            </svg>
+    <ul class="fiches reveal" role="list">
+
+      <!-- Fiche 01 · Tarifs -->
+      <li class="fiche" id="tarifs" data-key="tarifs">
+        <button class="fiche-head" type="button" aria-expanded="false">
+          <span class="fiche-perf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="fiche-num">P. 01</span>
+          <span class="fiche-title">Tarifs</span>
+          <span class="fiche-teaser">~20 €/h · devis forfait</span>
+          <span class="fiche-chev" aria-hidden="true">
+            <svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 7l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
-          <span class="pl-frame" data-fr="04"></span>
-          <span class="pl-frame" data-fr="05"></span>
-          <span class="pl-frame" data-fr="06"></span>
-          <span class="pl-frame" data-fr="07"></span>
-          <span class="pl-frame" data-fr="08"></span>
-          <span class="pl-frame" data-fr="09"></span>
-          <span class="pl-frame" data-fr="10"></span>
-          <span class="pl-frame" data-fr="11"></span>
-          <span class="pl-frame" data-fr="12"></span>
-        </div>
-        <div class="planche-foot">
-          <span class="planche-mark-note">↑ Sélection retenue — Wenda Aftermovie, pose 03</span>
-          <span class="planche-stamp">REEL № 47 · BXL</span>
-        </div>
-      </div>
+        </button>
+        <div class="fiche-body"><div class="fiche-body-inner">
+          <ul class="rates-grid" role="list">
+            <li class="rates-row">
+              <span class="rates-num">01</span>
+              <span class="rates-name">Montage</span>
+              <span class="rates-desc">Reels · Clips · Aftermovies</span>
+              <span class="rates-price"><em>~ 20 €</em><span>/h</span></span>
+            </li>
+            <li class="rates-row">
+              <span class="rates-num">02</span>
+              <span class="rates-name">Tournage</span>
+              <span class="rates-desc">Caméra &amp; drone · 4K</span>
+              <span class="rates-price"><em>~ 25 €</em><span>/h</span></span>
+            </li>
+            <li class="rates-row">
+              <span class="rates-num">03</span>
+              <span class="rates-name">Formation</span>
+              <span class="rates-desc">Premiere Pro · particulier</span>
+              <span class="rates-price"><em>~ 20 €</em><span>/h</span></span>
+            </li>
+          </ul>
+          <p class="fiche-note">Projets lourds (brand films, aftermovies full) devisés au forfait. WhatsApp pour un chiffrage — 24 h.</p>
+        </div></div>
+      </li>
 
-      <!-- Outro Next section — § 01·5 → § 02 Services -->
-      <a class="section-outro reveal" href="#services" aria-label="Section suivante — Services">
-        <span class="section-outro-k">Suivant</span>
-        <span class="section-outro-v">§ 02 — Services</span>
-        <span class="section-outro-arr" aria-hidden="true">↓</span>
-      </a>
-    </div>
+      <!-- Fiche 02 · À propos -->
+      <li class="fiche" id="apropos" data-key="apropos">
+        <button class="fiche-head" type="button" aria-expanded="false">
+          <span class="fiche-perf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="fiche-num">P. 02</span>
+          <span class="fiche-title">À propos</span>
+          <span class="fiche-teaser">Bruxelles · BE · 2020→26</span>
+          <span class="fiche-chev" aria-hidden="true">
+            <svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 7l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="fiche-body"><div class="fiche-body-inner">
+          <div class="bio-grid">
+            <div class="bio-photo">
+              <picture>
+                <source type="image/avif"
+                        srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w, assets/portrait-1200.avif 1200w"
+                        sizes="(max-width: 700px) 80vw, 360px">
+                <img src="assets/portrait-800.jpg"
+                     srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w, assets/portrait-1200.jpg 1200w"
+                     sizes="(max-width: 700px) 80vw, 360px"
+                     width="800" height="1200"
+                     loading="lazy" decoding="async"
+                     alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
+              </picture>
+            </div>
+            <div class="bio-text">
+              <p class="bio-quote">Je donne vie à vos projets visuels — aftermovies, clips, brand films.</p>
+              <p class="bio-body">De l'écriture au montage, je cherche le bon rythme et le détail qui fait image. Bruxelles · disponible Belgique &amp; Europe.</p>
+            </div>
+          </div>
+        </div></div>
+      </li>
+
+    </ul>
   </section>
 
-  <!-- SERVICES — Timeline Premiere Pro (+ Tarifs / A propos en Inspector tabs)
-       Un "projet .prproj" sombre pose au milieu de la page editoriale cream.
-       3 tabs : Timeline | Effects Controls (Rates) | Project Info (A propos).
-       Tarifs + A propos restent fermes par defaut (clique pour ouvrir). -->
-  <section class="section wrap section--pp" id="services" data-section-label="§ 02 — Services">
+  <!-- ═══ § 05 — CONTACT — section dédiée, visible inline (pas un drawer) ═══ -->
+  <section class="section wrap" id="contact" data-section-label="§ 04 — Contact">
     <div class="section-head reveal">
-      <div class="idx">§ 02 / Ce que je fais</div>
-      <h2>Services</h2>
-      <div class="sub">Montage &amp; vidéo<br/>au cœur du métier</div>
+      <div class="idx">§ 04 / On se parle ?</div>
+      <h2>Une idée<br/>en tête&nbsp;?</h2>
+      <div class="sub">Réponse sous 24 h · Bruxelles</div>
     </div>
 
     <div class="section-body">
-
-      <!-- Manifeste bref au-dessus du sommaire -->
-      <p class="services-lead reveal">
-        Je <em>conçois, filme et monte</em> des histoires. Le montage est le cœur du métier —
-        trouver le bon rythme, la bonne lumière, le détail qui fait image.
-      </p>
-
-      <!-- =========================================================
-           SOMMAIRE ÉDITORIAL — 5 services en accordéon.
-           Pattern .menu-list déjà stylé : typo display, rail vermillon,
-           chevron + qui devient × au clic. JS exclusif : 1 seul ouvert
-           à la fois.
-           ========================================================= -->
-      <ul class="menu-list reveal" role="list" id="services-menu">
-
-        <!-- § 02.1 · Montage vidéo (feature) -->
-        <li class="menu-item menu-item--feature" data-key="montage">
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 02.1</span>
-            <span class="menu-title">Montage vidéo</span>
-            <span class="menu-meta">Cœur du métier</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro &amp; DaVinci. Tout format, du reel 9:16 au court-métrage.</p>
-            <ul class="menu-tags" role="list">
-              <li>Premiere Pro</li><li>DaVinci</li><li>Étalonnage</li><li>Sound design</li><li>Tout format</li>
-            </ul>
-          </div></div>
-        </li>
-
-        <!-- § 02.2 · Shooting · caméra & drone -->
-        <li class="menu-item" data-key="shooting">
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 02.2</span>
-            <span class="menu-title">Shooting · caméra &amp; drone</span>
-            <span class="menu-meta">Captation terrain · 4K</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Tournage terrain — caméra 4K pour l'intention, drone pour les vues aériennes. Multi-cam si besoin, éclairage maîtrisé, repérages inclus. De la prod légère au dispositif plus costaud.</p>
-            <ul class="menu-tags" role="list">
-              <li>Caméra 4K</li><li>Drone</li><li>Multi-cam</li><li>Éclairage</li><li>Repérages</li>
-            </ul>
-          </div></div>
-        </li>
-
-        <!-- § 02.3 · Aftermovies -->
-        <li class="menu-item" data-key="after">
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 02.3</span>
-            <span class="menu-title">Aftermovies</span>
-            <span class="menu-meta">Festivals &amp; événements</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Capter l'énergie d'un événement — de la captation live au montage final. Drone, grand angle, proximité. Livrables teaser + full.</p>
-            <ul class="menu-tags" role="list">
-              <li>Festivals</li><li>Events</li><li>Drone</li><li>Live</li>
-            </ul>
-          </div></div>
-        </li>
-
-        <!-- § 02.4 · Brand films & Clips -->
-        <li class="menu-item" data-key="brandclips">
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 02.4</span>
-            <span class="menu-title">Brand films &amp; Clips</span>
-            <span class="menu-meta">Films de marque · reels · clips</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Films de marque, capsules sociales, clips musicaux, reels — écriture, direction artistique, tournage 4K, drone si besoin. Identité forte, narration ciblée, rythme pensé pour le format.</p>
-            <ul class="menu-tags" role="list">
-              <li>Brand films</li><li>Clips</li><li>Reels</li><li>DA</li><li>Social</li>
-            </ul>
-          </div></div>
-        </li>
-
-        <!-- § 02.5 · Formation Premiere Pro -->
-        <li class="menu-item" data-key="formation">
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 02.5</span>
-            <span class="menu-title">Formation Premiere Pro</span>
-            <span class="menu-meta">Cours particuliers · remote / Bruxelles</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à Bruxelles. Projet réel comme support pédagogique.</p>
-            <ul class="menu-tags" role="list">
-              <li>Premiere Pro</li><li>Initiation</li><li>Perfectionnement</li><li>Remote</li>
-            </ul>
-          </div></div>
-        </li>
-
-      </ul>
-
-      <!-- Outro Next section — § 02 → § 03 Tarifs -->
-      <a class="section-outro reveal" href="#tarifs" aria-label="Section suivante — Tarifs">
-        <span class="section-outro-k">Suivant</span>
-        <span class="section-outro-v">§ 03 — Tarifs</span>
-        <span class="section-outro-arr" aria-hidden="true">↓</span>
-      </a>
-
-    </div><!-- /.section-body -->
-  </section>
-
-  <!-- =============================================================
-       § 03 — TARIFS
-       Grille éditoriale simple : kicker + titre + 3 lignes (service · type · prix).
-       Pas de chrome, pas d'accordéon — lecture directe.
-       ============================================================= -->
-  <section class="section wrap section--rates" id="tarifs" data-section-label="§ 03 — Tarifs">
-    <div class="section-head reveal">
-      <div class="idx">§ 03 / Tarifs</div>
-      <h2>Tarifs</h2>
-      <div class="sub">Grille indicative<br/>devis gratuit</div>
-    </div>
-
-    <div class="section-body">
-
-      <!-- Pliable : même pattern que § 02, 1 seul item qui s'ouvre sur la grille -->
-      <ul class="menu-list reveal" role="list">
-        <li class="menu-item">
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 03.1</span>
-            <span class="menu-title">Grille tarifaire</span>
-            <span class="menu-meta">3 lignes · tarif /h · devis au forfait</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-
-            <p class="menu-desc">
-              Tarif <em>horaire</em> pour le courant. Les projets lourds — brand films, aftermovies full — sont devisés au <em>forfait</em>. WhatsApp pour un chiffrage rapide, réponse sous 24 h.
-            </p>
-
-            <ul class="rates-grid" role="list">
-              <li class="rates-row">
-                <span class="rates-num">01</span>
-                <span class="rates-name">Montage</span>
-                <span class="rates-desc">Reels · Clips · Aftermovies</span>
-                <span class="rates-price"><em>~ 20 €</em><span>/h</span></span>
-              </li>
-              <li class="rates-row">
-                <span class="rates-num">02</span>
-                <span class="rates-name">Tournage</span>
-                <span class="rates-desc">Caméra &amp; drone · 4K</span>
-                <span class="rates-price"><em>~ 25 €</em><span>/h</span></span>
-              </li>
-              <li class="rates-row">
-                <span class="rates-num">03</span>
-                <span class="rates-name">Formation</span>
-                <span class="rates-desc">Premiere Pro · particulier</span>
-                <span class="rates-price"><em>~ 20 €</em><span>/h</span></span>
-              </li>
-            </ul>
-
-          </div></div>
-        </li>
-      </ul>
-
-    </div><!-- /.section-body -->
-  </section>
-
-  <!-- =============================================================
-       § 04 — À PROPOS
-       Portrait + bio + meta. Pas de chrome, cream éditorial.
-       ============================================================= -->
-  <section class="section wrap section--bio" id="apropos" data-section-label="§ 04 — À propos">
-    <div class="section-head reveal">
-      <div class="idx">§ 04 / À propos</div>
-      <h2>À propos</h2>
-      <div class="sub">Corentin Devillé<br/>Bruxelles · BE</div>
-    </div>
-
-    <div class="section-body">
-
-      <!-- Pliable : 1 seul item qui s'ouvre sur portrait + bio + contact -->
       <ul class="menu-list reveal" role="list">
         <li class="menu-item">
           <button class="menu-head" type="button" aria-expanded="false">
             <span class="menu-num">§ 04.1</span>
-            <span class="menu-title">Corentin Devillé</span>
-            <span class="menu-meta">Vidéaste · Bruxelles · Disponible</span>
+            <span class="menu-title">Une idée en tête ?</span>
+            <span class="menu-meta">WhatsApp · IG · YouTube · 24 h</span>
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
           <div class="menu-body"><div class="menu-body-inner">
+            <div class="contact-content contact-content--simple">
+              <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o." target="_blank" class="contact-wa-btn">
+                <span class="contact-wa-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                </span>
+                <span class="contact-wa-label"><span class="contact-wa-top">WhatsApp — direct</span><span class="contact-wa-sub">+32 495 92 42 95</span></span>
+                <span class="contact-wa-arrow">→</span>
+              </a>
 
-            <!-- Portrait + bio + meta -->
-            <div class="bio-grid">
-              <div class="bio-photo">
-                <picture>
-                  <source type="image/avif"
-                          srcset="assets/portrait-480.avif 480w, assets/portrait-800.avif 800w, assets/portrait-1200.avif 1200w"
-                          sizes="(max-width: 700px) 80vw, 360px">
-                  <img src="assets/portrait-800.jpg"
-                       srcset="assets/portrait-480.jpg 480w, assets/portrait-800.jpg 800w, assets/portrait-1200.jpg 1200w"
-                       sizes="(max-width: 700px) 80vw, 360px"
-                       width="800" height="1200"
-                       loading="lazy" decoding="async"
-                       alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
-                </picture>
-              </div>
-              <div class="bio-text">
-                <p class="bio-quote">Étudiant passionné, je donne vie à vos projets visuels — <em>brand design</em>, aftermovies, clips et contenus digitaux.</p>
-                <p class="bio-body">De l'écriture au montage, je cherche le bon rythme, la bonne lumière, le détail qui fait basculer une image en souvenir. Marques ou collectifs, formats courts ou films longs — même exigence : une narration honnête et une image soignée.</p>
-                <ul class="bio-meta" role="list">
-                  <li><span class="bio-k">Director</span><span class="bio-v">Corentin Devillé</span></li>
-                  <li><span class="bio-k">DOP · Editor</span><span class="bio-v">Corentin Devillé</span></li>
-                  <li><span class="bio-k">Based in</span><span class="bio-v">Bruxelles · BE</span></li>
-                  <li><span class="bio-k">Available</span><span class="bio-v">Belgique &amp; Europe</span></li>
-                  <li><span class="bio-k">Projects</span><span class="bio-v">40+ livrés · 2020 — 2026</span></li>
-                </ul>
+              <div class="contact-links">
+                <a href="https://www.instagram.com/corentin.deville" target="_blank" class="contact-link">
+                  <span class="contact-link-label">Instagram</span>
+                  <span class="contact-link-val">@corentin.deville</span>
+                  <span class="contact-link-arr">↗</span>
+                </a>
+                <a href="https://www.youtube.com/@corentindeville" target="_blank" class="contact-link">
+                  <span class="contact-link-label">YouTube</span>
+                  <span class="contact-link-val">@corentindeville</span>
+                  <span class="contact-link-arr">↗</span>
+                </a>
               </div>
             </div>
-
           </div></div>
         </li>
       </ul>
-
-    </div><!-- /.section-body -->
-  </section>
-
-  <!-- ═══ § 05 — CONTACT — section dédiée, visible inline (pas un drawer) ═══ -->
-  <section class="section wrap" id="contact" data-section-label="§ 05 — Contact">
-    <div class="section-head reveal">
-      <div class="idx">§ 05 / On se parle ?</div>
-      <h2>Une idée<br/>en tête&nbsp;?</h2>
-      <div class="sub">Réponse sous 24 h · Bruxelles<br/>Disponible Belgique &amp; Europe</div>
-    </div>
-
-    <div class="section-body">
-      <div class="contact-content contact-content--simple reveal">
-        <p class="contact-lede">Un projet vidéo, une question sur une formation, ou juste une idée — écris-moi, je réponds dans la journée.</p>
-
-        <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o." target="_blank" class="contact-wa-btn">
-          <span class="contact-wa-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          </span>
-          <span class="contact-wa-label"><span class="contact-wa-top">WhatsApp — direct</span><span class="contact-wa-sub">+32 495 92 42 95</span></span>
-          <span class="contact-wa-arrow">→</span>
-        </a>
-
-        <div class="contact-links">
-          <a href="/cdn-cgi/l/email-protection#7f1c100d1a110b1611511b1a091613131a511d1a3f18121e1613511c1012" class="contact-link">
-            <span class="contact-link-label">Email</span>
-            <span class="contact-link-val"><span class="__cf_email__" data-cfemail="167579647378627f78387273607f7a7a7338747356717b777f7a3875797b">[email&#160;protected]</span></span>
-            <span class="contact-link-arr">↗</span>
-          </a>
-          <a href="https://www.instagram.com/corentin.deville" target="_blank" class="contact-link">
-            <span class="contact-link-label">Instagram</span>
-            <span class="contact-link-val">@corentin.deville</span>
-            <span class="contact-link-arr">↗</span>
-          </a>
-          <a href="https://www.youtube.com/@corentindeville" target="_blank" class="contact-link">
-            <span class="contact-link-label">YouTube</span>
-            <span class="contact-link-val">@corentindeville</span>
-            <span class="contact-link-arr">↗</span>
-          </a>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -5352,6 +5339,20 @@ const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ========== HERO SHOWREEL — hydrate + autoplay (above the fold) ========== */
+(function(){
+  const v = document.querySelector('.hero-reel-video');
+  if(!v) return;
+  const src = v.getAttribute('data-src');
+  if(src && !v.src){
+    v.src = src;
+    v.load();
+  }
+  const tryPlay = () => { const p = v.play(); if(p && p.catch) p.catch(()=>{}); };
+  if(v.readyState >= 2) tryPlay();
+  else v.addEventListener('loadeddata', tryPlay, { once: true });
+})();
 
 /* ========== Hide mobile WA FAB when contact is in view ========== */
 (function(){
@@ -5665,6 +5666,21 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   }
 })();
 
+/* ========== FICHES STUDIO — accordéon indépendant (Tarifs + À propos) ==========
+   Chaque fiche s'ouvre / se ferme indépendamment (pas d'exclusivité entre
+   Tarifs et À propos). Clic ailleurs ne ferme pas. */
+(function(){
+  document.querySelectorAll('.fiche').forEach(fiche => {
+    const head = fiche.querySelector('.fiche-head');
+    if(!head) return;
+    head.addEventListener('click', (e) => {
+      e.preventDefault();
+      const open = fiche.classList.toggle('is-open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+})();
+
 /* ========== MENU-LIST — accordeon exclusif (Services · A propos) ==========
    Meme logique que les chaps mais sans hydratation video ni pile/deploy.
    Un seul item ouvert a la fois par liste. Cliquer un ouvert le referme. */
@@ -5738,6 +5754,17 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     let target;
     try { target = document.querySelector(hash); } catch(e){ return; }
     if(!target) return;
+    // Fiche Studio (Tarifs / À propos) — ouvrir la fiche correspondante
+    const fiche = target.closest('.fiche');
+    if(fiche){
+      if(!fiche.classList.contains('is-open')){
+        fiche.classList.add('is-open');
+        const fh = fiche.querySelector('.fiche-head');
+        if(fh) fh.setAttribute('aria-expanded','true');
+      }
+      setTimeout(() => fiche.scrollIntoView({behavior:'smooth', block:'start'}), 120);
+      return;
+    }
     const item = target.closest('.menu-item');
     if(!item) return;
     const head = item.querySelector('.menu-head');

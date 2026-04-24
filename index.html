@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
-<meta name="description" content="Corentin Devillé — vidéaste et formateur Premiere Pro basé à Bruxelles. Aftermovies, clips & brand films. Disponible pour vos projets." />
+<meta name="description" content="Corentin Devillé — vidéaste et formateur Premiere Pro basé dans le Brabant wallon (Bruxelles & Europe). Aftermovies, clips & brand films. Disponible pour vos projets." />
 <meta name="theme-color" content="#F0EEE9" />
 <meta name="author" content="Corentin Devillé" />
-<title>Corentin Devillé — Vidéaste & Formateur Premiere Pro · Bruxelles</title>
+<title>Corentin Devillé — Vidéaste & Formateur Premiere Pro · Brabant wallon / Bruxelles</title>
 
 <!-- Canonical -->
 <link rel="canonical" href="https://corentindeville.com/" />
@@ -17,18 +17,18 @@
 <meta property="og:site_name" content="Corentin Devillé" />
 <meta property="og:url" content="https://corentindeville.com/" />
 <meta property="og:title" content="Corentin Devillé — Vidéaste & Formateur Premiere Pro" />
-<meta property="og:description" content="Aftermovies, clips & brand films. Tournage, montage, drone et cours Premiere Pro à Bruxelles." />
+<meta property="og:description" content="Aftermovies, clips & brand films. Tournage, montage, drone et cours Premiere Pro — basé dans le Brabant wallon, déplacements Bruxelles & Europe." />
 <meta property="og:image" content="https://corentindeville.com/assets/og-image.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Showreel 2026 — Corentin Devillé, vidéaste Bruxelles" />
+<meta property="og:image:alt" content="Showreel 2026 — Corentin Devillé, vidéaste Brabant wallon / Bruxelles" />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Corentin Devillé — Vidéaste & Formateur Premiere Pro" />
-<meta name="twitter:description" content="Aftermovies, clips & brand films. Bruxelles · Remote." />
+<meta name="twitter:description" content="Aftermovies, clips & brand films. Brabant wallon · Bruxelles · Remote." />
 <meta name="twitter:image" content="https://corentindeville.com/assets/og-image.jpg" />
-<meta name="twitter:image:alt" content="Showreel 2026 — Corentin Devillé, vidéaste Bruxelles" />
+<meta name="twitter:image:alt" content="Showreel 2026 — Corentin Devillé, vidéaste Brabant wallon / Bruxelles" />
 
 <!-- Favicons -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -43,9 +43,10 @@
   "url": "https://corentindeville.com/",
   "image": "https://corentindeville.com/assets/portrait-1200.jpg",
   "jobTitle": "Vidéaste & Formateur Premiere Pro",
-  "description": "Vidéaste et formateur Premiere Pro basé à Bruxelles. Aftermovies, clips et brand films pour artistes, festivals et marques.",
+  "description": "Vidéaste et formateur Premiere Pro basé dans le Brabant wallon (Bruxelles & Europe). Aftermovies, clips et brand films pour artistes, festivals et marques.",
   "address": {
     "@type": "PostalAddress",
+    "addressRegion": "Brabant wallon",
     "addressLocality": "Bruxelles",
     "addressCountry": "BE"
   },
@@ -468,7 +469,7 @@ body[data-mode="glass"]{background: color-mix(in srgb, var(--accent) 3%, #F5EFE3
 .topbar{
   position:fixed;top:0;left:0;right:0;z-index:40;
   padding: 0 var(--page-pad);
-  height:60px;
+  height:76px;
   display:grid;grid-template-columns:auto 1fr auto auto;gap:16px;align-items:center;
   font-family:var(--font-body);font-size:14px;font-weight:400;
   mix-blend-mode:normal;
@@ -488,7 +489,25 @@ body[data-mode="glass"]{background: color-mix(in srgb, var(--accent) 3%, #F5EFE3
   font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
   color:var(--muted);padding:3px 8px;border:1px solid var(--rule);border-radius:20px;
 }
-.brand-logo{display:flex;align-items:center;text-decoration:none}
+.brand-logo{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:8px 16px 8px 12px;
+  background:color-mix(in srgb, var(--ink) 4%, transparent);
+  border:1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  border-radius:999px;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  text-decoration:none;
+  transition:background .25s, border-color .25s;
+}
+.brand-logo:hover{
+  background:color-mix(in srgb, var(--ink) 7%, transparent);
+  border-color:color-mix(in srgb, var(--ink) 14%, transparent);
+}
+body[data-theme="dark"] .brand-logo{
+  background:rgba(240,238,233,.05);
+  border-color:rgba(240,238,233,.12);
+}
 .logo-wrap{position:relative;height:44px;display:inline-flex;align-items:center}
 .logo-img{height:52px;width:auto;display:block;transition:transform .4s cubic-bezier(.22,1,.36,1)}
 .brand-logo:hover .logo-img{transform:scale(1.08) rotate(-3deg)}
@@ -977,35 +996,26 @@ body[data-mode="glass"] .topbar{
    → section sans ambiguïté, on voit où elle commence / finit. */
 .section-body{
   position:relative;
-  padding: clamp(28px,3.5vw,44px) 0 clamp(32px,4vw,56px);
-  padding-left: clamp(28px, 3.4vw, 52px);  /* place pour rail + badge */
+  padding: clamp(36px,4vw,56px) 0 clamp(32px,4vw,56px);
+  padding-left: clamp(56px, 5vw, 88px);  /* place pour rail massif + badge */
+  --rail-color: #1E8A6B; /* vert emerald profond (match carte Shooting) */
 }
-/* Rail vermillon plein */
+/* Rail vert emerald plein — totalement assumé */
 .section-body::before{
   content:"";
   position:absolute;
-  left: clamp(8px, 1.2vw, 18px);
+  left: clamp(18px, 2.2vw, 32px);
   top: 0; bottom: 0;
-  width: 3px;
-  background: var(--accent);
+  width: 14px;
+  background: var(--rail-color);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--rail-color) 70%, #000),
+    0 2px 0 color-mix(in srgb, var(--rail-color) 65%, #000),
+    0 18px 36px -10px color-mix(in srgb, var(--rail-color) 50%, transparent);
+  border-radius:2px;
 }
-/* Badge "§ XX" qui coiffe le rail en haut — contenu specifique par section */
-.section-body::after{
-  content:"§ 01";
-  position:absolute;
-  left: clamp(-1px, -0.1vw, 2px);
-  top: clamp(8px,1vw,14px);
-  padding: 6px 10px;
-  background: var(--accent);
-  color: var(--bg);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .22em;
-  line-height: 1;
-  text-transform: uppercase;
-  z-index: 2;
-}
+/* Badge "§ XX" retiré — seul le rail reste */
+.section-body::after{ content:none; }
 #services .section-body::after{ content:"§ 02"; }
 
 .section-seal{
@@ -1596,20 +1606,33 @@ body[data-mode="glass"] .topbar{
 }
 .prj-swipe-more{
   align-self: flex-start;
-  margin-top: 8px;
+  margin-top: 10px;
   font-family: var(--font-mono);
-  font-size: 11px; letter-spacing: .14em;
+  font-size: 11.5px; letter-spacing: .16em;
   text-transform: uppercase;
-  background: transparent;
-  border: 1px solid var(--rule);
-  color: var(--ink);
-  padding: 10px 16px;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  color: var(--bg);
+  padding: 12px 20px;
   border-radius: 999px;
   cursor: pointer;
-  min-height: 40px;
-  transition: border-color .2s, color .2s, background .2s;
+  min-height: 42px;
+  font-weight: 600;
+  display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 14px -6px rgba(0,0,0,.35);
+  transition: transform .25s, background .25s, box-shadow .25s;
 }
-.prj-swipe-more:hover{ border-color: var(--accent); color: var(--accent-text); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.prj-swipe-more:hover{
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.prj-swipe-more span{
+  transition: transform .25s;
+}
+.prj-swipe-more:hover span{ transform: translate(3px,-3px); }
 
 /* ---------- GHOST SLIDE ---------- */
 .prj-swipe-slide--ghost{
@@ -1688,8 +1711,36 @@ body[data-mode="glass"] .topbar{
   position: fixed; inset: 0;
   z-index: 980;
   display: none;
+  /* Grid 3 rangées : spacer top < panel < spacer bottom
+     Ratio 1fr / auto / 2fr → le panneau est "optiquement centré"
+     (1/3 d'espace au-dessus, 2/3 en dessous = bias vers le haut) */
+  grid-template-rows: 1fr auto 2fr;
+  grid-template-columns: 1fr;
+  place-items: center;
 }
-.prj-swipe-drawer.is-open{ display: block; }
+.prj-swipe-drawer.is-open{ display: grid; }
+.prj-swipe-drawer-backdrop{
+  grid-column: 1; grid-row: 1 / -1;   /* backdrop couvre toute la grille */
+}
+.prj-swipe-drawer-panel{
+  grid-column: 1; grid-row: 2;        /* panneau dans la rangée du milieu */
+}
+/* Mobile : bottom sheet — laisse voir la vidéo du dessus */
+@media (max-width:640px){
+  .prj-swipe-drawer{
+    grid-template-rows: 1fr auto;
+    grid-template-columns: 1fr;
+    place-items: stretch;
+    overflow-x: hidden;              /* plus aucun débord horizontal */
+    box-sizing: border-box;
+  }
+  .prj-swipe-drawer-panel{
+    grid-row: 2;
+    grid-column: 1;
+    box-sizing: border-box;
+    width: 100%;                     /* vrai 100% du container, pas 100vw */
+  }
+}
 .prj-swipe-drawer-backdrop{
   position: absolute; inset: 0;
   background: rgba(0,0,0,.55);
@@ -1698,17 +1749,24 @@ body[data-mode="glass"] .topbar{
   animation: prjSwipeFade .22s ease;
 }
 .prj-swipe-drawer-panel{
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  max-height: 88vh;
+  position: relative;
+  width: min(96vw, 1100px);
+  max-height: calc(100vh - 32px);
   background: var(--bg);
-  border-top: 2px solid var(--ink);
-  border-radius: 20px 20px 0 0;
-  padding: 22px 18px 36px;
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  padding: 52px 22px 28px;
   overflow-y: auto;
   animation: prjSwipeUp .28s cubic-bezier(.2,.8,.2,1);
-  box-shadow: 0 -16px 40px -10px rgba(0,0,0,.25);
+  box-shadow: 0 30px 60px -16px rgba(0,0,0,.5);
+  /* Contenu centré verticalement quand il reste de la place */
+  display: flex; flex-direction: column; justify-content: center;
+  margin: auto;
 }
+.prj-swipe-drawer-panel .prj-swipe-k{
+  text-align: center;
+}
+/* Ancien bloc mobile retiré — consolidé plus bas pour passer APRÈS les règles de base */
 .prj-swipe-drawer-close{
   position: absolute; top: 12px; right: 14px;
   width: 42px; height: 42px;
@@ -1719,23 +1777,148 @@ body[data-mode="glass"] .topbar{
   cursor: pointer;
   display: grid; place-items: center;
 }
+/* Liste flex — items de taille fixe, centrés, responsive naturel */
 .prj-swipe-drawer-list{
-  display: flex; flex-direction: column; gap: 18px;
-  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 16px;
+  margin-top: 20px;
+  width: 100%;
 }
+/* Item à taille fixe basée sur viewport — évite tout étirement aléatoire */
 .prj-swipe-drawer-item{
   position: relative;
+  flex: 0 0 auto;
+  /* Taille calée sur le viewport : hauteur max, ratio qui détermine la largeur */
+  height: min(70vh, 560px);
   aspect-ratio: 9 / 16;
-  max-height: 70vh;
   border-radius: 14px;
   overflow: hidden;
-  background: #000;
 }
+/* ═══ Mobile (≤ 640px) — modale centrée + scroll vertical snap ═══ */
+@media (max-width:640px){
+  /* Container : centré verticalement, pas bottom-sheet */
+  .prj-swipe-drawer{
+    grid-template-rows: 1fr auto 1fr;
+    grid-template-columns: 1fr;
+    place-items: center;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    padding: 16px;
+  }
+  /* Panel : centré, largeur plein écran (- marges), hauteur max qui garantit
+     header + reel visible + close button + safe area sans débord */
+  .prj-swipe-drawer-panel{
+    grid-row: 2; grid-column: 1;
+    width: 100%; max-width: 420px;
+    margin: 0;
+    justify-self: center;
+    height: auto;
+    /* hauteur adaptée à la taille d'écran — assure que le reel 9:16 tient
+       avec header + close + 16px margin sans scroller la page */
+    max-height: calc(100dvh - 32px);
+    border-radius: 18px;
+    border: 2px solid var(--ink);
+    padding: 44px 14px 14px;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    box-shadow: 0 20px 60px -10px rgba(0,0,0,.5);
+  }
+  .prj-swipe-drawer-panel::before{ display:none; }
+  .prj-swipe-drawer-panel .prj-swipe-k{
+    font-size:10px; margin-bottom:6px;
+  }
+  /* Liste : scroll VERTICAL avec snap entre reels */
+  .prj-swipe-drawer-list{
+    flex-wrap: nowrap !important;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 8px;
+    padding: 0;
+    scrollbar-width: none;
+    /* hauteur = panel - header(~40) - padding(58) pour qu'un reel tienne entier */
+    height: calc(100dvh - 140px);
+    max-height: calc(100dvh - 140px);
+  }
+  .prj-swipe-drawer-list::-webkit-scrollbar{ display:none; }
+  /* Item : ratio 9:16 strict, height fixe basée sur l'espace réel dispo */
+  .prj-swipe-drawer-item{
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+    /* height = espace dispo dans la liste (même valeur que .list height)
+       Le ratio donne la width automatiquement, donc pas d'étirement. */
+    height: calc(100dvh - 150px);
+    width: auto;
+    aspect-ratio: 9 / 16;
+    /* Garde-fou : jamais plus large que le panel */
+    max-width: calc(100% - 4px);
+  }
+  /* Items 16x9 (non-reels) : même hauteur max mais aspect 16/9 */
+  .prj-swipe-drawer-item[data-ratio="16x9"]{
+    height: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+  /* Close button bien visible */
+  .prj-swipe-drawer-close{
+    top: 10px; right: 10px;
+    width: 38px; height: 38px;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,.35);
+  }
+}
+/* Format paysage (16:9) pour les clips non-reels */
+.prj-swipe-drawer-item[data-ratio="16x9"]{
+  aspect-ratio: 16 / 9;
+}
+/* Ratio vertical par défaut pour les reels — OK */
+.prj-swipe-drawer-item[data-ratio="9x16"]{
+  aspect-ratio: 9 / 16;
+  /* Placeholder éditorial visible même si la vidéo ne charge pas */
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 40%, color-mix(in srgb, var(--accent) 18%, #1a1a1a) 0%, #141414 70%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 2px, transparent 2px 5px),
+    #141414;
+  display:flex;align-items:center;justify-content:center;
+}
+/* Gros numéro "02 / 03" centré — ambiance pellicule */
+.prj-swipe-drawer-item::before{
+  content:attr(data-clip-num);
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:clamp(80px,18vw,140px);
+  color:rgba(255,255,255,.08);line-height:1;letter-spacing:-.02em;
+  pointer-events:none;user-select:none;
+}
+/* Mention "Bientôt en ligne" discrète */
+.prj-swipe-drawer-item::after{
+  content:"Bientôt en ligne";
+  position:absolute;bottom:18px;left:0;right:0;text-align:center;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+  pointer-events:none;
+}
+/* Vidéo cachée tant qu'elle n'a pas démarré */
 .prj-swipe-drawer-item video{
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
+  z-index:1;
+  opacity:0;
+  transition:opacity .3s ease;
 }
+/* Si la vidéo a démarré avec succès → vidéo visible + placeholder masqué */
+.prj-swipe-drawer-item.has-video video{ opacity:1; }
+.prj-swipe-drawer-item.has-video::before,
+.prj-swipe-drawer-item.has-video::after{ display:none; }
 .prj-swipe-drawer-idx{
   position: absolute; top: 10px; left: 10px;
   font-family: var(--font-mono);
@@ -1745,7 +1928,7 @@ body[data-mode="glass"] .topbar{
   padding: 4px 9px; border-radius: 999px;
 }
 @keyframes prjSwipeFade{ from{opacity:0} to{opacity:1} }
-@keyframes prjSwipeUp{ from{transform:translateY(100%)} to{transform:translateY(0)} }
+@keyframes prjSwipeUp{ from{transform:scale(.94);opacity:0} to{transform:scale(1);opacity:1} }
 
 /* ---------- DESKTOP ≥900px : grille 3 colonnes, pas de rail ---------- */
 @media (min-width: 900px){
@@ -1949,10 +2132,15 @@ body.drawer-open{overflow:hidden}
      "§ 01" — pas besoin du badge ::after du rail sur mobile. */
   .section-body{
     padding: clamp(10px,1.6vw,16px) 0 clamp(28px,4vw,40px);
-    padding-left: 18px;  /* place pour le rail sans chevauchement */
+    padding-left: 32px;  /* place pour le rail massif */
   }
-  /* Rail vermillon — pleine hauteur, bien visible */
-  .section-body::before{left:0;top:0;bottom:0;width:3px}
+  /* Rail vert emerald — massif, totalement assumé */
+  .section-body::before{
+    left:0;top:0;bottom:0;width:9px;border-radius:0 2px 2px 0;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--rail-color, #1E8A6B) 70%, #000),
+      2px 0 0 color-mix(in srgb, var(--rail-color, #1E8A6B) 60%, #000);
+  }
   /* Badge § 01 du rail caché sur mobile (le seal-mark du sceau d'ouverture
      joue déjà ce rôle — évite la redondance et le chevauchement). */
   .section-body::after{display:none}
@@ -2342,52 +2530,66 @@ body.drawer-open{overflow:hidden}
    ===================================================================== */
 .section-nav{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  display:inline-flex;align-items:baseline;gap: clamp(14px, 2vw, 28px);
-  font-family:var(--font-mono);font-size:11.5px;
-  letter-spacing:.18em;text-transform:uppercase;
-  background: transparent;
-  padding: 0;
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px;
+  background:color-mix(in srgb, var(--ink) 4%, transparent);
+  border:1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  border-radius:999px;
+  font-family:var(--font-body);font-size:13px;
+  letter-spacing:0;text-transform:none;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  transition:opacity .35s ease, transform .45s cubic-bezier(.5,0,.3,1);
 }
+/* Indicateur coulissant (pill noir qui glisse derrière l'actif) */
+.nav-indicator{
+  position:absolute;
+  top:4px;bottom:4px;left:0;
+  width:0;
+  background:var(--ink);
+  border-radius:999px;
+  box-shadow:0 2px 10px -4px rgba(0,0,0,.25);
+  transition:
+    transform .5s cubic-bezier(.5,0,.25,1),
+    width .5s cubic-bezier(.5,0,.25,1);
+  pointer-events:none;
+  z-index:0;
+}
+/* Nav reste toujours visible — pas de disparition au scroll */
 .section-nav a{
-  position:relative;
-  padding: 8px 2px;
-  color: var(--muted);
-  font-weight: 500;
-  transition: color .3s cubic-bezier(.3,.9,.2,1);
+  position:relative;z-index:1;
+  padding:8px 16px;
+  color:var(--muted);
+  font-weight:500;
+  border-radius:999px;
+  transition:color .3s ease;
   white-space:nowrap;
-  display:inline-flex;align-items:baseline;gap:6px;
+  display:inline-flex;align-items:center;gap:6px;
 }
-.section-nav a::before{
-  /* § numéro de section, discret, apparaît au hover/active */
-  content: attr(data-num);
-  font-family: var(--font-mono);
-  font-size: 9.5px;letter-spacing:.15em;
-  color: var(--accent-text);
-  opacity: 0;
-  transform: translateY(1px);
-  transition: opacity .3s ease, transform .3s cubic-bezier(.3,.9,.2,1);
-}
-.section-nav a::after{
-  content:"";
-  position:absolute;left:0;right:0;bottom:2px;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .45s cubic-bezier(.3,.9,.2,1);
-}
-.section-nav a:hover{ color: var(--ink); }
-.section-nav a:hover::before{ opacity: 1;transform: translateY(0); }
-.section-nav a:hover::after{ transform: scaleX(.35); }
+.section-nav a::before{ content:none; }
+.section-nav a::after{ content:none; }
+.section-nav a:hover{ color:var(--ink); }
 .section-nav a.active{
-  color: var(--ink);
-  font-weight: 600;
+  color:var(--bg);
+  font-weight:600;
 }
-.section-nav a.active::before{ opacity: 1;transform: translateY(0); }
-.section-nav a.active::after{ transform: scaleX(1); }
+.section-nav a.active::before{
+  content:"";
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  display:inline-block;
+  flex-shrink:0;
+}
 /* Le nav-pill legacy n'est plus visuel */
 .section-nav .nav-pill{ display: none; }
 @media (max-width:1100px){.section-nav{display:none}}
+body[data-theme="dark"] .section-nav{
+  background:rgba(240,238,233,.05);
+  border-color:rgba(240,238,233,.12);
+}
+body[data-theme="dark"] .section-nav a.active{
+  background:var(--bg);color:var(--ink);
+}
 
 /* Eye blink — smooth modern */
 @keyframes eyeBlink{
@@ -2623,6 +2825,93 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
 }
 .ctk.is-live{ opacity:1;transform:none; }
 
+/* ── Variante simplifiée : WhatsApp + 3 gros boutons ── */
+.ctk--simple{
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+  max-width:540px;margin:0 auto;
+}
+.ctk--simple .ctk-lede{
+  font-family:var(--font-body);font-size:17px;line-height:1.5;
+  color:#F0EEE9;text-align:center;margin:0 0 8px;
+}
+.ctk--simple .ctk-wa{ width:100%; }
+
+/* ── Liens contacts : 4 lignes stackées, Tél+Email mis en avant ── */
+.ctk-simple-links{
+  width:100%;
+  display:flex;flex-direction:column;gap:12px;
+}
+.ctk-simple-links a{
+  position:relative;overflow:hidden;
+  display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:20px;
+  padding:20px 26px;
+  color:#F0EEE9;text-decoration:none;
+  background:rgba(240,238,233,.04);
+  border:1px solid rgba(240,238,233,.16);
+  border-radius:10px;
+  font-family:var(--font-body);
+  transition:background .25s, border-color .25s, transform .25s;
+}
+.ctk-simple-links a:hover{
+  background:rgba(240,238,233,.10);
+  border-color:rgba(240,238,233,.32);
+  transform:translateY(-2px);
+}
+.ctk-simple-links a:hover .cs-a{ transform:translate(4px,-4px);color:#fff; }
+.cs-k{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.26em;
+  text-transform:uppercase;color:rgba(240,238,233,.6);
+}
+.cs-v{
+  font-size:17px;letter-spacing:0;color:#F0EEE9;font-weight:500;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.cs-a{
+  font-family:var(--font-mono);font-size:18px;color:rgba(240,238,233,.55);
+  transition:transform .25s, color .25s;
+}
+
+/* ── Mise en avant : Téléphone + Email ── */
+.ctk-primary-link{
+  background:rgba(240,238,233,.08) !important;
+  border-color:var(--accent) !important;
+  padding:24px 28px !important;
+}
+.ctk-primary-link .cs-k{
+  color:var(--accent);font-weight:700;
+}
+.ctk-primary-link .cs-v{ font-size:19px;font-weight:600; }
+.ctk-primary-link .cs-a{ color:var(--accent);font-size:22px; }
+
+/* Sweep lumineux sur Tél/Email (pas de LED clignotante — retirée) */
+.ctk-primary-link{ overflow:hidden; }
+.ctk-primary-link::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,
+    transparent 0%, transparent 40%,
+    color-mix(in srgb, var(--accent) 22%, transparent) 50%,
+    transparent 60%, transparent 100%);
+  background-size:200% 100%;
+  background-position:-100% 0;
+  animation:ctkSweep 3.2s ease-in-out infinite;
+}
+@keyframes ctkSweep{
+  0%,100%{ background-position:-100% 0;opacity:0; }
+  40%   { opacity:1; }
+  60%   { opacity:1; }
+  100%  { background-position:200% 0;opacity:0; }
+}
+.ctk-primary-link:hover::after{ animation-duration:1.6s; }
+.ctk-primary-link > *{ position:relative;z-index:1; }
+
+@media (max-width:640px){
+  .ctk-simple-links a{ grid-template-columns:90px 1fr auto;gap:12px;padding:18px 20px; }
+  .ctk-primary-link{ padding:20px 22px 20px 34px !important; }
+  .cs-v{ font-size:14px; }
+  .ctk-primary-link .cs-v{ font-size:15px; }
+  .cs-k{ font-size:10px; }
+}
+
 /* Col gauche : lede + statut */
 .ctk-aside{
   display:flex;flex-direction:column;gap:clamp(22px,2.4vw,32px);
@@ -2726,12 +3015,32 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
 
 /* Big WhatsApp button — hero CTA (sable sur ink, icône WA garde son vert signature) */
 .contact-wa-btn{
+  position:relative;overflow:hidden;
   display:flex;align-items:center;gap:20px;
   padding:22px 26px;background:var(--bg);color:var(--ink);
   border-radius:14px;text-decoration:none;
   transition:transform .3s cubic-bezier(.3,1.3,.4,1), background .25s, box-shadow .3s;
   box-shadow:0 12px 30px -12px rgba(0,0,0,.45);
 }
+/* Barre lumineuse qui balaie le bouton WhatsApp — attire l'œil sur le CTA principal */
+.contact-wa-btn::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:linear-gradient(110deg,
+    transparent 0%, transparent 40%,
+    rgba(37,211,102,.22) 50%,
+    transparent 60%, transparent 100%);
+  background-size:200% 100%;
+  background-position:-100% 0;
+  animation:waSweep 3.4s ease-in-out infinite;
+}
+@keyframes waSweep{
+  0%,100%{ background-position:-100% 0;opacity:0; }
+  40%   { opacity:1; }
+  60%   { opacity:1; }
+  100%  { background-position:200% 0;opacity:0; }
+}
+.contact-wa-btn:hover::before{ animation-duration:1.8s; }
+.contact-wa-btn > *{ position:relative;z-index:2; }
 .contact-wa-btn:hover{ transform:translateY(-3px); background:#fff; box-shadow:0 20px 40px -14px rgba(0,0,0,.5); }
 .contact-wa-icon{
   width:44px;height:44px;flex-shrink:0;
@@ -2849,8 +3158,8 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
 .menu-item--feature::before{ opacity:.25; }
 .menu-item--feature.is-open::before{ opacity:1; }
 .menu-item--feature .menu-title{
-  /* legerement plus gros pour signaler que c'est le coeur du metier */
-  font-size:clamp(36px,5vw,76px);
+  /* Nettement plus gros pour signaler le coeur du métier */
+  font-size:clamp(38px,5vw,66px);
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -2861,34 +3170,119 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
 /* ═══════════════════════════════════════════════════════════════ */
 .menu-list{
   list-style:none;margin:0;padding:0;
-  display:flex;flex-direction:column;
-  border-top:1px solid var(--ink);
+  display:flex;flex-direction:column;gap:14px;
+  border-top:none;
 }
 .menu-item{
-  border-bottom:1px solid var(--rule);
   position:relative;
+  border:1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 1px 0 rgba(0,0,0,.02), 0 10px 24px -14px rgba(0,0,0,.14);
+  overflow:hidden;
+  transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s;
 }
-.menu-item:last-child{ border-bottom:1px solid var(--ink); }
+/* ── CARTES "TAPE LABELS" — on assume : fond plein couleur saturé,
+   badge mono inversé, pas d'ombre, pas de halo, juste du bloc franc.
+   Même langage que le badge de section § 01 sur le rail vermillon. ── */
+.menu-item{ --svc-hue: var(--accent); --svc-ink:#fff; }
+.menu-item:nth-child(1){ --svc-hue:#1a1a1a; --svc-ink:var(--bg); } /* K */
+.menu-item:nth-child(2){ --svc-hue:#1E8A6B; --svc-ink:#fff; }     /* vert profond (match § 01) */
+.menu-item:nth-child(3){ --svc-hue:#E04F1E; --svc-ink:#fff; }     /* vermillon */
+.menu-item:nth-child(4){ --svc-hue:#0A7A99; --svc-ink:#fff; }     /* cyan profond */
+.menu-item:nth-child(5){ --svc-hue:#C4362D; --svc-ink:#fff; }     /* rouge brique */
+.menu-item:nth-child(6){ --svc-hue:#3E2E8A; --svc-ink:#fff; }     /* indigo */
+
+.menu-item{
+  background:var(--svc-hue);
+  color:var(--svc-ink);
+  border:none;
+  border-radius:6px;
+  box-shadow:none;
+}
+.menu-item:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 0 -6px rgba(0,0,0,.18);
+}
+
+/* Rail gauche : on le conserve mais en version inversée (bande crème) */
 .menu-item::before{
-  /* micro-rail vermillon qui répond à la grande rail section-body */
-  content:"";position:absolute;left:-14px;top:0;bottom:0;
-  width:2px;background:var(--accent);
-  opacity:0;transition:opacity .35s ease;
+  content:"";position:absolute;left:0;top:0;bottom:0;
+  width:6px;background:var(--bg);opacity:.9;
+  border-radius:0;
 }
-.menu-item.is-open::before{ opacity:1; }
+
+/* Badge "tape label" mono en haut-gauche — façon § 01 sur le rail */
+.menu-item::after{
+  content:"";display:none;
+}
+
+/* Typographie : tout inversé, blocs nets, mono assumé */
+.menu-item .menu-title{ color:var(--svc-ink); }
+.menu-item .menu-num{
+  color:var(--svc-ink);font-weight:700;
+  background:color-mix(in srgb, var(--svc-ink) 18%, transparent);
+  padding:4px 9px 5px;border-radius:3px;
+  align-self:center;
+}
+.menu-item .menu-meta{
+  color:color-mix(in srgb, var(--svc-ink) 75%, transparent);
+}
+.menu-item .menu-chev{
+  border-color:color-mix(in srgb, var(--svc-ink) 35%, transparent);
+  color:var(--svc-ink);
+}
+.menu-item:hover .menu-chev,
+.menu-item.is-open .menu-chev{
+  background:var(--svc-ink);color:var(--svc-hue);
+  border-color:var(--svc-ink);
+}
+
+/* Feature (Montage) : noir plein, le bandeau accent comme signature */
+.menu-item--feature{
+  background:var(--ink);
+}
+.menu-item--feature .menu-num{ color:var(--accent);background:rgba(255,255,255,.08); }
+.menu-item:hover{
+  transform:translateY(-2px);
+  box-shadow:0 2px 0 rgba(0,0,0,.03), 0 18px 32px -14px rgba(0,0,0,.2);
+}
+.menu-item--feature{
+  border:1px solid var(--ink);
+  background:var(--ink);color:var(--bg);
+  box-shadow:0 2px 0 rgba(0,0,0,.06), 0 14px 28px -14px rgba(0,0,0,.28);
+}
+.menu-item--feature .menu-title{ color:var(--bg); }
+.menu-item--feature .menu-meta{ color:color-mix(in srgb, var(--bg) 75%, transparent); }
+.menu-item--feature .menu-num{ color:var(--accent); }
+.menu-item--feature .menu-chev{
+  border-color:color-mix(in srgb, var(--bg) 40%, transparent);
+  color:var(--bg);
+}
+.menu-item--feature:hover .menu-chev{
+  background:var(--bg);color:var(--ink);border-color:var(--bg);
+}
+.menu-item::before{
+  /* Rail vermillon permanent à gauche */
+  content:"";position:absolute;left:0;top:12px;bottom:12px;
+  width:3px;background:var(--accent);
+  opacity:.55;transition:opacity .35s ease, top .35s, bottom .35s;
+  border-radius:0 3px 3px 0;
+}
+.menu-item.is-open::before{ opacity:1;top:0;bottom:0; }
+.menu-item--feature::before{ opacity:.8; }
 
 .menu-head{
-  all:unset;cursor:pointer;
+  all:unset;cursor:pointer;box-sizing:border-box;
   display:grid;
   grid-template-columns:auto 1fr auto auto;
   align-items:baseline;
   gap:clamp(16px,2vw,28px);
   width:100%;
-  padding:clamp(22px,2.5vw,32px) 4px;
+  padding:clamp(22px,2.4vw,32px) clamp(24px,2.4vw,36px);
   transition:padding-left .35s cubic-bezier(.22,1,.36,1);
 }
-.menu-head:hover{ padding-left:10px; }
-.menu-item.is-open > .menu-head{ padding-left:14px; }
+.menu-item.is-open > .menu-head{ padding-left:clamp(30px,2.8vw,42px); }
 
 .menu-num{
   font-family:var(--font-mono);font-size:12px;letter-spacing:.25em;
@@ -2897,16 +3291,14 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
 }
 .menu-title{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(32px,4.5vw,64px);line-height:.95;letter-spacing:-.025em;
+  font-size:clamp(32px,4vw,54px);line-height:1.02;letter-spacing:-.025em;
   color:var(--ink);
   text-transform:none;
 }
 .menu-meta{
   font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;
   text-transform:uppercase;color:var(--muted);
-  justify-self:end;
-  text-align:right;
-  max-width:24ch;
+  justify-self:end;text-align:right;max-width:24ch;
 }
 .menu-chev{
   font-family:var(--font-mono);font-size:22px;line-height:1;
@@ -2943,21 +3335,29 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
   display:flex;flex-direction:column;gap:18px;
 }
 .menu-desc{
-  font-size:clamp(16px,1.3vw,18px);line-height:1.6;color:var(--ink);
-  max-width:56ch;margin:0;
+  font-size:clamp(16px,1.35vw,19px);line-height:1.65;
+  color:var(--svc-ink, var(--ink));
+  max-width:62ch;margin:0;
+  font-weight:400;
 }
 .menu-tags{
   list-style:none;margin:0;padding:0;
   display:flex;flex-wrap:wrap;gap:8px;
 }
 .menu-tags li{
-  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
-  padding:7px 12px;background:rgba(26,26,26,.06);color:var(--ink);
-  border-radius:999px;font-weight:500;
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  padding:8px 14px;
+  background:color-mix(in srgb, var(--svc-ink, var(--ink)) 15%, transparent);
+  color:var(--svc-ink, var(--ink));
+  border:1px solid color-mix(in srgb, var(--svc-ink, var(--ink)) 28%, transparent);
+  border-radius:999px;font-weight:600;
   transition:background .25s,color .25s;
 }
-body[data-theme="dark"] .menu-tags li{ background:rgba(240,238,233,.08); }
-.menu-tags li:hover{ background:var(--ink);color:var(--bg); }
+.menu-tags li:hover{
+  background:var(--svc-ink, var(--ink));
+  color:var(--svc-hue, var(--bg));
+  border-color:var(--svc-ink, var(--ink));
+}
 
 /* ═══════════════════════════════════════════════════════════════ */
 /*  SERVICES — repli par défaut (on ne montre que Montage + Shooting) */
@@ -3300,9 +3700,7 @@ body[data-theme="dark"] .fold-card.is-open{
   .studio-cards .receipt{ max-width:380px;transform:rotate(1.4deg); }
   .studio-cards .receipt:hover{ transform:rotate(.3deg) translateY(-3px); }
   .studio-cards .receipt.is-open{ transform:rotate(0deg); }
-  .studio-cards .receipt-title-h{ font-size:42px;letter-spacing:-.03em; }
   .studio-cards .receipt-title-k{ font-size:10px; }
-  .studio-cards .receipt-title-sub{ font-size:13px; }
   .studio-cards .receipt-masthead{ font-size:10.5px;padding:13px 22px 12px; }
   .studio-cards .mag{ max-width:380px;transform:rotate(-1.6deg); }
   .studio-cards .mag:hover{ transform:rotate(-.3deg) translateY(-3px); }
@@ -3330,50 +3728,39 @@ body[data-theme="dark"] .fold-card.is-open{
   transform:rotate(1.4deg);
   transition:transform .45s cubic-bezier(.2,.85,.2,1);
   filter:drop-shadow(0 1px 0 rgba(0,0,0,.04)) drop-shadow(0 14px 28px rgba(0,0,0,.16));
-  /* Bord dentelé en haut — signature ticket */
-  clip-path: polygon(
-    0 8px,
-    3.125% 0, 6.25% 8px, 9.375% 0, 12.5% 8px,
-    15.625% 0, 18.75% 8px, 21.875% 0, 25% 8px,
-    28.125% 0, 31.25% 8px, 34.375% 0, 37.5% 8px,
-    40.625% 0, 43.75% 8px, 46.875% 0, 50% 8px,
-    53.125% 0, 56.25% 8px, 59.375% 0, 62.5% 8px,
-    65.625% 0, 68.75% 8px, 71.875% 0, 75% 8px,
-    78.125% 0, 81.25% 8px, 84.375% 0, 87.5% 8px,
-    90.625% 0, 93.75% 8px, 96.875% 0, 100% 8px,
-    100% 100%, 0 100%
-  );
+  /* Bords nets — plus de dentelures */
 }
 .receipt:hover{ transform:rotate(0.3deg) translateY(-3px); }
 .receipt.is-open{ transform:rotate(0deg); }
 
-/* Grain print subtil — cohérence avec .mag */
-.receipt::before{
-  content:"";position:absolute;inset:0;pointer-events:none;z-index:4;
-  background-image:radial-gradient(circle at 1px 1px, rgba(0,0,0,.08) 1px, transparent 1.5px);
-  background-size:3px 3px;
-  mix-blend-mode:multiply;opacity:.35;
-}
+/* Grain print retiré — on veut un ticket clair/épuré */
+.receipt::before{ content:none; }
 
-/* COVER — bouton éditorial, ratio couverture */
+/* COVER — bouton format ticket (largeur d'origine, hauteur généreuse) */
 .receipt-head{
   all:unset;box-sizing:border-box;cursor:pointer;display:block;
   width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;
-  padding:42px 16px 56px;
+  padding:42px 20px 56px;
   background:
-    radial-gradient(ellipse 70% 55% at 50% 20%, rgba(255,255,255,.45) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 45% at 85% 85%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 100%, transparent) 0%, color-mix(in srgb, var(--bg) 96%, #000 4%) 100%),
     var(--bg);
+}
+/* Perforation horizontale "tear here" juste sous le masthead */
+.receipt-head::after{
+  content:"";position:absolute;left:10px;right:10px;top:32px;height:1px;z-index:2;
+  background-image:linear-gradient(90deg, color-mix(in srgb, var(--ink) 38%, transparent) 50%, transparent 50%);
+  background-size:5px 1px;background-repeat:repeat-x;
+  pointer-events:none;
 }
 .receipt-head:focus-visible{ outline:2px solid var(--accent);outline-offset:4px; }
 
 /* Masthead — identique en rythme à .mag-masthead */
 .receipt-masthead{
-  position:absolute;top:8px;left:0;right:0;z-index:3;
+  position:absolute;top:6px;left:0;right:0;z-index:3;
   display:flex;justify-content:space-between;align-items:center;
   padding:11px 18px 10px;
-  border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  border-bottom:1px dashed color-mix(in srgb, var(--ink) 28%, transparent);
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
 }
 .receipt-issue{ color:var(--accent-text);font-weight:700; }
 .receipt-name{ color:var(--ink);font-weight:700;letter-spacing:.28em; }
@@ -3394,7 +3781,7 @@ body[data-theme="dark"] .fold-card.is-open{
 .receipt-regmark--bl{ bottom:64px;left:6px; }
 
 .receipt-cmyk{
-  position:absolute;right:4px;top:120px;z-index:3;
+  position:absolute;right:4px;top:50%;transform:translateY(-50%);z-index:3;
   display:flex;flex-direction:column;gap:2px;
   pointer-events:none;
 }
@@ -3408,26 +3795,79 @@ body[data-theme="dark"] .fold-card.is-open{
 .receipt-cmyk i:nth-child(4){ background:#1a1a1a; }
 
 /* Bloc titre — display serif (même registre que .mag-title) */
-.receipt-title{
-  position:absolute;left:16px;right:16px;bottom:56px;z-index:3;
-  padding:12px 12px 14px;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 82%, transparent) 0%, var(--bg) 40%);
-  border-top:2px solid var(--ink);
-  display:flex;flex-direction:column;gap:3px;
-}
+/* Zone portrait neutralisée — on revient au ticket sans image */
+.receipt-portrait{ display:none; }
 .receipt-title-k{
   font-family:var(--font-mono);font-size:9px;letter-spacing:.28em;text-transform:uppercase;
   color:var(--accent-text);font-weight:700;
 }
 .receipt-title-h{
   font-family:var(--font-display);font-weight:400;
-  font-size:clamp(32px,4.2vw,40px);line-height:.9;letter-spacing:-.025em;
+  font-size:clamp(52px,6.5vw,72px);line-height:.9;letter-spacing:-.025em;
   color:var(--ink);margin:0;
 }
-.receipt-title-sub{
-  font-family:var(--font-body);font-size:11.5px;line-height:1.3;font-style:italic;
-  color:var(--muted);margin-top:3px;
+.receipt-title-h br{ display:none; }
+
+/* Liste d'items — vraie grammaire de ticket de caisse */
+.receipt-items{
+  position:absolute;left:20px;right:20px;top:148px;bottom:94px;z-index:3;
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;justify-content:center;gap:10px;
+  font-family:var(--font-mono);font-size:11.5px;
+  color:var(--ink);
 }
+.receipt-items li{
+  display:flex;align-items:baseline;gap:6px;
+  letter-spacing:.04em;
+}
+.receipt-items li::after{
+  /* Points de suite, comme sur les vraies notes */
+  content:"";flex:1;
+  border-bottom:1px dotted color-mix(in srgb, var(--ink) 32%, transparent);
+  transform:translateY(-3px);
+  order:1;
+}
+.receipt-items li span{ order:0; }
+.receipt-items li em{
+  order:2;font-style:normal;font-weight:700;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+
+/* Total en bas — séparateur épais + mise en avant */
+.receipt-total{
+  position:absolute;left:20px;right:20px;bottom:62px;z-index:3;
+  padding-top:9px;
+  border-top:2px solid var(--ink);
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink);
+}
+.receipt-total em{
+  font-style:normal;font-weight:700;letter-spacing:.06em;
+  font-size:13px;font-variant-numeric:tabular-nums;
+  color:var(--accent-text);
+}
+/* En-tête recto : kicker + titre display "Tarifs", centré au milieu du recto */
+.receipt-head-title{
+  position:absolute;left:20px;right:20px;top:50%;transform:translateY(-50%);z-index:3;
+  display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;
+}
+.receipt-title-k{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--accent-text);font-weight:700;
+}
+.receipt-title-h{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(52px,6.5vw,72px);line-height:.9;letter-spacing:-.025em;
+  color:var(--ink);margin:0;text-transform:none;
+}
+.receipt-title-sub{
+  display:block;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin-top:4px;
+}
+/* Ancien bloc "liste/total" neutralisé — plus d'items sur la face recto */
+.receipt-title, .receipt-items, .receipt-total, .receipt-teasers{ display:none; }
 
 /* Teasers pills (même motif que .mag-teasers) */
 .receipt-teasers{
@@ -3442,7 +3882,7 @@ body[data-theme="dark"] .fold-card.is-open{
 
 /* Bande accent bas (identique .mag-hint) */
 .receipt-hint{
-  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  position:absolute;left:0;right:0;bottom:6px;z-index:3;
   padding:9px 0 10px;
   background:var(--accent);color:#fff;
   font-family:var(--font-mono);font-size:9.5px;letter-spacing:.3em;
@@ -3455,18 +3895,35 @@ body[data-theme="dark"] .fold-card.is-open{
   animation:none;
 }
 
-/* BODY — page intérieure qui glisse (même anim que .mag-body) */
+/* ═══ FLIP 3D — vrai retournement complet, rapide, délai d'attente ═══ */
+.receipt{ perspective:1800px; }
+.receipt-flip{
+  position:relative;display:block;width:100%;
+  aspect-ratio:3/4;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  transform:rotateY(0deg) translateZ(0);
+  transition:transform .9s cubic-bezier(.76,0,.24,1);
+  will-change:transform;
+}
+.receipt.is-open .receipt-flip{
+  transform:rotateY(180deg) translateZ(0);
+}
+/* Faces parfaitement opposées — back invisible tant que la rotation ne passe pas 90° */
+.receipt-head,
 .receipt-body{
-  display:grid;grid-template-rows:0fr;
-  transition:grid-template-rows .9s cubic-bezier(.22,1,.36,1);
+  position:absolute;inset:0;
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+  transform-style:preserve-3d;
+}
+.receipt-head{ transform:rotateY(0deg) translateZ(0.5px); aspect-ratio:auto; }
+.receipt-body{
+  transform:rotateY(180deg) translateZ(0.5px);
   background:var(--bg);color:var(--ink);
-  position:relative;z-index:1;
+  padding:20px 20px 54px;
+  overflow:hidden;
 }
-.receipt.is-open > .receipt-body{ grid-template-rows:1fr; }
-.receipt-body-inner{
-  overflow:hidden;min-height:0;
-  padding:0 22px;
-}
+.receipt-body-inner{ padding:0; }
 .receipt.is-open > .receipt-body > .receipt-body-inner{
   padding:22px 22px 26px;
   border-top:4px double var(--ink);
@@ -3734,26 +4191,34 @@ body[data-theme="dark"] .fold-card.is-open{
 }
 
 /* BODY — article intérieur qui glisse vers le bas */
+/* ═══ FLIP 3D — vrai retournement complet ═══ */
+.mag{ perspective:1800px; }
+.mag-flip{
+  position:relative;display:block;width:100%;
+  aspect-ratio:3/4;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  transform:rotateY(0deg) translateZ(0);
+  transition:transform .9s cubic-bezier(.76,0,.24,1);
+  will-change:transform;
+}
+.mag.is-open .mag-flip{
+  transform:rotateY(180deg) translateZ(0);
+}
+.mag-cover,
 .mag-body{
-  display:grid;grid-template-rows:0fr;
-  transition:grid-template-rows .9s cubic-bezier(.22,1,.36,1);
+  position:absolute;inset:0;
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+  transform-style:preserve-3d;
+}
+.mag-cover{ transform:rotateY(0deg) translateZ(0.5px); aspect-ratio:auto; }
+.mag-body{
+  transform:rotateY(180deg) translateZ(0.5px);
   background:var(--bg);color:var(--ink);
-  position:relative;z-index:1;
+  padding:20px 20px 54px;
+  overflow:hidden;
 }
-.mag.is-open > .mag-body{ grid-template-rows:1fr; }
-.mag-body-inner{
-  overflow:hidden;min-height:0;
-  padding:0 22px;
-}
-.mag.is-open > .mag-body > .mag-body-inner{
-  padding:22px 22px 26px;
-  border-top:4px double var(--ink);
-}
-.mag-body-inner > *{
-  opacity:0;transform:translateY(-8px);
-  transition:opacity .55s .2s ease, transform .6s .2s cubic-bezier(.22,1,.36,1);
-}
-.mag.is-open .mag-body-inner > *{ opacity:1;transform:none; }
+.mag-body-inner{ padding:0; }
 
 .mag-article{ display:flex;flex-direction:column;gap:14px; }
 .mag-deck-k{
@@ -4230,16 +4695,21 @@ body[data-theme="dark"] .fold-card.is-open{
   grid-template-areas:
     "num   title  arr"
     "num   sub    arr";
-  column-gap:16px;row-gap:4px;
+  column-gap:18px;row-gap:6px;
   align-items:center;
-  padding:20px 26px 20px 26px;
-  background:var(--pp-bg-2);
-  border:0;border-right:1px solid var(--pp-line);
+  padding:28px 32px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--pp-bg-2) 100%, #fff 0%) 0%,
+    color-mix(in srgb, var(--pp-bg-2) 94%, #000 6%) 100%);
+  border:1px solid color-mix(in srgb, var(--pp-text) 6%, transparent);
+  border-radius:14px;
   color:var(--pp-text);
   cursor:pointer;text-align:left;
   font:inherit;
   position:relative;
-  transition:background .22s ease,padding-left .22s ease;
+  overflow:hidden;
+  transition:transform .35s cubic-bezier(.22,1,.36,1), border-color .3s, box-shadow .3s;
+  box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 14px 30px -18px rgba(0,0,0,.55);
 }
 /* Rail vertical coloré à gauche du section-block (identite de categorie) */
 .pp-section::before{
@@ -4252,16 +4722,16 @@ body[data-theme="dark"] .fold-card.is-open{
 .pp-section-num{
   grid-area:num;
   align-self:start;
-  padding:5px 9px;
+  padding:0;
   background:transparent;
-  border:1px solid color-mix(in srgb,var(--pp-accent) 35%,transparent);
-  border-radius:3px;
+  border:none;
+  border-radius:0;
   color:var(--pp-accent);
   font-family:ui-monospace,monospace;
-  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  font-weight:600;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  font-weight:700;
   white-space:nowrap;
-  transition:background .22s ease,color .22s ease,border-color .22s ease;
+  transition:color .22s ease;
 }
 .pp-section-title{
   grid-area:title;
@@ -4313,7 +4783,7 @@ body[data-theme="dark"] .fold-card.is-open{
 .pp-row:hover .pp-section-arr{ transform:translateX(4px);color:var(--pp-accent); }
 .pp-row:hover .pp-section-num,
 .pp-row.is-active .pp-section-num{
-  background:var(--pp-accent);color:var(--pp-bg);border-color:var(--pp-accent);
+  color:#fff;
 }
 
 /* ───── Playhead (scrube uniquement dans la lane) ───── */
@@ -4646,15 +5116,67 @@ body[data-theme="dark"] .fold-card.is-open{
   }
 }
 @media(max-width:600px){
-  .menu-list{ border-top-color:var(--ink); }
-  .menu-head{ padding:20px 4px;gap:12px; }
-  .menu-title{ font-size:clamp(26px,8vw,38px); }
-  .menu-item--feature .menu-title{ font-size:clamp(30px,9vw,44px); }
-  .menu-num{ font-size:11px;letter-spacing:.22em;min-width:22px; }
-  .menu-chev{ width:26px;height:26px;font-size:18px; }
-  .menu-body-inner{ padding:0 4px 22px 32px; }
-  .menu-desc{ font-size:14.5px;line-height:1.55; }
-  .menu-tags li{ font-size:10.5px;padding:6px 10px; }
+  /* ─ Mobile : garde la même grammaire couleurs que desktop ─ */
+  .menu-list{
+    border-top:none;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  /* On n'écrase PAS le background ici (hérité de --svc-hue via le desktop) */
+  .menu-item{ overflow:hidden; }
+  .menu-item::before{
+    /* Rail accent toujours visible en mobile (hiérarchie claire) */
+    content:"";position:absolute;left:0;top:14px;bottom:14px;
+    width:3px;background:var(--accent);opacity:.6;
+    border-radius:0 3px 3px 0;
+  }
+  .menu-item.is-open::before{ opacity:1; top:0;bottom:0; }
+
+  .menu-head{
+    grid-template-columns:1fr auto;
+    grid-template-areas:
+      "num chev"
+      "title chev"
+      "meta chev";
+    grid-template-rows:auto auto auto;
+    padding:20px 18px 22px 22px;column-gap:14px;row-gap:8px;
+    align-items:start;
+  }
+  .menu-head:hover{ padding-left:22px; } /* no shift on mobile */
+  .menu-item.is-open > .menu-head{ padding-left:22px; }
+
+  .menu-num{
+    grid-area:num;font-size:11px;letter-spacing:.26em;
+    font-weight:700;color:var(--accent);
+    align-self:start;
+  }
+  .menu-title{
+    grid-area:title;
+    font-size:clamp(28px,7.6vw,38px);line-height:1.05;letter-spacing:-.02em;
+    align-self:start;margin:0;
+  }
+  .menu-item--feature .menu-title{ font-size:clamp(32px,8.4vw,42px); }
+  .menu-meta{
+    grid-area:meta;
+    display:inline-block;
+    padding:4px 10px 5px;
+    border:1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+    border-radius:3px;
+    font-size:9.5px;letter-spacing:.18em;
+    align-self:start;margin-top:4px;
+    justify-self:start;
+    width:fit-content;
+  }
+  .menu-chev{
+    grid-area:chev;grid-row:1 / span 3;
+    align-self:center;
+    width:34px;height:34px;font-size:20px;
+    background:var(--bg);
+  }
+  .menu-item.is-open .menu-chev{ background:var(--accent); }
+
+  .menu-body-inner{ padding:0 22px 22px 22px;gap:16px; }
+  .menu-desc{ font-size:16px;line-height:1.6;max-width:none; }
+  .menu-tags li{ font-size:11.5px;padding:7px 12px;letter-spacing:.14em; }
   .services-lead{ font-size:clamp(20px,6.5vw,26px); }
 
   .price-block{ margin-top:40px;padding-top:24px; }
@@ -4960,7 +5482,7 @@ body:has(.mob-menu.open) .brand-wordmark-sub{
 .brand-logo:hover .cd-mono{transform:scale(1.03)}
 .topbar a.brand-logo:hover{color:var(--ink)} /* override .topbar a:hover qui passe en accent */
 .cd-mono{
-  width:auto;height:30px;display:block;
+  width:auto;height:44px;display:block;
   color:var(--ink);
   transition:transform .45s cubic-bezier(.22,1,.36,1);
   flex-shrink:0;
@@ -5006,14 +5528,14 @@ body[data-theme="dark"] .cd-mono{color:var(--cream)}
 }
 .brand-wordmark-top{
   font-family:var(--font-display);
-  font-size:15px;letter-spacing:.01em;
+  font-size:22px;letter-spacing:.01em;
   color:var(--ink);
 }
 .brand-wordmark-sub{
   font-family:var(--font-mono);
-  font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;
+  font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
   color:var(--muted);
-  margin-top:2px;
+  margin-top:4px;
 }
 body[data-theme="dark"] .brand-wordmark-top{color:var(--cream)}
 @media(max-width:720px){
@@ -5262,9 +5784,9 @@ body[data-theme="dark"] .planche{background:#1a1a19;border-color:color-mix(in sr
 /* ---------- Colophon footer (signature minimaliste) ---------- */
 .colophon{
   margin-top:96px;
-  padding:40px clamp(24px,5vw,72px) 36px;
+  padding:56px clamp(24px,5vw,72px) 52px;
   position:relative;
-  display:flex;flex-direction:column;align-items:center;gap:14px;
+  display:flex;flex-direction:column;align-items:center;gap:20px;
 }
 .colophon-rule{
   position:absolute;top:0;left:0;right:0;height:1px;
@@ -5275,29 +5797,30 @@ body[data-theme="dark"] .planche{background:#1a1a19;border-color:color-mix(in sr
     transparent 100%);
 }
 .colo-logo{
-  display:inline-flex;align-items:center;gap:10px;
+  display:inline-flex;align-items:center;gap:16px;
   text-decoration:none;color:var(--ink);
   transition:opacity .25s ease;
 }
 .colo-logo:hover{opacity:.7}
 .colo-eye{
-  width:22px;height:auto;display:block;
+  width:40px;height:auto;display:block;
   fill:var(--ink);
 }
 .colo-wordmark{
-  font-family:var(--font-mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;
-  color:var(--ink);
+  font-family:var(--font-mono);font-size:18px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ink);font-weight:600;
 }
 .colo-copy{
-  font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;
+  font-family:var(--font-mono);font-size:13px;letter-spacing:.18em;
   color:var(--muted);
   text-transform:uppercase;
 }
 body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 @media(max-width:900px){
-  .colophon{padding:32px 20px 28px;margin-top:72px}
-  .colo-eye{width:20px}
-  .colo-copy{font-size:9.5px}
+  .colophon{padding:40px 20px 36px;margin-top:72px;gap:16px;}
+  .colo-eye{width:32px}
+  .colo-wordmark{font-size:15px}
+  .colo-copy{font-size:11px}
 }
 </style>
 </head>
@@ -5398,6 +5921,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     </span>
   </a>
   <nav class="section-nav" id="sectionNav" aria-label="Sections">
+    <span class="nav-indicator" aria-hidden="true"></span>
+    <a href="#top" data-target="top" data-num="§ 00">Accueil</a>
     <a href="#projets" data-target="projets" data-num="§ 01">Projets</a>
     <a href="#tarifs" data-target="tarifs" data-num="§ 02">Tarifs</a>
     <a href="#apropos" data-target="apropos" data-num="§ 02">À propos</a>
@@ -5418,11 +5943,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       </h1>
       <div class="hero-morph"><span>Je suis —</span><span class="morph-word" id="morphWord">Vidéaste</span></div>
 
-      <p class="hero-pitch">
-        Vidéaste à BW. Je fabrique des <strong>aftermovies, clips &amp; brand films</strong>
-        — des images qui racontent vraiment quelque chose.
-      </p>
-
     </div>
   </section>
 
@@ -5431,7 +5951,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     <div class="section-head reveal">
       <div class="idx">§ 01 / Travaux récents</div>
       <h2>Projets</h2>
-      <div class="sub">Social content · Événementiel<br/>&amp; Music</div>
+      <div class="sub">Social content · Événementiel · Music</div>
     </div>
 
     <!-- DOSSIER UNIFIÉ — un seul bloc (preview + pile de 5 cahiers) encadré par
@@ -5680,11 +6200,15 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                 <button class="prj-swipe-drawer-close" type="button" data-drawer-close aria-label="Fermer">×</button>
                 <span class="prj-swipe-k">Lucid Dreams · extraits</span>
                 <div class="prj-swipe-drawer-list">
-                  <div class="prj-swipe-drawer-item" data-ratio="9x16">
+                  <div class="prj-swipe-drawer-item" data-ratio="9x16" data-clip-num="01">
+                    <video data-src="https://videos.corentindeville.com/lucid-clip-1.mp4" muted loop playsinline preload="none"></video>
+                    <span class="prj-swipe-drawer-idx">01</span>
+                  </div>
+                  <div class="prj-swipe-drawer-item" data-ratio="9x16" data-clip-num="02">
                     <video data-src="https://videos.corentindeville.com/lucid-clip-2.mp4" muted loop playsinline preload="none"></video>
                     <span class="prj-swipe-drawer-idx">02</span>
                   </div>
-                  <div class="prj-swipe-drawer-item" data-ratio="9x16">
+                  <div class="prj-swipe-drawer-item" data-ratio="9x16" data-clip-num="03">
                     <video data-src="https://videos.corentindeville.com/lucid-clip-3.mp4" muted loop playsinline preload="none"></video>
                     <span class="prj-swipe-drawer-idx">03</span>
                   </div>
@@ -5787,10 +6311,26 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
           </div></div>
         </li>
 
-        <!-- § 02.1.5 — Formation Premiere Pro -->
-        <li class="menu-item" data-key="formation" data-svc-more>
+        <!-- § 02.1.5 — Motion · titrages & animations -->
+        <li class="menu-item" data-key="motion" data-svc-more>
           <button class="menu-head" type="button" aria-expanded="false">
             <span class="menu-num">§ 02.1.5</span>
+            <span class="menu-title">Motion · titrages &amp; animations</span>
+            <span class="menu-meta">After Effects · habillage</span>
+            <span class="menu-chev" aria-hidden="true">+</span>
+          </button>
+          <div class="menu-body"><div class="menu-body-inner">
+            <p class="menu-desc">Habillage graphique et titrages animés — lower thirds, typos cinétiques, micro-animations logo. Pensé pour appuyer le propos sans l'écraser.</p>
+            <ul class="menu-tags" role="list">
+              <li>After Effects</li><li>Titrages</li><li>Lower thirds</li><li>Motion logo</li>
+            </ul>
+          </div></div>
+        </li>
+
+        <!-- § 02.1.6 — Formation Premiere Pro -->
+        <li class="menu-item" data-key="formation" data-svc-more>
+          <button class="menu-head" type="button" aria-expanded="false">
+            <span class="menu-num">§ 02.1.6</span>
             <span class="menu-title">Formation Premiere Pro</span>
             <span class="menu-meta">Cours particuliers · remote / BW</span>
             <span class="menu-chev" aria-hidden="true">+</span>
@@ -5805,14 +6345,14 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 
       </ul>
 
-      <!-- Bouton "Voir tout" — dévoile les 3 postes repliés par défaut -->
+      <!-- Bouton "Voir tout" — dévoile les 4 postes repliés -->
       <div class="svc-more">
         <button class="svc-more-btn" type="button"
                 aria-expanded="false"
                 aria-controls="services-menu"
                 data-svc-more-btn>
           <span class="svc-more-label">Voir tous les services</span>
-          <span class="svc-more-count" aria-hidden="true">+3</span>
+          <span class="svc-more-count" aria-hidden="true">+4</span>
           <span class="svc-more-chev" aria-hidden="true">▼</span>
         </button>
       </div>
@@ -5824,82 +6364,47 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 
       <!-- Tarifs — ticket éditorial moderne (même langage que la mag) -->
       <li class="receipt" id="tarifs" data-key="tarifs">
+        <span class="receipt-flip">
         <button class="receipt-head" type="button" aria-expanded="false" aria-controls="receipt-body-tarifs">
           <!-- Masthead : bandeau éditorial -->
           <span class="receipt-masthead">
-            <span class="receipt-issue">TK · 01</span>
+            <span class="receipt-issue">N° 01</span>
             <span class="receipt-name">CD · STUDIO</span>
             <span class="receipt-ed">ÉD. 2026</span>
           </span>
 
-          <!-- Marques d'imprimerie -->
-          <span class="receipt-regmark receipt-regmark--tr" aria-hidden="true"></span>
-          <span class="receipt-regmark receipt-regmark--bl" aria-hidden="true"></span>
-          <span class="receipt-cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-
-          <!-- Titre display -->
-          <span class="receipt-title">
+          <!-- Face recto : juste le titre, pas les chiffres (ils sont au verso) -->
+          <span class="receipt-head-title">
             <span class="receipt-title-k">Honoraires · 2026</span>
-            <span class="receipt-title-h">Tarifs<br/>2026</span>
-            <span class="receipt-title-sub">20 à 25 €/h · forfait sur devis après brief</span>
-            <span class="receipt-teasers" aria-hidden="true">
-              <span>À l'heure</span><span>Au forfait</span>
-            </span>
+            <span class="receipt-title-h">Tarifs</span>
+            <span class="receipt-title-sub">À l'heure · au forfait</span>
           </span>
 
           <!-- Bande d'ouverture -->
-          <span class="receipt-hint">▼ OUVRIR LE TICKET ▼</span>
+          <span class="receipt-hint">▼ RETOURNER LE TICKET ▼</span>
         </button>
 
         <!-- Contenu éditorial intérieur -->
         <div class="receipt-body" id="receipt-body-tarifs">
           <div class="receipt-body-inner">
             <article class="rc-article">
-              <span class="rc-deck-k">Ma manière de chiffrer</span>
-              <p class="rc-deck-lead">Je facture <em>à l'heure</em> pour les travaux ciblés, et <em>au forfait</em> pour les projets avec écriture, repérages et livrables complets — pour que tu saches à quoi t'attendre.</p>
-
-              <div class="rc-mode">
-                <div class="rc-mode-head">
-                  <span class="rc-mode-k">Mode A</span>
-                  <h4 class="rc-mode-h">À l'heure</h4>
-                </div>
-                <p class="rc-mode-desc">Montage ciblé, session tournage, cours — facturation simple, transparente.</p>
-                <ul class="rc-mode-list" role="list">
-                  <li><span>Montage</span><strong>20 €/h</strong></li>
-                  <li><span>Tournage · 4K + drone</span><strong>25 €/h</strong></li>
-                  <li><span>Formation · Premiere Pro</span><strong>20 €/h</strong></li>
-                </ul>
-              </div>
-
-              <div class="rc-mode">
-                <div class="rc-mode-head">
-                  <span class="rc-mode-k">Mode B</span>
-                  <h4 class="rc-mode-h">Au forfait</h4>
-                </div>
-                <p class="rc-mode-desc">Projets complets — on écrit ensemble, je chiffre après brief. Réponse sous 24 h.</p>
-                <ul class="rc-mode-list" role="list">
-                  <li><span>Clip / reel court</span><strong>sur devis</strong></li>
-                  <li><span>Aftermovie · événement</span><strong>sur devis</strong></li>
-                  <li><span>Brand film · long format</span><strong>sur devis</strong></li>
-                </ul>
-              </div>
-
-              <aside class="rc-quote">
-                <span class="rc-quote-k">Étape suivante</span>
-                <h4 class="rc-quote-h">Envoie-moi ton brief</h4>
-                <p class="rc-quote-body">Quelques lignes sur le projet, le format, la date. Je reviens vers toi sous 24 h avec un devis clair.</p>
-                <a class="rc-quote-cta" href="#contact">Demander un devis →</a>
-              </aside>
-
-              <div class="rc-signature">— CD.</div>
-              <div class="rc-foot"><span>CD · STUDIO · BW</span><span>TK · 01 / 2026</span></div>
+              <span class="rc-deck-k">Honoraires</span>
+              <ul class="rc-mode-list" role="list">
+                <li><span>Montage</span><strong>20 €/h</strong></li>
+                <li><span>Tournage · 4K + drone</span><strong>25 €/h</strong></li>
+                <li><span>Formation Premiere</span><strong>20 €/h</strong></li>
+                <li><span>Forfait long format</span><strong>sur devis</strong></li>
+              </ul>
+              <a class="rc-quote-cta" href="#contact">Demander un devis →</a>
             </article>
           </div>
         </div>
+        </span><!-- /.receipt-flip -->
       </li>
 
       <!-- Bio — magazine cover éditorial qui se déroule vers le bas -->
       <li class="mag" id="apropos" data-key="apropos">
+        <span class="mag-flip">
         <button class="mag-cover" type="button" aria-expanded="false" aria-controls="mag-body-apropos">
           <!-- Portrait détouré (PNG transparent) sur fond stylisé crème -->
           <span class="mag-portrait">
@@ -5932,26 +6437,25 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
           </span>
 
           <!-- Barre d'appel à ouverture -->
-          <span class="mag-hint">▼ OUVRIR LE NUMÉRO ▼</span>
+          <span class="mag-hint">▼ RETOURNER LE NUMÉRO ▼</span>
         </button>
 
         <!-- Contenu — se déroule vers le bas -->
         <div class="mag-body" id="mag-body-apropos">
           <div class="mag-body-inner">
             <article class="mag-article">
-              <span class="mag-deck-k">Entretien · Studio CD</span>
-              <p class="mag-deck-lead">De l'écriture au montage, le bruxellois cherche le bon rythme et le détail qui fait image.</p>
-              <p class="mag-col">Je donne vie à tes projets visuels — aftermovies, clips, brand films. J'aime partir de l'idée, comprendre le pourquoi, puis construire un rythme qui te ressemble. Caméra, drone, direction artistique, montage : un même fil, du premier repérage au master final.</p>
+              <span class="mag-deck-k">Featuring</span>
+              <p class="mag-col">Vidéaste basé dans le Brabant wallon — aftermovies, clips, brand films. De l'écriture au master, un même fil pour des images qui racontent vraiment quelque chose.</p>
               <ul class="mag-specs" role="list">
-                <li class="mag-specs-row"><span class="mag-specs-k">Disponible</span><span class="mag-specs-v">Belgique &amp; Europe</span></li>
-                <li class="mag-specs-row"><span class="mag-specs-k">Expertise</span><span class="mag-specs-v">Montage · Tournage 4K · Drone · DA</span></li>
-                <li class="mag-specs-row"><span class="mag-specs-k">Période</span><span class="mag-specs-v">2020 — 2026</span></li>
+                <li class="mag-specs-row"><span class="mag-specs-k">Base</span><span class="mag-specs-v">Brabant wallon · Bruxelles · Europe</span></li>
+                <li class="mag-specs-row"><span class="mag-specs-k">Stack</span><span class="mag-specs-v">Caméra · Drone · Montage</span></li>
+                <li class="mag-specs-row"><span class="mag-specs-k">Depuis</span><span class="mag-specs-v">2020</span></li>
               </ul>
               <div class="mag-signature">— Corentin D.</div>
-              <div class="mag-foot"><span>CD · STUDIO · BW</span><span>N° 02 / 2026</span></div>
             </article>
           </div>
         </div>
+        </span><!-- /.mag-flip -->
       </li>
 
     </ul>
@@ -5967,50 +6471,26 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     </div>
 
     <div class="section-body">
-      <div class="ctk reveal" data-auto-reveal>
-        <!-- Colonne gauche : lede + disponibilité -->
-        <aside class="ctk-aside">
-          <p class="ctk-lede">Aftermovies, clips, brand&nbsp;films — <em>je prends&nbsp;le temps de comprendre ton&nbsp;projet</em> avant de chiffrer.</p>
+      <div class="ctk ctk--simple reveal" data-auto-reveal>
+        <p class="ctk-lede">Réponse sous 24 h — basé dans le Brabant wallon, Bruxelles &amp; Europe.</p>
 
-          <ul class="ctk-status" role="list">
-            <li><span class="ctk-dot" aria-hidden="true"></span><span class="ctk-k">Ouvert</span><span class="ctk-v">Printemps–Été 2026</span></li>
-            <li><span class="ctk-k">Réponse</span><span class="ctk-v">sous 24 h</span></li>
-            <li><span class="ctk-k">Basé</span><span class="ctk-v">BW · BE</span></li>
-            <li><span class="ctk-k">Horaire</span><span class="ctk-v" id="ctkClock">BW · --:--</span></li>
-          </ul>
-        </aside>
+        <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o."
+           target="_blank" rel="noopener" class="contact-wa-btn ctk-wa">
+          <span class="contact-wa-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </span>
+          <span class="contact-wa-label">
+            <span class="contact-wa-top">WhatsApp</span>
+            <span class="contact-wa-sub">+32 495 92 42 95</span>
+          </span>
+          <span class="contact-wa-arrow">→</span>
+        </a>
 
-        <!-- Colonne droite : actions -->
-        <div class="ctk-stack">
-          <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o."
-             target="_blank" rel="noopener" class="contact-wa-btn ctk-wa">
-            <span class="contact-wa-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            </span>
-            <span class="contact-wa-label">
-              <span class="contact-wa-top">WhatsApp — direct</span>
-              <span class="contact-wa-sub">+32 495 92 42 95</span>
-            </span>
-            <span class="contact-wa-arrow">→</span>
-          </a>
-
-          <div class="ctk-links">
-            <a href="mailto:hello@corentindeville.com" class="ctk-link">
-              <span class="ctk-link-k">Email</span>
-              <span class="ctk-link-v">hello@corentindeville.com</span>
-              <span class="ctk-link-arr" aria-hidden="true">↗</span>
-            </a>
-            <a href="https://www.instagram.com/corentin.deville" target="_blank" rel="noopener" class="ctk-link">
-              <span class="ctk-link-k">Instagram</span>
-              <span class="ctk-link-v">@corentin.deville</span>
-              <span class="ctk-link-arr" aria-hidden="true">↗</span>
-            </a>
-            <a href="https://www.youtube.com/@corentindeville2797" target="_blank" rel="noopener" class="ctk-link">
-              <span class="ctk-link-k">YouTube</span>
-              <span class="ctk-link-v">@corentindeville2797</span>
-              <span class="ctk-link-arr" aria-hidden="true">↗</span>
-            </a>
-          </div>
+        <div class="ctk-simple-links">
+          <a href="tel:+32495924295" class="ctk-primary-link"><span class="cs-k">Téléphone</span><span class="cs-v">+32 495 92 42 95</span><span class="cs-a">↗</span></a>
+          <a href="mailto:hello@corentindeville.com" class="ctk-primary-link"><span class="cs-k">Email</span><span class="cs-v">hello@corentindeville.com</span><span class="cs-a">↗</span></a>
+          <a href="https://www.instagram.com/corentin.deville" target="_blank" rel="noopener"><span class="cs-k">Instagram</span><span class="cs-v">@corentin.deville</span><span class="cs-a">↗</span></a>
+          <a href="https://www.youtube.com/@corentindeville2797" target="_blank" rel="noopener"><span class="cs-k">YouTube</span><span class="cs-v">@corentindeville2797</span><span class="cs-a">↗</span></a>
         </div>
       </div>
     </div>
@@ -6384,6 +6864,14 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     // Drawer : Lucid extras (vidéo 2 & 3)
     const drawer = document.getElementById('prjSwipeDrawer');
     if(drawer){
+      // PORTAL : déplace le drawer comme enfant direct de <body>.
+      // Sinon, un ancêtre (.chap-carousel) avec `perspective:1600px` crée
+      // un containing block qui déplace le "position:fixed" du drawer vers
+      // le haut de la carousel au lieu du viewport → la fenêtre s'ouvrait
+      // "là où on a cliqué" au lieu d'être centrée.
+      if (drawer.parentNode !== document.body) {
+        document.body.appendChild(drawer);
+      }
       const openBtns = root.querySelectorAll('[data-drawer="lucid"]');
       const closeEls = drawer.querySelectorAll('[data-drawer-close]');
       const drawerVideos = drawer.querySelectorAll('video[data-src]');
@@ -6393,7 +6881,14 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
         drawer.setAttribute('aria-hidden','false');
         document.body.style.overflow = 'hidden';
         drawerVideos.forEach(v => {
-          if(v.dataset.loaded !== '1'){ v.src = v.getAttribute('data-src'); v.dataset.loaded = '1'; }
+          const parent = v.parentElement;
+          if(v.dataset.loaded !== '1'){
+            v.src = v.getAttribute('data-src');
+            v.dataset.loaded = '1';
+            // Placeholder masqué seulement si la vidéo démarre pour de vrai
+            v.addEventListener('playing', () => parent.classList.add('has-video'), { once:true });
+            v.addEventListener('error',   () => parent.classList.remove('has-video'), { once:true });
+          }
           const p = v.play();
           if(p && typeof p.catch === 'function') p.catch(()=>{});
         });
@@ -6446,25 +6941,38 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
    Bio    : magazine cover — clic sur la couv => le body éditorial se déroule
    vers le bas (même pattern grid-rows). Toggle indépendant. */
 (function(){
-  // Receipt
+  // Receipt — clic sur recto OU verso = flip dans un sens ou l'autre
   document.querySelectorAll('.receipt').forEach(rec => {
     const head = rec.querySelector('.receipt-head');
-    if(!head) return;
-    head.addEventListener('click', (e) => {
+    const body = rec.querySelector('.receipt-body');
+    const toggle = (e) => {
+      // Ne flippe pas si on clique sur un lien (CTA "Demander un devis")
+      if(e.target.closest('a')) return;
       e.preventDefault();
       const open = rec.classList.toggle('is-open');
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
+      if(head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    if(head) head.addEventListener('click', toggle);
+    if(body){
+      body.style.cursor = 'pointer';
+      body.addEventListener('click', toggle);
+    }
   });
-  // Mag (bio)
+  // Mag (bio) — idem
   document.querySelectorAll('.mag').forEach(m => {
     const btn = m.querySelector('.mag-cover');
-    if(!btn) return;
-    btn.addEventListener('click', (e) => {
+    const body = m.querySelector('.mag-body');
+    const toggle = (e) => {
+      if(e.target.closest('a')) return;
       e.preventDefault();
       const open = m.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
+      if(btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    if(btn) btn.addEventListener('click', toggle);
+    if(body){
+      body.style.cursor = 'pointer';
+      body.addEventListener('click', toggle);
+    }
   });
 })();
 
@@ -6923,9 +7431,14 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
 (function(){
   const nav = document.getElementById('sectionNav');
   if (!nav) return;
-  const pill = document.getElementById('navPill');
+  const pill = nav.querySelector('.nav-indicator');
   const links = [...nav.querySelectorAll('a[data-target]')];
-  const sections = links.map(a => ({link:a, id:a.dataset.target, node: document.getElementById(a.dataset.target)})).filter(s => s.node);
+  // "Accueil" vise #top qui n'existe pas comme section — fallback sur le haut de page
+  const sections = links.map(a => {
+    const id = a.dataset.target;
+    const node = id === 'top' ? document.body : document.getElementById(id);
+    return {link:a, id, node};
+  }).filter(s => s.node);
   let currentId = '';
 
   function movePill(link){
@@ -6936,10 +7449,19 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   }
 
   function update(){
-    const y = window.scrollY + window.innerHeight*0.35;
+    // On prend 20% du viewport comme "ligne de détection" pour être réactif
+    // mais pas trop — bascule au moment où la section entre vraiment en scène.
+    const scrollY = window.scrollY;
+    const detect = scrollY + window.innerHeight * 0.20;
     let found = sections[0];
     for (const s of sections){
-      if (s.node.offsetTop <= y) found = s;
+      const top = s.id === 'top' ? 0 : s.node.getBoundingClientRect().top + scrollY;
+      if (top <= detect) found = s;
+    }
+    // Cas spécial : si on est tout en haut (<80px), on force "Accueil"
+    if (scrollY < 80){
+      const top = sections.find(s => s.id === 'top');
+      if (top) found = top;
     }
     if (found.id !== currentId){
       currentId = found.id;
@@ -6951,10 +7473,16 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
       );
     }
   }
-  // initial
+  // initial — on attend que le layout se stabilise (fonts + images)
   requestAnimationFrame(() => { update(); });
+  window.addEventListener('load', () => {
+    update();
+    const active = nav.querySelector('a.active');
+    if (active) movePill(active);
+  });
   window.addEventListener('scroll', update, {passive:true});
   window.addEventListener('resize', () => {
+    update();
     const active = nav.querySelector('a.active');
     if (active) movePill(active);
   }, {passive:true});
@@ -7150,7 +7678,7 @@ try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e)
 (function(){
   const el = document.getElementById('morphWord');
   if (!el) return;
-  const words = ['Vidéaste','Formateur','Monteur','Créatif','Storyteller'];
+  const words = ['Vidéaste','Monteur','Créatif'];
   const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789—†';
   let idx = 0;
   function scrambleTo(target){

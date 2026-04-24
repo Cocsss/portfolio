@@ -5580,6 +5580,20 @@ body[data-theme="dark"] .brand-wordmark-top{color:var(--cream)}
   .brand-wordmark-sub{display:none}
   .brand-wordmark-top{font-size:13px}
   .cd-mono{height:24px}
+  /* Sur mobile, on retire la capsule/bulle autour du logo — le CD + Studio
+     vit directement sur la topbar (garde propre + plus d'espace). */
+  .brand-logo{
+    padding:0;
+    background:transparent !important;
+    border:0 !important;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    gap:8px;
+  }
+  body[data-theme="dark"] .brand-logo{
+    background:transparent !important;
+    border-color:transparent !important;
+  }
 }
 
 /* ---------- Topline éditoriale DA 2026 — fin trait vermillon ---------- */
@@ -6148,7 +6162,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                     <video class="prj-swipe-video"
                            data-src="https://videos.corentindeville.com/lucid-clip-1.mp4"
                            muted loop playsinline preload="none" aria-hidden="true"></video>
-                    <span class="prj-swipe-live" aria-hidden="true">● LIVE</span>
+                    <span class="prj-swipe-live" aria-hidden="true">4K · 60 FPS</span>
                   </div>
                   <div class="prj-swipe-cap">
                     <span class="prj-swipe-k">#01 · Music · Clip</span>
@@ -6166,7 +6180,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                     <video class="prj-swipe-video"
                            data-src="https://videos.corentindeville.com/scout-reel-1.mp4"
                            muted loop playsinline preload="none" aria-hidden="true"></video>
-                    <span class="prj-swipe-live" aria-hidden="true">● LIVE</span>
+                    <span class="prj-swipe-live" aria-hidden="true">4K · 30 FPS</span>
                   </div>
                   <div class="prj-swipe-cap">
                     <span class="prj-swipe-k">#02 · Teaser · 9:16</span>

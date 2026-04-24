@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" class="preloading">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
@@ -120,6 +120,14 @@ html{font-size:112%}
 html,body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 html{scroll-behavior:smooth}
 body{overflow-x:hidden;line-height:1.6}
+/* ═══ Preloading : tant que .film-loader est actif, on force un fond NOIR
+   sur html/body pour que même sur iOS Safari, si le rideau ne couvre pas
+   la safe-area bottom (URL bar), on ne voie pas le site s'afficher en
+   dessous. La classe .preloading est retirée par JS après l'animation
+   complète (~4.5s). */
+html.preloading, html.preloading body{
+  background:#0a0a09 !important;
+}
 a{color:inherit;text-decoration:none}
 button{font:inherit;background:none;border:0;color:inherit;cursor:pointer}
 img{max-width:100%;display:block}
@@ -266,25 +274,18 @@ body[data-mode="glass"] .gridbg::before{
 body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
 
 .film-loader{
-  /* iOS Safari : le vieux 100vh peut laisser un "gap" quand la barre d'URL
-     change de taille. On empile les unités (de la plus ancienne à la plus
-     récente) pour que le navigateur prenne la dernière qu'il connaît, et
-     on ajoute `-webkit-fill-available` en fallback pour les vieux iOS. */
+  /* iOS Safari : on utilise inset:0 classique pour que clip-path
+     fonctionne proprement à la fin, ET on ajoute un background noir
+     sur <html> pendant la phase preloading pour masquer tout gap
+     éventuel en bas (URL bar toggle). */
   position:fixed;
   inset:0;
-  top:0;left:0;right:0;bottom:0;
   width:100vw;
-  /* height : 5 fallbacks empilés, chaque nouvelle règle override si supportée */
   height:100vh;
   height:100svh;
   height:100dvh;
   height:100lvh;
   height:-webkit-fill-available;
-  /* même logique sur min-height comme garde-fou */
-  min-height:100vh;
-  min-height:100dvh;
-  min-height:100lvh;
-  min-height:-webkit-fill-available;
   z-index:6000;pointer-events:none;
   /* Base SMPTE — voilée par ::before jusqu'à l'arrivée à la barre */
   background:linear-gradient(90deg,
@@ -5901,6 +5902,14 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     </svg>
   </div>
 </div>
+<script>
+  // Retire la classe .preloading sur <html> juste après la fin de l'animation
+  // du film-loader (~4.5s) → le fond noir de garde s'en va avec, laissant
+  // apparaître le site en cream beige normalement.
+  setTimeout(function(){
+    document.documentElement.classList.remove('preloading');
+  }, 4600);
+</script>
 <div class="page-cover" style="display:none"></div>
 <div class="mob-menu" id="mobMenu">
   <button class="mm-close" id="mmClose">Fermer ×</button>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" class="preloading">
+<html lang="fr">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
@@ -120,14 +120,6 @@ html{font-size:112%}
 html,body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 html{scroll-behavior:smooth}
 body{overflow-x:hidden;line-height:1.6}
-/* ═══ Preloading : tant que .film-loader est actif, on force un fond NOIR
-   sur html/body pour que même sur iOS Safari, si le rideau ne couvre pas
-   la safe-area bottom (URL bar), on ne voie pas le site s'afficher en
-   dessous. La classe .preloading est retirée par JS après l'animation
-   complète (~4.5s). */
-html.preloading, html.preloading body{
-  background:#0a0a09 !important;
-}
 a{color:inherit;text-decoration:none}
 button{font:inherit;background:none;border:0;color:inherit;cursor:pointer}
 img{max-width:100%;display:block}
@@ -5902,14 +5894,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     </svg>
   </div>
 </div>
-<script>
-  // Retire la classe .preloading sur <html> juste après la fin de l'animation
-  // du film-loader (~4.5s) → le fond noir de garde s'en va avec, laissant
-  // apparaître le site en cream beige normalement.
-  setTimeout(function(){
-    document.documentElement.classList.remove('preloading');
-  }, 4600);
-</script>
 <div class="page-cover" style="display:none"></div>
 <div class="mob-menu" id="mobMenu">
   <button class="mm-close" id="mmClose">Fermer ×</button>
@@ -7483,10 +7467,22 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     });
   });
 
-  // Tous les dialogs : bouton close + clic backdrop + Escape
+  // Event delegation globale : tout clic sur .drawer-close (peu importe
+  // où il est dans le DOM, même si le button a un <span> enfant) ferme
+  // le dialog parent. Plus robuste qu'un addEventListener par bouton,
+  // notamment sur iOS Safari où le target peut varier.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('.drawer-close');
+    if (!btn) return;
+    const dlg = btn.closest('dialog.proj-drawer');
+    if (!dlg) return;
+    e.preventDefault();
+    e.stopPropagation();
+    closeDrawer(dlg);
+  }, true); // capture phase → on chope avant tout autre handler
+
+  // Tous les dialogs : clic backdrop + native close event
   document.querySelectorAll('dialog.proj-drawer').forEach(dlg => {
-    const closeBtn = dlg.querySelector('.drawer-close');
-    if(closeBtn) closeBtn.addEventListener('click', () => closeDrawer(dlg));
     // Clic backdrop : cible = dlg lui-même (pas ses enfants)
     dlg.addEventListener('click', (e) => {
       if(e.target === dlg) closeDrawer(dlg);

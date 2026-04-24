@@ -1495,11 +1495,15 @@ body[data-mode="glass"] .topbar{
   margin: clamp(16px, 2vw, 24px) 0 8px;
 }
 
-/* ---------- RAIL ---------- */
+/* ---------- RAIL ----------
+   Peek-carousel : la slide courante est centrée, et on voit un petit bord
+   de la slide précédente (gauche) + suivante (droite) → indice visuel fort
+   que le rail est "scrollable", shift logique. */
 .prj-swipe-rail{
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 100%;
+  /* Slide plus étroite que le viewport → les voisines peekent */
+  grid-auto-columns: 88%;
   gap: 12px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1507,9 +1511,17 @@ body[data-mode="glass"] .topbar{
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
-  padding: 4px 16px 20px;
+  /* Padding symétrique → la slide centrée l'est vraiment au milieu du viewport */
+  padding: 4px 6% 20px;
   margin: 0 -16px;
   scrollbar-width: none;
+}
+@media (min-width:960px){
+  /* Desktop : peek plus discret, slides plus larges */
+  .prj-swipe-rail{
+    grid-auto-columns: 92%;
+    padding: 4px 4% 20px;
+  }
 }
 .prj-swipe-rail::-webkit-scrollbar{ display: none; }
 

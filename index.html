@@ -1693,18 +1693,21 @@ body[data-mode="glass"] .topbar{
 }
 .prj-swipe-bar{
   flex: 1;
-  height: 2px;
-  background: var(--rule);
-  border-radius: 2px;
+  height: 3px;
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+  border-radius: 999px;
   overflow: hidden;
   position: relative;
 }
+/* Barre de progression continue : remplit de gauche à droite au fur et
+   à mesure du scroll — classique et intuitif. */
 .prj-swipe-bar-fill{
   position: absolute; left: 0; top: 0; bottom: 0;
-  width: calc(100% / 6);
+  width: 0%;
   background: var(--accent);
-  transition: transform .3s cubic-bezier(.3,.9,.2,1);
-  transform: translateX(0);
+  border-radius: inherit;
+  transition: width .18s linear;
+  will-change: width;
 }
 .prj-swipe-hint{
   font-family: var(--font-mono);
@@ -5876,8 +5879,11 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 <!-- Film grain overlay -->
 <svg id="film-grain" xmlns="http://www.w3.org/2000/svg"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
 
-<div class="eye-label">Contacte-moi</div>
-<button class="eye-bubble" id="eyeBubble" aria-label="Contact — scroll vers la section">
+<!-- Eye-bubble flottante retirée à la demande de Corentin.
+     On garde le markup masqué (display:none) pour éviter de casser le JS
+     qui référence #eyeBubble / .eye-label plus bas. -->
+<div class="eye-label" style="display:none !important;">Contacte-moi</div>
+<button class="eye-bubble" id="eyeBubble" style="display:none !important;" aria-hidden="true" tabindex="-1" aria-label="Contact — scroll vers la section">
  <div class="eye-inner">
   <!-- Rest state: œil unifié avec scan de pupille -->
   <svg class="eye-unified" viewBox="0 0 166.06 126.14" xmlns="http://www.w3.org/2000/svg">
@@ -6268,9 +6274,9 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
           <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro &amp; DaVinci. Tout format, du reel 9:16 au court-métrage.</p>
+            <p class="menu-desc">Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro. Tout format, du reel 9:16 au court-métrage.</p>
             <ul class="menu-tags" role="list">
-              <li>Premiere Pro</li><li>DaVinci</li><li>Étalonnage</li><li>Sound design</li><li>Tout format</li>
+              <li>Premiere Pro</li><li>Étalonnage</li><li>Sound design</li><li>Tout format</li>
             </ul>
           </div></div>
         </li>
@@ -6284,9 +6290,9 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
             <span class="menu-chev" aria-hidden="true">+</span>
           </button>
           <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Tournage terrain — caméra 4K pour l'intention, drone pour les vues aériennes. Multi-cam si besoin, éclairage maîtrisé, repérages inclus. De la prod légère au dispositif plus costaud.</p>
+            <p class="menu-desc">Tournage terrain — caméra 4K 60 fps pour l'intention, drone pour les vues aériennes. Multi-cam si besoin, éclairage maîtrisé, repérages inclus. De la prod légère au dispositif plus costaud.</p>
             <ul class="menu-tags" role="list">
-              <li>Caméra 4K</li><li>Drone</li><li>Multi-cam</li><li>Éclairage</li><li>Repérages</li>
+              <li>Caméra 4K 60 fps</li><li>Drone</li><li>Multi-cam</li><li>Éclairage</li><li>Repérages</li>
             </ul>
           </div></div>
         </li>
@@ -6848,6 +6854,7 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
 
     // Indicator : compteur + barre (suit le slide le plus centré)
     const updateIndicator = () => {
+      // Compteur : slide le plus proche du centre du viewport
       const railRect = rail.getBoundingClientRect();
       const center = railRect.left + railRect.width / 2;
       let bestIdx = 0, bestDist = Infinity;
@@ -6858,9 +6865,15 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
         if(d < bestDist){ bestDist = d; bestIdx = i; }
       });
       if(curEl) curEl.textContent = String(bestIdx+1).padStart(2,'0');
+
+      // Barre : progression CONTINUE basée sur scrollLeft / scrollWidth
+      // → remplit de 0% (début) à 100% (fin) en temps réel pendant le scroll
       if(barFill){
-        const pct = bestIdx / Math.max(1, total - 1);
-        barFill.style.transform = `translateX(${pct * (total - 1) * 100}%)`;
+        const maxScroll = rail.scrollWidth - rail.clientWidth;
+        const pct = maxScroll > 0
+          ? Math.min(100, Math.max(0, (rail.scrollLeft / maxScroll) * 100))
+          : 100;
+        barFill.style.width = pct + '%';
       }
     };
 
@@ -7174,13 +7187,13 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   const CLIPS = {
     montage: {
       num:'§ 02.1', name:'Montage vidéo',
-      desc:"Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro & DaVinci. Tout format, du reel 9:16 au court-métrage.",
-      tags:['Premiere Pro','DaVinci','Étalonnage','Sound design','Tout format']
+      desc:"Transformer des rushes en histoire — coupes précises, étalonnage, sound design. Premiere Pro. Tout format, du reel 9:16 au court-métrage.",
+      tags:['Premiere Pro','Étalonnage','Sound design','Tout format']
     },
     shooting: {
       num:'§ 02.2', name:'Shooting · caméra & drone',
       desc:"Tournage terrain — caméra 4K pour l'intention, drone pour les vues aériennes. Multi-cam si besoin, éclairage maîtrisé, repérages inclus. De la prod légère au dispositif plus costaud.",
-      tags:['Caméra 4K','Drone','Multi-cam','Éclairage','Repérages']
+      tags:['Caméra 4K 60 fps','Drone','Multi-cam','Éclairage','Repérages']
     },
     after: {
       num:'§ 02.3', name:'Aftermovies',

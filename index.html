@@ -266,12 +266,25 @@ body[data-mode="glass"] .gridbg::before{
 body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
 
 .film-loader{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  /* iOS Safari : 100vh = large viewport (URL bar cachée) ; on force l'élément
-     à couvrir min(100vh, 100dvh) pour éliminer le gap quand la barre d'URL
-     est visible. width:100vw garantit aussi la largeur full-bleed. */
-  width:100vw;min-width:100%;
-  min-height:100vh;min-height:100dvh;min-height:100lvh;
+  /* iOS Safari : le vieux 100vh peut laisser un "gap" quand la barre d'URL
+     change de taille. On empile les unités (de la plus ancienne à la plus
+     récente) pour que le navigateur prenne la dernière qu'il connaît, et
+     on ajoute `-webkit-fill-available` en fallback pour les vieux iOS. */
+  position:fixed;
+  inset:0;
+  top:0;left:0;right:0;bottom:0;
+  width:100vw;
+  /* height : 5 fallbacks empilés, chaque nouvelle règle override si supportée */
+  height:100vh;
+  height:100svh;
+  height:100dvh;
+  height:100lvh;
+  height:-webkit-fill-available;
+  /* même logique sur min-height comme garde-fou */
+  min-height:100vh;
+  min-height:100dvh;
+  min-height:100lvh;
+  min-height:-webkit-fill-available;
   z-index:6000;pointer-events:none;
   /* Base SMPTE — voilée par ::before jusqu'à l'arrivée à la barre */
   background:linear-gradient(90deg,
@@ -2044,15 +2057,25 @@ body[data-mode="glass"] .topbar{
   padding:clamp(36px,5vw,72px) clamp(24px,4vw,56px) clamp(48px,6vw,80px);
   scrollbar-gutter:stable;
 }
+/* Close : ancré ABSOLU au dialog (pas sticky dans le scroll) pour que
+   le clic fonctionne toujours sur iOS Safari. Z-index élevé pour passer
+   au-dessus de tout contenu qui scroll en-dessous. */
 .drawer-close{
-  position:sticky;top:0;float:right;z-index:2;
+  position:absolute;
+  top:clamp(14px, 2vw, 22px);
+  right:clamp(14px, 2vw, 22px);
+  z-index:10;
   width:44px;height:44px;border-radius:50%;
   background:var(--ink);color:var(--bg);border:none;
   font-size:18px;line-height:1;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   transition:background .3s, transform .3s;
+  -webkit-tap-highlight-color:transparent;
+  /* garantit que le clic n'est pas intercepté par un overlay */
+  pointer-events:auto;
 }
 .drawer-close:hover{background:var(--accent);transform:rotate(90deg)}
+.drawer-close:active{transform:scale(.92)}
 .drawer-close:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 .drawer-head{margin:12px 0 36px;max-width:60ch}
@@ -5879,11 +5902,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 <!-- Film grain overlay -->
 <svg id="film-grain" xmlns="http://www.w3.org/2000/svg"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
 
-<!-- Eye-bubble flottante retirée à la demande de Corentin.
-     On garde le markup masqué (display:none) pour éviter de casser le JS
-     qui référence #eyeBubble / .eye-label plus bas. -->
-<div class="eye-label" style="display:none !important;">Contacte-moi</div>
-<button class="eye-bubble" id="eyeBubble" style="display:none !important;" aria-hidden="true" tabindex="-1" aria-label="Contact — scroll vers la section">
+<div class="eye-label">Contacte-moi</div>
+<button class="eye-bubble" id="eyeBubble" aria-label="Contact — scroll vers la section">
  <div class="eye-inner">
   <!-- Rest state: œil unifié avec scan de pupille -->
   <svg class="eye-unified" viewBox="0 0 166.06 126.14" xmlns="http://www.w3.org/2000/svg">

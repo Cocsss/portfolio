@@ -73,6 +73,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://videos.corentindeville.com">
+<link rel="preconnect" href="https://videos.corentindeville.com" crossorigin>
+<link rel="dns-prefetch" href="https://videos.corentindeville.com">
+<link rel="preload" as="video" href="https://videos.corentindeville.com/wenda-reel-1.mp4" type="video/mp4">
+<link rel="preload" as="video" href="https://videos.corentindeville.com/bebooth-reel-1.mp4" type="video/mp4">
+<link rel="prefetch" href="https://videos.corentindeville.com/wenda-reel-3.mp4">
+<link rel="prefetch" href="https://videos.corentindeville.com/wenda-reel-2.mp4">
+<link rel="prefetch" href="https://videos.corentindeville.com/bebooth-reel-2.mp4">
+<link rel="prefetch" href="https://videos.corentindeville.com/bebooth-reel-3.mp4">
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Dela+Gothic+One&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -6691,7 +6699,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
             <div class="proj-preview-media proj-preview-carousel" data-format="9x16">
               <div class="proj-preview-rail" data-rail>
                 <div class="proj-preview-slide">
-                  <video src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="auto" aria-hidden="true"></video>
+                  <video src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="auto" autoplay aria-hidden="true"></video>
                   <span class="proj-preview-live" aria-hidden="true">4K · 60 FPS</span>
                 </div>
                 <div class="proj-preview-slide">
@@ -6726,7 +6734,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
             <div class="proj-preview-media proj-preview-carousel" data-format="16x9">
               <div class="proj-preview-rail" data-rail>
                 <div class="proj-preview-slide">
-                  <video src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="auto" aria-hidden="true"></video>
+                  <video src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="auto" autoplay aria-hidden="true"></video>
                   <span class="proj-preview-live" aria-hidden="true">4K · 30 FPS</span>
                 </div>
                 <div class="proj-preview-slide">
@@ -7044,7 +7052,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
         <span class="mag-flip">
         <button class="mag-cover" type="button" aria-expanded="false" aria-controls="mag-body-apropos">
           <span class="mag-portrait">
-            <img src="https://videos.corentindeville.com/portrait.png" width="800" height="1000"
+            <img src="https://videos.corentindeville.com/Moi.png" width="800" height="1000"
                  loading="lazy" decoding="async"
                  alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
           </span>
@@ -7154,7 +7162,8 @@ if(history.replaceState) history.replaceState(null, '', window.location.pathname
 window.scrollTo(0, 0);
 
 /* ========== EAGER VIDEO LOADING ========== */
-setTimeout(function(){
+(function(){
+  // Load ALL videos immediately — no waiting
   document.querySelectorAll('video[data-src]').forEach(function(v){
     if(!v.src){
       v.src = v.getAttribute('data-src');
@@ -7162,7 +7171,7 @@ setTimeout(function(){
       v.load();
     }
   });
-}, 500);
+})();
 
 /* ========== TWEAKABLE DEFAULTS ========== */
 const TWEAKS = /*EDITMODE-BEGIN*/{

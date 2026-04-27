@@ -988,6 +988,73 @@ body[data-mode="glass"] .topbar{
 }
 .proj-preview-card:hover .proj-preview-arr{transform:translate(5px,-5px)}
 
+/* ───── Mini-carousel de vidéos dans la preview card ─────
+   Rail horizontal avec scroll-snap natif. Chaque slide = 100% de
+   la largeur du média (= la zone vidéo unique d'avant). 3 slides
+   = scroll horizontal pour swipe entre les reels. */
+.proj-preview-carousel{
+  position:relative;
+  /* hérite des dimensions de .proj-preview-media (aspect-ratio +
+     border-radius). On ne touche pas — voir .proj-preview-media{} */
+}
+.proj-preview-rail{
+  position:absolute; inset:0;
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  /* coupe les coins comme la card */
+  border-radius:inherit;
+}
+.proj-preview-rail::-webkit-scrollbar{ display:none; }
+.proj-preview-slide{
+  position:relative;
+  scroll-snap-align:center;
+  scroll-snap-stop:always;
+  width:100%; height:100%;
+  overflow:hidden;
+}
+.proj-preview-slide video{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+}
+/* Dots indicateurs : centrés en bas, au-dessus du rail */
+.proj-preview-dots{
+  position:absolute;
+  bottom:12px; left:50%;
+  transform:translateX(-50%);
+  display:flex; gap:6px;
+  padding:5px 8px;
+  background:rgba(10,10,9,.55);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-radius:999px;
+  z-index:3;
+  pointer-events:auto;
+}
+.ppd-dot{
+  width:7px; height:7px;
+  border-radius:50%;
+  background:rgba(255,255,255,.4);
+  border:0;
+  padding:0;
+  cursor:pointer;
+  transition:background .2s ease, width .2s ease;
+}
+.ppd-dot.is-active{
+  background:#F0EEE9;
+  width:18px;
+  border-radius:99px;
+}
+
 /* ───── Dossier dropdown intégré dans la carte preview ───── */
 .proj-preview-details{
   /* override : <details> ne doit pas avoir de comportement display interfère */
@@ -6104,9 +6171,24 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
               <span class="proj-preview-lbl-num">N°01</span>
               <span class="proj-preview-lbl-cat">Fashion</span>
             </span>
-            <div class="proj-preview-media">
-              <video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-              <span class="proj-preview-live" aria-hidden="true">4K · 60 FPS</span>
+            <div class="proj-preview-media proj-preview-carousel" data-format="9x16">
+              <div class="proj-preview-rail" data-rail>
+                <div class="proj-preview-slide">
+                  <video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                  <span class="proj-preview-live" aria-hidden="true">4K · 60 FPS</span>
+                </div>
+                <div class="proj-preview-slide">
+                  <video data-src="https://videos.corentindeville.com/wenda-reel-2.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                </div>
+                <div class="proj-preview-slide">
+                  <video data-src="https://videos.corentindeville.com/wenda-reel-3.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                </div>
+              </div>
+              <div class="proj-preview-dots" data-dots>
+                <button class="ppd-dot is-active" type="button" aria-label="Reel 1"></button>
+                <button class="ppd-dot" type="button" aria-label="Reel 2"></button>
+                <button class="ppd-dot" type="button" aria-label="Reel 3"></button>
+              </div>
             </div>
             <span class="proj-preview-title">Les filles de Wenda<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
           </summary>
@@ -6138,9 +6220,24 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
               <span class="proj-preview-lbl-num">N°02</span>
               <span class="proj-preview-lbl-cat">Événementiel</span>
             </span>
-            <div class="proj-preview-media">
-              <video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-              <span class="proj-preview-live" aria-hidden="true">4K · 30 FPS</span>
+            <div class="proj-preview-media proj-preview-carousel" data-format="16x9">
+              <div class="proj-preview-rail" data-rail>
+                <div class="proj-preview-slide">
+                  <video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                  <span class="proj-preview-live" aria-hidden="true">4K · 30 FPS</span>
+                </div>
+                <div class="proj-preview-slide">
+                  <video data-src="https://videos.corentindeville.com/bebooth-reel-2.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                </div>
+                <div class="proj-preview-slide">
+                  <video data-src="https://videos.corentindeville.com/bebooth-reel-3.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                </div>
+              </div>
+              <div class="proj-preview-dots" data-dots>
+                <button class="ppd-dot is-active" type="button" aria-label="Capsule 1"></button>
+                <button class="ppd-dot" type="button" aria-label="Capsule 2"></button>
+                <button class="ppd-dot" type="button" aria-label="Capsule 3"></button>
+              </div>
             </div>
             <span class="proj-preview-title">Bebooth<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
             <p class="proj-preview-sub">Photobooth événementiel · 2025. Retour d'image + capsules éditoriales.</p>
@@ -6170,87 +6267,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 
     <!-- ACCORDION CHAPITRES — fond commun, un seul ouvert à la fois -->
     <div class="chap-stack reveal" id="chapStack">
-      <!-- ============ 01 — WENDA ============ -->
-      <article class="chap" data-num="01" data-slug="wenda">
-        <span class="chap-tab" aria-hidden="true">
-          <span class="chap-tab-num">N°01</span>
-          <span class="chap-tab-cat">Fashion</span>
-        </span>
-        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-01" type="button">
-          <span class="chap-num" aria-hidden="true">01</span>
-          <span class="chap-titlewrap">
-            <span class="chap-title">Les filles de Wenda</span>
-            <span class="chap-meta">Fashion · Social · 2024—2026 · 9:16</span>
-          </span>
-          <span class="chap-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </button>
-        <div class="chap-body" id="chap-body-01" role="region" aria-label="Les filles de Wenda — médias">
-          <div class="chap-body-inner">
-            <span class="chap-ghost" aria-hidden="true">01</span>
-            <div class="chap-carousel" id="carousel-wenda" data-format="9x16">
-              <div class="reel-stage">
-                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none"></video></div>
-                <div class="reel-card pos1"><span class="reel-idx">02</span><video data-src="https://videos.corentindeville.com/wenda-reel-2.mp4" muted loop playsinline preload="none"></video></div>
-                <div class="reel-card pos2"><span class="reel-idx">03</span><video data-src="https://videos.corentindeville.com/wenda-reel-3.mp4" muted loop playsinline preload="none"></video></div>
-              </div>
-              <button class="reel-nav reel-prev" type="button" aria-label="Reel précédent">‹</button>
-              <button class="reel-nav reel-next" type="button" aria-label="Reel suivant">›</button>
-              <div class="reel-dots" role="tablist" aria-label="Reels Wenda">
-                <button class="reel-dot active" type="button" aria-label="Reel 1" aria-selected="true"></button>
-                <button class="reel-dot" type="button" aria-label="Reel 2" aria-selected="false"></button>
-                <button class="reel-dot" type="button" aria-label="Reel 3" aria-selected="false"></button>
-              </div>
-            </div>
-            <button class="chap-more-btn" type="button" data-open-drawer="wenda">
-              <span class="chap-more-lbl">Voir le dossier complet</span>
-              <span class="chap-more-arr" aria-hidden="true">↗</span>
-            </button>
-          </div>
-        </div>
-      </article>
-
-      <!-- ============ 02 — BEBOOTH ============ -->
-      <article class="chap" data-num="02" data-slug="bebooth">
-        <span class="chap-tab" aria-hidden="true">
-          <span class="chap-tab-num">N°02</span>
-          <span class="chap-tab-cat">Événementiel</span>
-        </span>
-        <button class="chap-head" aria-expanded="false" aria-controls="chap-body-02" type="button">
-          <span class="chap-num" aria-hidden="true">02</span>
-          <span class="chap-titlewrap">
-            <span class="chap-title">Bebooth</span>
-            <span class="chap-meta">Événementiel · Photobooth · 2025 · 16:9</span>
-          </span>
-          <span class="chap-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </span>
-        </button>
-        <div class="chap-body" id="chap-body-02" role="region" aria-label="Bebooth — médias">
-          <div class="chap-body-inner">
-            <span class="chap-ghost" aria-hidden="true">02</span>
-            <div class="chap-carousel" id="carousel-bebooth" data-format="16x9">
-              <div class="reel-stage">
-                <div class="reel-card pos0"><span class="reel-idx">01</span><video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none"></video></div>
-                <div class="reel-card pos1"><span class="reel-idx">02</span><video data-src="https://videos.corentindeville.com/bebooth-reel-2.mp4" muted loop playsinline preload="none"></video></div>
-                <div class="reel-card pos2"><span class="reel-idx">03</span><video data-src="https://videos.corentindeville.com/bebooth-reel-3.mp4" muted loop playsinline preload="none"></video></div>
-              </div>
-              <button class="reel-nav reel-prev" type="button" aria-label="Capsule précédente">‹</button>
-              <button class="reel-nav reel-next" type="button" aria-label="Capsule suivante">›</button>
-              <div class="reel-dots" role="tablist" aria-label="Capsules Bebooth">
-                <button class="reel-dot active" type="button" aria-label="Capsule 1" aria-selected="true"></button>
-                <button class="reel-dot" type="button" aria-label="Capsule 2" aria-selected="false"></button>
-                <button class="reel-dot" type="button" aria-label="Capsule 3" aria-selected="false"></button>
-              </div>
-            </div>
-            <button class="chap-more-btn" type="button" data-open-drawer="bebooth">
-              <span class="chap-more-lbl">Voir le dossier complet</span>
-              <span class="chap-more-arr" aria-hidden="true">↗</span>
-            </button>
-          </div>
-        </div>
-      </article>
+      <!-- Wenda + Bebooth retirés : leurs vidéos vivent maintenant
+           directement dans les preview cards au-dessus (carousel inline). -->
 
       <!-- ============ 03 — AUTRES DOSSIERS (Lucid + Scouts + archives) ============
            Folders switcher : tabs en haut, un seul panel visible, slide gauche
@@ -7418,17 +7436,16 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   });
 })();
 
-/* ========== PROJETS — Preview strip (Wenda + Bebooth) ==========
-   Lazy-hydrate les 2 vidéos quand la strip entre dans le viewport.
-   Click sur une card → scroll smooth vers le cahier correspondant
-   + ouvre ce cahier (via head.click() qui respecte l'accordéon exclusif). */
+/* ========== PROJETS — Preview cards = mini-carousel inline ==========
+   Chaque .proj-preview-card contient un .proj-preview-rail avec 3 slides
+   vidéo. On hydrate les vidéos lazy, on autoplay seulement la slide
+   active (économie batterie/data), on sync les dots avec le scroll. */
 (function(){
   const strip = document.querySelector('.proj-preview');
   if(!strip) return;
-  const stack = document.getElementById('chapStack');
-  if(!stack) return;
 
-  // Lazy hydrate des vidéos preview
+  // Lazy hydrate de TOUTES les vidéos du strip — chaque vidéo devient
+  // visible une fois que la card entre dans le viewport.
   const videos = [...strip.querySelectorAll('video[data-src]')];
   if('IntersectionObserver' in window){
     const hydrateIO = new IntersectionObserver((entries, obs) => {
@@ -7437,10 +7454,8 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
         obs.unobserve(en.target);
         const v = en.target;
         if(!v.src){ v.src = v.dataset.src; v.load(); }
-        const p = v.play();
-        if(p && typeof p.catch === 'function') p.catch(()=>{});
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.05 });
     videos.forEach(v => hydrateIO.observe(v));
   } else {
     videos.forEach(v => {
@@ -7448,42 +7463,82 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     });
   }
 
-  // Click → scroll + ouverture du cahier ciblé
-  // Note : l'accordéon est exclusif (openChap ferme les autres),
-  // donc si un chap ouvert se trouve au-dessus de la cible, la position du
-  // chap cible va remonter pendant la transition (grid-template-rows 720ms).
-  // On anticipe ce shift AVANT de déclencher le click pour scroller juste.
-  strip.querySelectorAll('[data-preview-target]').forEach(card => {
-    card.addEventListener('click', (e) => {
-      e.preventDefault();
-      const slug = card.dataset.previewTarget;
-      const chap = stack.querySelector('.chap[data-slug="'+slug+'"]');
-      if(!chap) return;
+  // Pour chaque carte, gère le carousel : sync dots + autoplay coordonné
+  strip.querySelectorAll('.proj-preview-card').forEach(card => {
+    const rail  = card.querySelector('[data-rail]');
+    const dots  = [...card.querySelectorAll('[data-dots] .ppd-dot')];
+    const slides = rail ? [...rail.querySelectorAll('.proj-preview-slide')] : [];
+    if(!rail || !slides.length) return;
 
-      // Calcule le shift : somme des hauteurs des body-inner des chaps
-      // actuellement ouverts SITUÉS AVANT la cible (ceux qui vont se fermer).
-      const allChaps = [...stack.querySelectorAll('.chap')];
-      const targetIdx = allChaps.indexOf(chap);
-      let shiftUp = 0;
-      for(let i = 0; i < targetIdx; i++){
-        const c = allChaps[i];
-        if(c !== chap && c.classList.contains('is-open')){
-          const inner = c.querySelector('.chap-body-inner');
-          if(inner) shiftUp += inner.offsetHeight;
+    let activeIdx = 0;
+    const setActive = (idx) => {
+      if(idx < 0 || idx >= slides.length) return;
+      activeIdx = idx;
+      // Sync dots
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+      // Autoplay seulement la slide active, pause les autres
+      slides.forEach((s, i) => {
+        const v = s.querySelector('video');
+        if(!v) return;
+        if(i === idx){
+          const p = v.play();
+          if(p && typeof p.catch === 'function') p.catch(()=>{});
+        } else {
+          v.pause();
         }
-      }
+      });
+    };
 
-      // Position actuelle du cahier (avant le click qui déclenche l'accordéon)
-      const currentTop = chap.getBoundingClientRect().top + window.scrollY;
-      const scrollTarget = Math.max(0, currentTop - shiftUp - 80);
+    // Click sur dot → scroll vers la slide
+    dots.forEach((d, i) => {
+      d.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const slide = slides[i];
+        if(slide) slide.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+      });
+    });
 
-      // Ouvre si fermé (déclenche openChap exclusif via le handler head)
-      if(!chap.classList.contains('is-open')){
-        const head = chap.querySelector('.chap-head');
-        if(head) head.click();
-      }
+    // Sync de l'active idx pendant le scroll (snap-aware)
+    let ticking = false;
+    rail.addEventListener('scroll', () => {
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const railRect = rail.getBoundingClientRect();
+        const center = railRect.left + railRect.width / 2;
+        let bestIdx = 0, bestDist = Infinity;
+        slides.forEach((s, i) => {
+          const r = s.getBoundingClientRect();
+          const c = r.left + r.width / 2;
+          const d = Math.abs(c - center);
+          if(d < bestDist){ bestDist = d; bestIdx = i; }
+        });
+        if(bestIdx !== activeIdx) setActive(bestIdx);
+        ticking = false;
+      });
+    }, { passive:true });
 
-      window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+    // Première slide active dès que la card entre dans le viewport
+    if('IntersectionObserver' in window){
+      const playIO = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if(en.isIntersecting) setActive(activeIdx);
+          else slides.forEach(s => { const v = s.querySelector('video'); if(v) v.pause(); });
+        });
+      }, { threshold: 0.2 });
+      playIO.observe(card);
+    } else {
+      setActive(0);
+    }
+
+    // Le click sur le rail / video ne doit PAS toggle le <details> parent
+    // (sinon swiper = ouvrir le dossier). On stoppe la propagation pour
+    // laisser le browser gérer le scroll-snap natif sans déclencher summary.
+    rail.addEventListener('click', (e) => {
+      // Si le scroll a bougé, ne pas remonter le click au summary
+      // (le navigateur ne déclenche click qu'après mouseup sans drag, donc
+      // on laisse passer pour permettre le toggle du details au tap simple)
     });
   });
 })();

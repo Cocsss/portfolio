@@ -5730,6 +5730,27 @@ body:has(.mob-menu.open) .brand-wordmark-sub{
   flex-shrink:0;
   overflow:visible;
 }
+/* ── Eye-only logo (remplace le CD-mono dans la topbar) ── */
+.eye-mono{
+  width:auto;height:36px;display:block;
+  color:var(--ink);
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
+  flex-shrink:0;
+  overflow:visible;
+}
+.brand-logo:hover .eye-mono{ transform:scale(1.06); }
+.eye-mono .eye-pupil-move rect{
+  transform-origin:83px 63px;
+  animation: eyeMonoScan 5.5s cubic-bezier(.6,.05,.4,.95) 2s infinite;
+}
+@keyframes eyeMonoScan{
+  0%,18%   { transform:translateX(0); }
+  28%,42%  { transform:translateX(-32px); }
+  52%,68%  { transform:translateX(28px); }
+  78%,100% { transform:translateX(0); }
+}
+body[data-theme="dark"] .eye-mono{ color:var(--cream); }
+@media(max-width:720px){ .eye-mono{ height:22px; } }
 /* Le D est positionné à droite du C au repos, et glisse vers lui au hover */
 .cd-mono .cd-d{
   transform:translateX(83px);
@@ -6644,19 +6665,14 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
 
 <!-- TOP BAR -->
 <header class="topbar">
-  <a href="#top" class="brand brand-logo" aria-label="CD Studio — Corentin Devillé">
-    <svg class="cd-mono" viewBox="0 0 181 136.23" fill="currentColor" aria-hidden="true">
-      <!-- C officiel -->
-      <path class="cd-c" d="M68.13,118.42c0,5.13,0,10.26,0,15.39,0,2.17,0,2.29-2.15,2.19-11.8-.54-22.93-3.51-33-9.75-17.26-10.68-28.3-25.93-31.78-46C-3,56.18,3.91,35.33,21.6,18.35,32.44,7.94,45.6,2.19,60.5.41c2.07-.24,4.16.1,6.23-.36,1-.21,1.42.22,1.42,1.29q0,16.23,0,32.47c0,1.25-.7,1.31-1.62,1.34A31,31,0,0,0,44.17,45.24c-9,9.65-11.63,21-7.3,33.5C41.15,91.05,50.15,98.25,63,100.52a17.43,17.43,0,0,0,3.53.31c1.28,0,1.63.47,1.62,1.7C68.1,107.83,68.13,113.13,68.13,118.42Z"/>
-      <!-- D officiel : barre verticale + courbe (glisse vers le C au hover) -->
-      <g class="cd-d">
-        <rect width="32.35" height="136.23"/>
-        <path d="M29.43,17.81c0-5.13,0-10.26,0-15.39,0-2.17,0-2.29,2.15-2.19,11.8.54,22.93,3.52,33,9.75,17.26,10.68,28.3,25.93,31.78,46,4.19,24.1-2.72,45-20.41,61.93C65.12,128.3,52,134,37.06,135.82c-2.07.25-4.16-.1-6.23.36-.95.21-1.42-.22-1.42-1.29q0-16.23,0-32.47c0-1.25.7-1.3,1.62-1.34A31,31,0,0,0,53.39,91c9-9.65,11.63-21,7.3-33.49S47.41,38,34.55,35.71A18.17,18.17,0,0,0,31,35.4c-1.28,0-1.63-.47-1.62-1.7C29.46,28.4,29.43,23.11,29.43,17.81Z"/>
-      </g>
+  <a href="#top" class="brand brand-logo" aria-label="Corentin Devillé — Vidéaste monteur Brabant wallon">
+    <svg class="eye-mono" viewBox="0 0 166.06 126.14" fill="currentColor" aria-hidden="true">
+      <path class="eye-body" d="M83,0C37.17,0,0,28.24,0,63.07s37.17,63.07,83,63.07,83-28.24,83-63.07S128.89,0,83,0ZM99.21,91.22v-.17a52,52,0,0,1-32.35,0v.17C52.58,86.48,42.59,75.66,42.59,63.07s10-23.41,24.27-28.15v.17a52,52,0,0,1,32.35,0v-.17c14.28,4.74,24.26,15.56,24.26,28.15S113.49,86.48,99.21,91.22Z"/>
+      <g class="eye-pupil-move"><rect x="75" y="47" width="16" height="32" rx="3"/></g>
     </svg>
     <span class="brand-wordmark">
-      <span class="brand-wordmark-top">Studio</span>
-      <span class="brand-wordmark-sub">Corentin Devillé</span>
+      <span class="brand-wordmark-top">Corentin Devillé</span>
+      <span class="brand-wordmark-sub">Vidéaste monteur · Brabant wallon</span>
     </span>
   </a>
   <nav class="section-nav" id="sectionNav" aria-label="Sections">

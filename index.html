@@ -6745,9 +6745,106 @@ video, .proj-preview-media, .prj-swipe-media {
   isolation: isolate;
 }
 
-/* --- Services hidden, accordion clean --- */
-.studio-services { display: none !important; }
+/* --- Services: modern dark style --- */
+.studio-services { display: block !important; }
+.studio-services-head {
+  margin-bottom: 24px !important;
+}
+.studio-services-h {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  font-size: clamp(24px, 4vw, 40px) !important;
+  letter-spacing: -.03em !important;
+  color: #F5F2EC !important;
+}
+.studio-services-lede {
+  color: var(--muted) !important;
+  max-width: 50ch;
+}
+.studio-services-k { display: none !important; }
+
+/* Menu items: modern cards */
+.menu-list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 12px !important;
+  list-style: none !important;
+}
+.menu-item {
+  background: var(--surface-1) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  transition: border-color .3s, background .3s, box-shadow .3s !important;
+  display: block !important;
+}
+.menu-item[data-svc-more] { display: block !important; }
+.menu-item:hover {
+  border-color: var(--border-accent) !important;
+  background: var(--surface-2) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2) !important;
+}
+.menu-item.is-open {
+  border-color: var(--border-accent) !important;
+  background: var(--surface-2) !important;
+}
+.menu-head {
+  padding: 18px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border-radius: 14px !important;
+}
+.menu-num { display: none !important; }
+.menu-title {
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  color: #F5F2EC !important;
+  flex: 1;
+}
+.menu-meta {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  color: var(--muted) !important;
+  letter-spacing: .1em !important;
+}
+.menu-chev {
+  color: var(--accent) !important;
+  font-size: 14px !important;
+  transition: transform .3s !important;
+}
+.menu-item.is-open .menu-chev {
+  transform: rotate(45deg) !important;
+}
+.menu-body {
+  padding: 0 20px 18px !important;
+}
+.menu-desc {
+  color: var(--muted) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+.menu-tags {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin-top: 12px !important;
+  list-style: none !important;
+  padding: 0 !important;
+}
+.menu-tags li {
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+  background: var(--surface-3) !important;
+  color: var(--ink) !important;
+}
 .svc-more { display: none !important; }
+.menu-item--feature { grid-column: 1 / -1; }
 .chap::before { display: none !important; }
 .chap-tab { display: none !important; }
 .chap-ghost { display: none !important; }
@@ -7124,7 +7221,7 @@ video, .proj-preview-media, .prj-swipe-media {
 
         <div class="ctk-simple-links">
           <a href="tel:+32495924295" class="ctk-primary-link"><span class="cs-k">Téléphone</span><span class="cs-v">+32 495 92 42 95</span><span class="cs-a">↗</span></a>
-          <a href="/cdn-cgi/l/email-protection#264e434a4a49664549544348524f484243504f4a4a430845494b" class="ctk-primary-link"><span class="cs-k">Email</span><span class="cs-v"><span class="__cf_email__" data-cfemail="78101d141417381b170a1d160c11161c1d0e1114141d561b1715">[email&#160;protected]</span></span><span class="cs-a">↗</span></a>
+          <a href="/cdn-cgi/l/email-protection#bed6dbd2d2d1feddd1ccdbd0cad7d0dadbc8d7d2d2db90ddd1d3" class="ctk-primary-link"><span class="cs-k">Email</span><span class="cs-v"><span class="__cf_email__" data-cfemail="a2cac7cececde2c1cdd0c7ccd6cbccc6c7d4cbcecec78cc1cdcf">[email&#160;protected]</span></span><span class="cs-a">↗</span></a>
         </div>
       </div>
     </div>

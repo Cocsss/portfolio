@@ -1054,6 +1054,25 @@ body[data-mode="glass"] .topbar{
   width:18px;
   border-radius:99px;
 }
+/* Flèches navigation g/d */
+.ppc-nav{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:42px; height:42px; border-radius:50%;
+  background:rgba(10,10,9,.55);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  color:#F0EEE9; border:0; font-size:22px; line-height:1; font-weight:300;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  z-index:3; opacity:0; transition:opacity .25s ease, background .2s ease;
+  pointer-events:auto; -webkit-tap-highlight-color:transparent;
+}
+.ppc-prev{ left:10px; } .ppc-next{ right:10px; }
+.proj-preview-card:hover .ppc-nav,
+.proj-preview-card:focus-within .ppc-nav{ opacity:1; }
+.ppc-nav:hover{ background:rgba(10,10,9,.85); }
+.ppc-nav:active{ transform:translateY(-50%) scale(.92); }
+@media (hover:none){ .ppc-nav{ opacity:.85; } }
+.proj-preview-card[data-active="0"] .ppc-prev{ opacity:0 !important; pointer-events:none; }
+.proj-preview-card[data-active="2"] .ppc-next{ opacity:0 !important; pointer-events:none; }
 
 /* ───── Dossier dropdown intégré dans la carte preview ───── */
 .proj-preview-details{
@@ -6184,6 +6203,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                   <video data-src="https://videos.corentindeville.com/wenda-reel-3.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
                 </div>
               </div>
+              <button class="ppc-nav ppc-prev" type="button" aria-label="Reel précédent" data-nav="prev">‹</button>
+              <button class="ppc-nav ppc-next" type="button" aria-label="Reel suivant" data-nav="next">›</button>
               <div class="proj-preview-dots" data-dots>
                 <button class="ppd-dot is-active" type="button" aria-label="Reel 1"></button>
                 <button class="ppd-dot" type="button" aria-label="Reel 2"></button>
@@ -6233,6 +6254,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                   <video data-src="https://videos.corentindeville.com/bebooth-reel-3.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
                 </div>
               </div>
+              <button class="ppc-nav ppc-prev" type="button" aria-label="Capsule précédente" data-nav="prev">‹</button>
+              <button class="ppc-nav ppc-next" type="button" aria-label="Capsule suivante" data-nav="next">›</button>
               <div class="proj-preview-dots" data-dots>
                 <button class="ppd-dot is-active" type="button" aria-label="Capsule 1"></button>
                 <button class="ppd-dot" type="button" aria-label="Capsule 2"></button>
@@ -6276,19 +6299,19 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       <article class="chap chap--autres" data-num="03" data-slug="autres">
         <span class="chap-tab" aria-hidden="true">
           <span class="chap-tab-num">N°03</span>
-          <span class="chap-tab-cat">Autres dossiers</span>
+          <span class="chap-tab-cat">Autres projets</span>
         </span>
         <button class="chap-head" aria-expanded="false" aria-controls="chap-body-03" type="button">
           <span class="chap-num" aria-hidden="true">03</span>
           <span class="chap-titlewrap">
-            <span class="chap-title">Autres dossiers</span>
+            <span class="chap-title">Autres projets</span>
             <span class="chap-meta">Music · Aftermovies · Mariage · Corporate · Documentaire</span>
           </span>
           <span class="chap-chevron" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
         </button>
-        <div class="chap-body" id="chap-body-03" role="region" aria-label="Autres dossiers — sélecteur de projets">
+        <div class="chap-body" id="chap-body-03" role="region" aria-label="Autres projets — sélecteur de projets">
           <div class="chap-body-inner">
             <span class="chap-ghost" aria-hidden="true">03</span>
 
@@ -7474,28 +7497,40 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     const setActive = (idx) => {
       if(idx < 0 || idx >= slides.length) return;
       activeIdx = idx;
+      card.dataset.active = String(idx); // pour CSS hide-arrow aux extrêmes
       // Sync dots
       dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
-      // Autoplay seulement la slide active, pause les autres
+      // Autoplay seulement la slide active
       slides.forEach((s, i) => {
         const v = s.querySelector('video');
         if(!v) return;
         if(i === idx){
           const p = v.play();
           if(p && typeof p.catch === 'function') p.catch(()=>{});
-        } else {
-          v.pause();
-        }
+        } else { v.pause(); }
       });
     };
 
-    // Click sur dot → scroll vers la slide
+    // Helper : scroll vers une slide
+    const goTo = (idx) => {
+      if(idx < 0 || idx >= slides.length) return;
+      slides[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+    };
+
+    // Dots clickables
     dots.forEach((d, i) => {
       d.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const slide = slides[i];
-        if(slide) slide.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+        e.preventDefault(); e.stopPropagation();
+        goTo(i);
+      });
+    });
+
+    // Flèches nav prev/next
+    card.querySelectorAll('.ppc-nav').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        const dir = btn.dataset.nav;
+        goTo(dir === 'next' ? activeIdx + 1 : activeIdx - 1);
       });
     });
 

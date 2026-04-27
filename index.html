@@ -988,6 +988,93 @@ body[data-mode="glass"] .topbar{
 }
 .proj-preview-card:hover .proj-preview-arr{transform:translate(5px,-5px)}
 
+/* ───── Dossier dropdown intégré dans la carte preview ───── */
+.proj-preview-details{
+  /* override : <details> ne doit pas avoir de comportement display interfère */
+  display:flex; flex-direction:column;
+  cursor:default;
+}
+.proj-preview-summary{
+  display:flex; flex-direction:column; gap:0;
+  list-style:none;
+  cursor:pointer;
+  /* hérite des styles existants .proj-preview-card via le classlist */
+}
+.proj-preview-summary::-webkit-details-marker,
+.proj-preview-summary::marker{ display:none; }
+/* Quand ouvert : la flèche tourne, la vidéo reste visible */
+.proj-preview-details[open] > .proj-preview-summary .proj-preview-arr{
+  transform:rotate(45deg) translate(2px,-2px) !important;
+}
+.proj-preview-dossier{
+  margin-top:clamp(20px,3vw,32px);
+  padding-top:clamp(20px,3vw,28px);
+  border-top:1px solid var(--rule);
+  display:flex; flex-direction:column;
+  gap:clamp(18px,2.4vw,28px);
+  animation: dossierFadeIn .35s cubic-bezier(.22,1,.36,1);
+}
+@keyframes dossierFadeIn{
+  from{ opacity:0; transform:translateY(-8px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+.dossier-lede{
+  font-family:var(--font-display);
+  font-size:clamp(18px,1.8vw,24px);
+  line-height:1.35;
+  letter-spacing:-.01em;
+  color:var(--ink);
+  max-width:60ch;
+  margin:0;
+}
+.dossier-meta{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:14px 28px;
+  margin:0;
+}
+.dossier-meta > div{
+  display:flex; flex-direction:column; gap:2px;
+  border-left:2px solid var(--accent);
+  padding-left:12px;
+}
+.dossier-meta dt{
+  font-family:var(--font-mono);
+  font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted);
+}
+.dossier-meta dd{
+  margin:0;
+  font-family:var(--font-body);
+  font-size:14px;
+  color:var(--ink);
+}
+.dossier-text p{
+  font-family:var(--font-body);
+  font-size:15px; line-height:1.7;
+  color:var(--ink);
+  max-width:64ch;
+  margin:0 0 12px;
+}
+.dossier-text p:last-child{ margin-bottom:0; }
+.dossier-text strong{ color:var(--accent); font-weight:600; }
+.dossier-credits{
+  display:flex; align-items:baseline; gap:14px;
+  padding-top:clamp(12px,2vw,18px);
+  border-top:1px dashed var(--rule);
+  flex-wrap:wrap;
+}
+.dossier-credits-lbl{
+  font-family:var(--font-mono);
+  font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--muted);
+}
+.dossier-credits-val{
+  font-family:var(--font-body);
+  font-size:13px;
+  color:var(--ink);
+}
+
 .proj-preview-sub{
   font-family:var(--font-body);font-size:clamp(14px,1vw,16px);line-height:1.5;
   color:var(--muted);max-width:44ch;margin:0;
@@ -5900,7 +5987,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <nav>
     <a href="#projets" class="mm-link" data-n="01" data-target="projets">Projets</a>
     <a href="#tarifs" class="mm-link" data-n="02" data-target="tarifs">Tarifs</a>
-    <a href="#apropos" class="mm-link" data-n="02" data-target="apropos">À propos</a>
     <a href="#contact" class="mm-link" data-n="03" data-target="contact">Contact</a>
   </nav>
   <div class="mm-foot">
@@ -5974,7 +6060,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     <a href="#top" data-target="top" data-num="§ 00">Accueil</a>
     <a href="#projets" data-target="projets" data-num="§ 01">Projets</a>
     <a href="#tarifs" data-target="tarifs" data-num="§ 02">Tarifs</a>
-    <a href="#apropos" data-target="apropos" data-num="§ 02">À propos</a>
     <a href="#contact" data-target="contact" data-num="§ 03">Contact</a>
   </nav>
   <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobMenu"><span></span><span></span></button>
@@ -6009,38 +6094,79 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     <div class="section-body">
 
       <!-- PREVIEW STRIP — les 2 dernières vidéos visibles immédiatement -->
-      <!-- Click sur une carte → scroll vers le cahier correspondant + l'ouvre -->
+      <!-- 2 cartes preview avec dropdown inline (dossier complet sous la vidéo) -->
       <div class="proj-preview reveal">
-      <a class="proj-preview-card proj-preview-vert"
-         href="#chapStack"
-         data-preview-target="wenda"
-         aria-label="Les filles de Wenda — Fashion, ouvre le dossier">
-        <span class="proj-preview-lbl">
-          <span class="proj-preview-lbl-num">N°01</span>
-          <span class="proj-preview-lbl-cat">Fashion</span>
-        </span>
-        <div class="proj-preview-media">
-          <video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-          <span class="proj-preview-live" aria-hidden="true">4K · 60 FPS</span>
-        </div>
-        <span class="proj-preview-title">Les filles de Wenda<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
-      </a>
-      <a class="proj-preview-card proj-preview-horiz"
-         href="#chapStack"
-         data-preview-target="bebooth"
-         aria-label="Bebooth — Événementiel, ouvre le dossier">
-        <span class="proj-preview-lbl">
-          <span class="proj-preview-lbl-num">N°02</span>
-          <span class="proj-preview-lbl-cat">Événementiel</span>
-        </span>
-        <div class="proj-preview-media">
-          <video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-          <span class="proj-preview-live" aria-hidden="true">4K · 30 FPS</span>
-        </div>
-        <span class="proj-preview-title">Bebooth<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
-        <p class="proj-preview-sub">Photobooth événementiel · 2025. Retour d'image en live + capsules éditoriales.</p>
-      </a>
-    </div>
+
+        <!-- ============ WENDA ============ -->
+        <details class="proj-preview-card proj-preview-vert proj-preview-details" data-preview-target="wenda">
+          <summary class="proj-preview-summary" aria-label="Les filles de Wenda — ouvre le dossier">
+            <span class="proj-preview-lbl">
+              <span class="proj-preview-lbl-num">N°01</span>
+              <span class="proj-preview-lbl-cat">Fashion</span>
+            </span>
+            <div class="proj-preview-media">
+              <video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+              <span class="proj-preview-live" aria-hidden="true">4K · 60 FPS</span>
+            </div>
+            <span class="proj-preview-title">Les filles de Wenda<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
+          </summary>
+          <div class="proj-preview-dossier">
+            <p class="dossier-lede">Une maison belge, trois générations, une image qui devait respirer la transmission sans sentir le vieux.</p>
+            <dl class="dossier-meta">
+              <div><dt>Client</dt><dd>Les filles de Wenda</dd></div>
+              <div><dt>Catégorie</dt><dd>Fashion · Social content</dd></div>
+              <div><dt>Lieu</dt><dd>Waterloo · Brussels</dd></div>
+              <div><dt>Années</dt><dd>2024 — 2026</dd></div>
+              <div><dt>Format</dt><dd>9:16 vertical</dd></div>
+              <div><dt>Livraison</dt><dd>~40 reels / an</dd></div>
+            </dl>
+            <div class="dossier-text">
+              <p>Je réalise les vidéos et contenus visuels pour <strong>Les Filles de Wenda</strong>, maison de mode belge fondée en 1972 par Wenda d'Ursel et Pierre Marinof, aujourd'hui reprise par leurs filles Lara et Marina Marinof. Une histoire de famille, de transmission et de style.</p>
+              <p>Mon travail : capturer l'élégance intemporelle et la modernité des collections à travers des reels dynamiques pour Instagram — mises en scène des nouvelles pièces, ambiances boutique, moments de shooting. Le ton doit rester doux, féminin, un peu retenu — on montre sans crier.</p>
+            </div>
+            <div class="dossier-credits">
+              <span class="dossier-credits-lbl">Crédits</span>
+              <span class="dossier-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
+            </div>
+          </div>
+        </details>
+
+        <!-- ============ BEBOOTH ============ -->
+        <details class="proj-preview-card proj-preview-horiz proj-preview-details" data-preview-target="bebooth">
+          <summary class="proj-preview-summary" aria-label="Bebooth — ouvre le dossier">
+            <span class="proj-preview-lbl">
+              <span class="proj-preview-lbl-num">N°02</span>
+              <span class="proj-preview-lbl-cat">Événementiel</span>
+            </span>
+            <div class="proj-preview-media">
+              <video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+              <span class="proj-preview-live" aria-hidden="true">4K · 30 FPS</span>
+            </div>
+            <span class="proj-preview-title">Bebooth<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
+            <p class="proj-preview-sub">Photobooth événementiel · 2025. Retour d'image + capsules éditoriales.</p>
+          </summary>
+          <div class="proj-preview-dossier">
+            <p class="dossier-lede">Un photobooth nouvelle génération à documenter comme un produit — rapide, fun, parfaitement lisible en 10 secondes.</p>
+            <dl class="dossier-meta">
+              <div><dt>Client</dt><dd>Bebooth</dd></div>
+              <div><dt>Catégorie</dt><dd>Événementiel · Photobooth</dd></div>
+              <div><dt>Lieu</dt><dd>Brussels</dd></div>
+              <div><dt>Année</dt><dd>2025</dd></div>
+              <div><dt>Format</dt><dd>16:9 horizontal</dd></div>
+              <div><dt>Livraison</dt><dd>Capsules produit + social cuts</dd></div>
+            </dl>
+            <div class="dossier-text">
+              <p><strong>Bebooth</strong> propose un photobooth connecté pour mariages, événements corporate et fêtes privées. L'enjeu : montrer le produit en action, l'ambiance qu'il crée, la simplicité d'usage — tout ça en quelques secondes, pour des posts, des landing pages et des pitchs commerciaux.</p>
+              <p>Série de capsules 16:9 à cuts serrés, alternant plans produits et moments vécus. Chaque séquence est pensée comme un teaser autonome, déclinable en reels 9:16 pour Instagram et TikTok sans retournage.</p>
+            </div>
+            <div class="dossier-credits">
+              <span class="dossier-credits-lbl">Crédits</span>
+              <span class="dossier-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
+            </div>
+          </div>
+        </details>
+
+      </div>
 
     <!-- ACCORDION CHAPITRES — fond commun, un seul ouvert à la fois -->
     <div class="chap-stack reveal" id="chapStack">
@@ -6435,60 +6561,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </span><!-- /.receipt-flip -->
       </li>
 
-      <!-- Bio — magazine cover éditorial qui se déroule vers le bas -->
-      <li class="mag" id="apropos" data-key="apropos">
-        <span class="mag-flip">
-        <button class="mag-cover" type="button" aria-expanded="false" aria-controls="mag-body-apropos">
-          <!-- Portrait détouré (PNG transparent) sur fond stylisé crème -->
-          <span class="mag-portrait">
-            <img src="assets/portrait.png"
-                 width="800" height="1000"
-                 loading="lazy" decoding="async"
-                 alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
-          </span>
-
-          <!-- Masthead : bandeau du haut -->
-          <span class="mag-masthead">
-            <span class="mag-issue">N° 02</span>
-            <span class="mag-name">CD · STUDIO</span>
-            <span class="mag-ed">ÉD. 2026</span>
-          </span>
-
-          <!-- Marques d'imprimerie -->
-          <span class="mag-regmark mag-regmark--tr" aria-hidden="true"></span>
-          <span class="mag-regmark mag-regmark--bl" aria-hidden="true"></span>
-          <span class="mag-cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-
-          <!-- Bloc titre avec teasers intégrés -->
-          <span class="mag-title">
-            <span class="mag-title-k">Featuring</span>
-            <span class="mag-title-h">Corentin<br/>Devillé</span>
-            <span class="mag-title-sub">Vidéaste à BW · 2020 — 26</span>
-            <span class="mag-teasers" aria-hidden="true">
-              <span>Aftermovies</span><span>Clips</span><span>Brand&nbsp;films</span>
-            </span>
-          </span>
-
-          <!-- Barre d'appel à ouverture -->
-          <span class="mag-hint">▼ RETOURNER LE NUMÉRO ▼</span>
-        </button>
-
-        <!-- Contenu — se déroule vers le bas -->
-        <div class="mag-body" id="mag-body-apropos">
-          <div class="mag-body-inner">
-            <article class="mag-article">
-              <span class="mag-deck-k">Featuring</span>
-              <p class="mag-col">Vidéaste basé dans le Brabant wallon — aftermovies, clips, brand films. De l'écriture au master, un même fil pour des images qui racontent vraiment quelque chose.</p>
-              <ul class="mag-specs" role="list">
-                <li class="mag-specs-row"><span class="mag-specs-k">Base</span><span class="mag-specs-v">Brabant wallon · Bruxelles · Europe</span></li>
-                <li class="mag-specs-row"><span class="mag-specs-k">Stack</span><span class="mag-specs-v">Caméra · Drone · Montage</span></li>
-                <li class="mag-specs-row"><span class="mag-specs-k">Depuis</span><span class="mag-specs-v">2020</span></li>
-              </ul>
-            </article>
-          </div>
-        </div>
-        </span><!-- /.mag-flip -->
-      </li>
+      <!-- À propos retiré à la demande de Corentin -->
 
     </ul>
     </div><!-- /.studio-meta -->
@@ -7793,69 +7866,8 @@ try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e)
 <!-- Pour ajouter un drawer : <dialog class="proj-drawer" id="drawer-{slug}"> -->
 <!-- ========================================================= -->
 
-<dialog class="proj-drawer" id="drawer-wenda" aria-labelledby="drawer-wenda-title">
-  <button class="drawer-close" type="button" aria-label="Fermer le dossier">
-    <span aria-hidden="true">✕</span>
-  </button>
-  <div class="drawer-scroll">
-    <div class="drawer-head">
-      <span class="drawer-idx">§ 01 — Fashion</span>
-      <h3 class="drawer-title" id="drawer-wenda-title">Les filles de Wenda</h3>
-      <p class="drawer-lede">Une maison belge, trois générations, une image qui devait respirer la transmission sans sentir le vieux.</p>
-    </div>
-
-    <dl class="drawer-meta">
-      <div><dt>Client</dt><dd>Les filles de Wenda</dd></div>
-      <div><dt>Catégorie</dt><dd>Fashion · Social content</dd></div>
-      <div><dt>Lieu</dt><dd>Waterloo · Brussels</dd></div>
-      <div><dt>Années</dt><dd>2024 — 2026</dd></div>
-      <div><dt>Format</dt><dd>9:16 vertical</dd></div>
-      <div><dt>Livraison</dt><dd>~40 reels / an</dd></div>
-    </dl>
-
-    <div class="drawer-text">
-      <p>Je réalise les vidéos et contenus visuels pour <strong>Les Filles de Wenda</strong>, maison de mode belge fondée en 1972 par Wenda d'Ursel et Pierre Marinof, aujourd'hui reprise par leurs filles Lara et Marina Marinof. Une histoire de famille, de transmission et de style.</p>
-      <p>Mon travail : capturer l'élégance intemporelle et la modernité des collections à travers des reels dynamiques pour Instagram — mises en scène des nouvelles pièces, ambiances boutique, moments de shooting. Le ton doit rester doux, féminin, un peu retenu — on montre sans crier.</p>
-    </div>
-
-    <div class="drawer-credits">
-      <span class="drawer-credits-lbl">Crédits</span>
-      <span class="drawer-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
-    </div>
-  </div>
-</dialog>
-
-<dialog class="proj-drawer" id="drawer-bebooth" aria-labelledby="drawer-bebooth-title">
-  <button class="drawer-close" type="button" aria-label="Fermer le dossier">
-    <span aria-hidden="true">✕</span>
-  </button>
-  <div class="drawer-scroll">
-    <div class="drawer-head">
-      <span class="drawer-idx">§ 02 — Événementiel</span>
-      <h3 class="drawer-title" id="drawer-bebooth-title">Bebooth</h3>
-      <p class="drawer-lede">Un photobooth nouvelle génération à documenter comme un produit — rapide, fun, parfaitement lisible en 10 secondes.</p>
-    </div>
-
-    <dl class="drawer-meta">
-      <div><dt>Client</dt><dd>Bebooth</dd></div>
-      <div><dt>Catégorie</dt><dd>Événementiel · Photobooth</dd></div>
-      <div><dt>Lieu</dt><dd>Brussels</dd></div>
-      <div><dt>Année</dt><dd>2025</dd></div>
-      <div><dt>Format</dt><dd>16:9 horizontal</dd></div>
-      <div><dt>Livraison</dt><dd>Capsules produit + social cuts</dd></div>
-    </dl>
-
-    <div class="drawer-text">
-      <p><strong>Bebooth</strong> propose un photobooth connecté pour mariages, événements corporate et fêtes privées. L'enjeu : montrer le produit en action, l'ambiance qu'il crée, la simplicité d'usage — tout ça en quelques secondes, pour des posts, des landing pages et des pitchs commerciaux.</p>
-      <p>Série de capsules 16:9 à cuts serrés, alternant plans produits et moments vécus. Chaque séquence est pensée comme un teaser autonome, déclinable en reels 9:16 pour Instagram et TikTok sans retournage.</p>
-    </div>
-
-    <div class="drawer-credits">
-      <span class="drawer-credits-lbl">Crédits</span>
-      <span class="drawer-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
-    </div>
-  </div>
-</dialog>
+<!-- drawer Wenda + Bebooth retirés : leur contenu vit désormais inline
+     dans le déroulé de la carte preview au-dessus du chap-stack. -->
 
 <dialog class="proj-drawer" id="drawer-lucid" aria-labelledby="drawer-lucid-title">
   <button class="drawer-close" type="button" aria-label="Fermer le dossier">

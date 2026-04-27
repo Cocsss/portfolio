@@ -5421,6 +5421,16 @@ body[data-theme="dark"] .fold-card.is-open{
   .menu-body-inner{ padding:0 22px 22px 22px;gap:16px; }
   .menu-desc{ font-size:16px;line-height:1.6;max-width:none; }
   .menu-tags li{ font-size:11.5px;padding:7px 12px;letter-spacing:.14em; }
+
+  /* ── Mobile : services TOUJOURS dépliés (pas de toggle) ──
+     L'utilisateur voit direct desc + tags. Pas besoin de tapper. */
+  .menu-item .menu-body{ grid-template-rows:1fr !important; }
+  .menu-item .menu-body-inner > *{ opacity:1 !important; transform:none !important; }
+  /* Chevron retiré du visuel (plus de "+") puisque tout est ouvert */
+  .menu-item .menu-chev{ display:none !important; }
+  /* Le bouton menu-head est toujours actionable mais ne fait rien
+     d'utile en mobile → curseur normal */
+  .menu-head{ cursor:default; }
   .services-lead{ font-size:clamp(20px,6.5vw,26px); }
 
   .price-block{ margin-top:40px;padding-top:24px; }

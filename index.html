@@ -6878,22 +6878,25 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
                   </div>
                 </article>
 
-                <!-- 02 · Reel Scout -->
+                <!-- 02 · Reel Scout (nouveau mp4 en 1er + drawer "Voir plus de reels") -->
                 <article class="prj-swipe-slide" role="listitem" data-slug="scout-reel" data-format="9x16">
                   <div class="prj-swipe-media" data-ratio="9x16">
                     <video class="prj-swipe-video"
-                           data-src="https://videos.corentindeville.com/scout-reel.mp4"
+                           data-src="https://videos.corentindeville.com/reel_scout1d.mp4"
                            muted loop playsinline preload="none" aria-hidden="true"></video>
                     <span class="prj-swipe-live" aria-hidden="true">4K · 30 FPS</span>
                   </div>
                   <div class="prj-swipe-cap">
-                    <span class="prj-swipe-k">#02 · Teaser · 9:16</span>
+                    <span class="prj-swipe-k">#02 · Direction Artistique d'événements</span>
                     <h3 class="prj-swipe-title">Reel Scout</h3>
-                    <p class="prj-swipe-sub">Teaser social — festival scout, format vertical.</p>
+                    <p class="prj-swipe-sub">Direction artistique vidéo — captation d'événements scouts, format vertical.</p>
+                    <button class="prj-swipe-more" type="button" data-drawer="scout-reels">
+                      Voir plus de reels <span aria-hidden="true">↗</span>
+                    </button>
                   </div>
                 </article>
 
-                <!-- 03 · Scout Festival -->
+                <!-- 03 · Aftermovie Camp Scout -->
                 <article class="prj-swipe-slide" role="listitem" data-slug="scout" data-format="16x9">
                   <div class="prj-swipe-media" data-ratio="16x9">
                     <video class="prj-swipe-video"
@@ -6903,7 +6906,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
                   </div>
                   <div class="prj-swipe-cap">
                     <span class="prj-swipe-k">#03 · Aftermovie</span>
-                    <h3 class="prj-swipe-title">Scout Festival</h3>
+                    <h3 class="prj-swipe-title">Camp Scout</h3>
                     <p class="prj-swipe-sub">Aftermovie — énergie collective, grand format.</p>
                   </div>
                 </article>
@@ -6942,7 +6945,21 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
               </div>
             </div>
 
-            <p class="chap-autres-note">Un aperçu — d'autres vidéos sur demande, adaptées à ton projet.</p>
+            <!-- Drawer Scout-reels — autres reels événementiels -->
+            <div class="prj-swipe-drawer" id="prjSwipeDrawerScout" data-drawer-id="scout-reels" aria-hidden="true" role="dialog" aria-label="Plus de reels Scout">
+              <div class="prj-swipe-drawer-backdrop" data-drawer-close></div>
+              <div class="prj-swipe-drawer-panel">
+                <button class="prj-swipe-drawer-close" type="button" data-drawer-close aria-label="Fermer">×</button>
+                <span class="prj-swipe-k">Reel Scout · autres reels</span>
+                <div class="prj-swipe-drawer-list">
+                  <div class="prj-swipe-drawer-item" data-ratio="9x16" data-clip-num="01">
+                    <video data-src="https://videos.corentindeville.com/scout-reel.mp4" muted loop playsinline preload="none"></video>
+                    <span class="prj-swipe-drawer-idx">01</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </article>
@@ -7552,50 +7569,60 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     window.addEventListener('resize', updateIndicator, { passive: true });
     updateIndicator();
 
-    // Drawer : Lucid extras (vidéo 2 & 3)
-    const drawer = document.getElementById('prjSwipeDrawer');
-    if(drawer){
-      // PORTAL : déplace le drawer comme enfant direct de <body>.
-      // Sinon, un ancêtre (.chap-carousel) avec `perspective:1600px` crée
-      // un containing block qui déplace le "position:fixed" du drawer vers
-      // le haut de la carousel au lieu du viewport → la fenêtre s'ouvrait
-      // "là où on a cliqué" au lieu d'être centrée.
-      if (drawer.parentNode !== document.body) {
-        document.body.appendChild(drawer);
-      }
-      const openBtns = root.querySelectorAll('[data-drawer="lucid"]');
-      const closeEls = drawer.querySelectorAll('[data-drawer-close]');
-      const drawerVideos = drawer.querySelectorAll('video[data-src]');
+    // Drawers (générique — Lucid, Scout-reels, etc.)
+    // Chaque drawer a un id "prjSwipeDrawer..." et OPTIONNELLEMENT un
+    // attribut data-drawer-id qui correspond au data-drawer du bouton.
+    // Lucid est le drawer historique sans data-drawer-id → on l'associe à "lucid".
+    const allDrawers = document.querySelectorAll('.prj-swipe-drawer');
+    const drawerByKey = new Map();
+    allDrawers.forEach(d => {
+      const key = d.dataset.drawerId || (d.id === 'prjSwipeDrawer' ? 'lucid' : null);
+      if(key) drawerByKey.set(key, d);
+      // PORTAL : déplace chaque drawer comme enfant direct de <body>.
+      if (d.parentNode !== document.body) document.body.appendChild(d);
+    });
 
-      const open = () => {
-        drawer.classList.add('is-open');
-        drawer.setAttribute('aria-hidden','false');
-        document.body.style.overflow = 'hidden';
-        drawerVideos.forEach(v => {
-          const parent = v.parentElement;
-          if(v.dataset.loaded !== '1'){
-            v.src = v.getAttribute('data-src');
-            v.dataset.loaded = '1';
-            // Placeholder masqué seulement si la vidéo démarre pour de vrai
-            v.addEventListener('playing', () => parent.classList.add('has-video'), { once:true });
-            v.addEventListener('error',   () => parent.classList.remove('has-video'), { once:true });
-          }
-          const p = v.play();
-          if(p && typeof p.catch === 'function') p.catch(()=>{});
-        });
-      };
-      const close = () => {
-        drawer.classList.remove('is-open');
-        drawer.setAttribute('aria-hidden','true');
-        document.body.style.overflow = '';
-        drawerVideos.forEach(pauseVideo);
-      };
-      openBtns.forEach(b => b.addEventListener('click', open));
-      closeEls.forEach(el => el.addEventListener('click', close));
-      document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape' && drawer.classList.contains('is-open')) close();
+    const openDrawer = (drawer) => {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      drawer.querySelectorAll('video[data-src]').forEach(v => {
+        const parent = v.parentElement;
+        if(v.dataset.loaded !== '1'){
+          v.src = v.getAttribute('data-src');
+          v.dataset.loaded = '1';
+          v.addEventListener('playing', () => parent.classList.add('has-video'), { once:true });
+          v.addEventListener('error',   () => parent.classList.remove('has-video'), { once:true });
+        }
+        const p = v.play();
+        if(p && typeof p.catch === 'function') p.catch(()=>{});
       });
-    }
+    };
+    const closeDrawer = (drawer) => {
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      drawer.querySelectorAll('video[data-src]').forEach(pauseVideo);
+    };
+
+    // Wire chaque bouton ouvre→ son drawer
+    root.querySelectorAll('[data-drawer]').forEach(btn => {
+      const key = btn.dataset.drawer;
+      const d = drawerByKey.get(key);
+      if(!d) return;
+      btn.addEventListener('click', () => openDrawer(d));
+    });
+    // Wire close (backdrop, croix, Escape) sur tous les drawers
+    allDrawers.forEach(d => {
+      d.querySelectorAll('[data-drawer-close]').forEach(el => {
+        el.addEventListener('click', () => closeDrawer(d));
+      });
+    });
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape'){
+        allDrawers.forEach(d => { if(d.classList.contains('is-open')) closeDrawer(d); });
+      }
+    });
   })();
 
   /* ─── Pile → Deploy : entrée en scène quand la section entre en viewport ───

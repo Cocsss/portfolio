@@ -6907,7 +6907,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
                   <div class="prj-swipe-cap">
                     <span class="prj-swipe-k">#03 · Aftermovie</span>
                     <h3 class="prj-swipe-title">Camp Scout</h3>
-                    <p class="prj-swipe-sub">Aftermovie — énergie collective, grand format.</p>
+                    <p class="prj-swipe-sub">Aftermovie d'événement scout.</p>
                   </div>
                 </article>
 
@@ -7427,7 +7427,8 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     const carousel = chap.querySelector('.chap-carousel');
     if(carousel) initStackCarousel(carousel);
 
-    const videos = chap.querySelectorAll('.reel-card video[data-src]');
+    // Hydrate TOUTES les vidéos du chap (reel-card + prj-swipe-video)
+    const videos = chap.querySelectorAll('video[data-src]');
     videos.forEach(v => {
       if(!v.src){
         v.src = v.dataset.src;
@@ -7438,7 +7439,7 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     });
   }
   function dehydrateChap(chap){
-    const videos = chap.querySelectorAll('.reel-card video');
+    const videos = chap.querySelectorAll('video');
     videos.forEach(v => {
       try{ v.pause(); v.currentTime = 0; }catch(_){}
     });

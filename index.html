@@ -6073,6 +6073,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <nav>
     <a href="#projets" class="mm-link" data-n="01" data-target="projets">Projets</a>
     <a href="#tarifs" class="mm-link" data-n="02" data-target="tarifs">Tarifs</a>
+    <a href="#apropos" class="mm-link" data-n="02" data-target="apropos">À propos</a>
     <a href="#contact" class="mm-link" data-n="03" data-target="contact">Contact</a>
   </nav>
   <div class="mm-foot">
@@ -6146,6 +6147,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     <a href="#top" data-target="top" data-num="§ 00">Accueil</a>
     <a href="#projets" data-target="projets" data-num="§ 01">Projets</a>
     <a href="#tarifs" data-target="tarifs" data-num="§ 02">Tarifs</a>
+    <a href="#apropos" data-target="apropos" data-num="§ 02">À propos</a>
     <a href="#contact" data-target="contact" data-num="§ 03">Contact</a>
   </nav>
   <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobMenu"><span></span><span></span></button>
@@ -6602,7 +6604,48 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         </span><!-- /.receipt-flip -->
       </li>
 
-      <!-- À propos retiré à la demande de Corentin -->
+      <!-- Bio — magazine cover éditorial qui se déroule vers le bas -->
+      <li class="mag" id="apropos" data-key="apropos">
+        <span class="mag-flip">
+        <button class="mag-cover" type="button" aria-expanded="false" aria-controls="mag-body-apropos">
+          <span class="mag-portrait">
+            <img src="assets/portrait.png" width="800" height="1000"
+                 loading="lazy" decoding="async"
+                 alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
+          </span>
+          <span class="mag-masthead">
+            <span class="mag-issue">N° 02</span>
+            <span class="mag-name">CD · STUDIO</span>
+            <span class="mag-ed">ÉD. 2026</span>
+          </span>
+          <span class="mag-regmark mag-regmark--tr" aria-hidden="true"></span>
+          <span class="mag-regmark mag-regmark--bl" aria-hidden="true"></span>
+          <span class="mag-cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="mag-title">
+            <span class="mag-title-k">Featuring</span>
+            <span class="mag-title-h">Corentin<br/>Devillé</span>
+            <span class="mag-title-sub">Vidéaste à BW · 2020 — 26</span>
+            <span class="mag-teasers" aria-hidden="true">
+              <span>Aftermovies</span><span>Clips</span><span>Brand&nbsp;films</span>
+            </span>
+          </span>
+          <span class="mag-hint">▼ RETOURNER LE NUMÉRO ▼</span>
+        </button>
+        <div class="mag-body" id="mag-body-apropos">
+          <div class="mag-body-inner">
+            <article class="mag-article">
+              <span class="mag-deck-k">Featuring</span>
+              <p class="mag-col">Vidéaste basé dans le Brabant wallon — aftermovies, clips, brand films. De l'écriture au master, un même fil pour des images qui racontent vraiment quelque chose.</p>
+              <ul class="mag-specs" role="list">
+                <li class="mag-specs-row"><span class="mag-specs-k">Base</span><span class="mag-specs-v">Brabant wallon · Bruxelles · Europe</span></li>
+                <li class="mag-specs-row"><span class="mag-specs-k">Stack</span><span class="mag-specs-v">Caméra · Drone · Montage</span></li>
+                <li class="mag-specs-row"><span class="mag-specs-k">Depuis</span><span class="mag-specs-v">2020</span></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+        </span><!-- /.mag-flip -->
+      </li>
 
     </ul>
     </div><!-- /.studio-meta -->

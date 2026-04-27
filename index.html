@@ -6473,30 +6473,30 @@ body[data-theme="dark"] .ctk-primary-link { background:var(--surface-2)!importan
 .studio-kicker { display:none!important; }
 .studio-services { display:block!important; }
 .studio-services-head { margin-bottom:28px!important; }
-.studio-services-h { font-family:var(--font-heading)!important; font-weight:700!important; font-size:clamp(28px,5vw,48px)!important; letter-spacing:-.03em!important; color:#F5F2EC!important; }
-.studio-services-lede { color:var(--ink)!important; opacity:.7; max-width:60ch; font-size:16px!important; line-height:1.6!important; margin-top:8px; }
+.studio-services-h { font-family:var(--font-heading)!important; font-weight:700!important; font-size:clamp(32px,5vw,52px)!important; letter-spacing:-.03em!important; color:#F5F2EC!important; margin-bottom:8px; }
+.studio-services-lede { color:var(--ink)!important; opacity:.65; max-width:55ch; font-size:17px!important; line-height:1.65!important; margin-top:8px; }
 .studio-services-k { display:none!important; }
-.menu-list { display:flex!important; flex-direction:column!important; gap:12px!important; list-style:none!important; }
-.menu-item { background:var(--surface-2)!important; border:1px solid var(--border-subtle)!important; border-left:none!important; border-radius:14px!important; overflow:hidden!important; display:block!important; width:100%!important; transition:border-color .3s,background .3s,box-shadow .3s!important; }
+.menu-list { display:flex!important; flex-direction:column!important; gap:16px!important; list-style:none!important; }
+.menu-item { background:var(--surface-2)!important; border:1px solid var(--border-subtle)!important; border-left:none!important; border-radius:20px!important; overflow:hidden!important; display:block!important; width:100%!important; transition:border-color .4s,background .4s,box-shadow .4s!important; }
+.menu-item:hover { border-color:var(--border-accent)!important; background:var(--surface-3)!important; box-shadow:0 12px 40px rgba(0,0,0,.2)!important; }
+.menu-item.is-open { border-color:var(--border-accent)!important; background:var(--surface-3)!important; border-left:none!important; }
 .menu-item[data-svc-more] { display:block!important; }
 .menu-item::before,.menu-item::after,.menu-item--feature::before,.menu-item--feature::after { display:none!important; }
-.menu-item:hover { border-color:var(--border-accent)!important; background:var(--surface-3)!important; box-shadow:0 8px 24px rgba(0,0,0,.15)!important; }
-.menu-item.is-open { border-color:var(--border-accent)!important; background:var(--surface-3)!important; border-left:none!important; }
-.menu-head { padding:22px 28px!important; display:flex!important; align-items:center!important; gap:16px!important; border-radius:14px!important; width:100%!important; }
+.menu-head { padding:28px 36px!important; display:flex!important; align-items:center!important; gap:24px!important; border-radius:20px!important; width:100%!important; }
 .menu-num { display:none!important; }
-.menu-title { font-family:var(--font-heading)!important; font-weight:600!important; font-size:18px!important; color:#F5F2EC!important; flex:1; }
-.menu-meta { font-family:var(--font-mono)!important; font-size:11px!important; color:var(--muted)!important; letter-spacing:.1em!important; }
-.menu-chev { color:var(--accent)!important; font-size:16px!important; transition:transform .3s!important; }
+.menu-title { font-family:var(--font-heading)!important; font-weight:600!important; font-size:22px!important; color:#F5F2EC!important; flex:1; letter-spacing:-.015em; }
+.menu-meta { font-family:var(--font-mono)!important; font-size:13px!important; color:var(--ink)!important; opacity:.5; letter-spacing:.12em!important; }
+.menu-chev { color:var(--accent)!important; font-size:20px!important; transition:transform .4s cubic-bezier(.22,1,.36,1)!important; }
 .menu-item.is-open .menu-chev { transform:rotate(45deg)!important; }
-.menu-body { padding:0 28px 22px!important; }
-.menu-desc { color:var(--ink)!important; font-size:15px!important; line-height:1.65!important; opacity:.8; }
-.menu-tags { display:flex!important; flex-wrap:wrap!important; gap:6px!important; margin-top:12px!important; list-style:none!important; padding:0!important; }
-.menu-tags li { font-family:var(--font-mono)!important; font-size:10px!important; letter-spacing:.12em!important; text-transform:uppercase!important; padding:5px 12px!important; border-radius:8px!important; background:var(--surface-3)!important; color:var(--ink)!important; }
+.menu-body { padding:0 36px 28px!important; }
+.menu-desc { color:var(--ink)!important; font-size:17px!important; line-height:1.75!important; opacity:.7; }
+.menu-tags { display:flex!important; flex-wrap:wrap!important; gap:8px!important; margin-top:16px!important; list-style:none!important; padding:0!important; }
+.menu-tags li { font-family:var(--font-mono)!important; font-size:11px!important; letter-spacing:.14em!important; text-transform:uppercase!important; padding:7px 16px!important; border-radius:10px!important; background:var(--surface-3)!important; color:var(--ink)!important; border:1px solid var(--border-subtle); }
 .svc-more { display:none!important; }
 
 /* Flip cards: dark mode + smaller */
 .studio-cards { display:flex !important; flex-wrap:wrap; gap:20px !important; list-style:none !important; padding:0 !important; justify-content:center; }
-.studio-cards .receipt, .studio-cards .mag { max-width:300px !important; flex:1 1 260px; }
+.studio-cards .receipt, .studio-cards .mag { max-width:420px !important; flex:1 1 360px; }
 body[data-theme="dark"] .receipt-head { background:var(--surface-2) !important; color:var(--ink) !important; border:1px solid var(--border-subtle) !important; }
 body[data-theme="dark"] .receipt-body { background:var(--bg) !important; color:var(--ink) !important; border:1px solid var(--border-subtle) !important; }
 body[data-theme="dark"] .receipt-masthead, body[data-theme="dark"] .mag-masthead { color:var(--muted) !important; }
@@ -6519,11 +6519,23 @@ body[data-theme="dark"] .receipt.is-open .receipt-body-inner { border-top-color:
 body[data-theme="dark"] .mag.is-open .mag-body { border-top-color:var(--border-subtle) !important; }
 @media(max-width:720px) { .studio-cards .receipt,.studio-cards .mag { max-width:100% !important; flex:1 1 100%; } }
 
-/* Sound toggle */
-.sound-toggle { position:fixed; bottom:24px; right:24px; z-index:900; width:44px; height:44px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .3s,border-color .3s; color:var(--ink); }
-.sound-toggle:hover { background:var(--surface-3); border-color:var(--border-accent); }
-.sound-toggle svg { width:20px; height:20px; }
-.sound-toggle.muted .sound-wave { display:none; }
+/* Sound toggle per video */
+.video-sound-btn {
+  position: absolute; bottom: 12px; right: 12px; z-index: 10;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.15);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .2s, border-color .2s;
+  color: rgba(255,255,255,.7);
+}
+.video-sound-btn:hover { background: rgba(0,0,0,.7); border-color: rgba(255,255,255,.3); color: #fff; }
+.video-sound-btn.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.video-sound-btn svg { width: 16px; height: 16px; }
+.video-sound-btn .icon-on { display: none; }
+.video-sound-btn .icon-off { display: flex; }
+.video-sound-btn.is-on .icon-on { display: flex; }
+.video-sound-btn.is-on .icon-off { display: none; }
 
 /* Tweaks */
 body[data-theme="dark"] .tweaks { background:rgba(17,17,20,.95)!important; border-color:var(--border-subtle)!important; color:var(--ink)!important; box-shadow:0 16px 48px rgba(0,0,0,.5)!important; }
@@ -6679,7 +6691,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
             <div class="proj-preview-media proj-preview-carousel" data-format="9x16">
               <div class="proj-preview-rail" data-rail>
                 <div class="proj-preview-slide">
-                  <video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                  <video src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="auto" aria-hidden="true"></video>
                   <span class="proj-preview-live" aria-hidden="true">4K · 60 FPS</span>
                 </div>
                 <div class="proj-preview-slide">
@@ -6714,7 +6726,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
             <div class="proj-preview-media proj-preview-carousel" data-format="16x9">
               <div class="proj-preview-rail" data-rail>
                 <div class="proj-preview-slide">
-                  <video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+                  <video src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="auto" aria-hidden="true"></video>
                   <span class="proj-preview-live" aria-hidden="true">4K · 30 FPS</span>
                 </div>
                 <div class="proj-preview-slide">
@@ -7093,13 +7105,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
   </a>
 
 
-<!-- Sound toggle -->
-<button class="sound-toggle muted" id="soundToggle" aria-label="Activer le son">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-    <path class="sound-wave" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-  </svg>
-</button>
+<!-- Per-video sound buttons are injected by JS -->
 
 </main>
 
@@ -7146,6 +7152,17 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
 /* ========== ALWAYS START AT TOP ========== */
 if(history.replaceState) history.replaceState(null, '', window.location.pathname);
 window.scrollTo(0, 0);
+
+/* ========== EAGER VIDEO LOADING ========== */
+setTimeout(function(){
+  document.querySelectorAll('video[data-src]').forEach(function(v){
+    if(!v.src){
+      v.src = v.getAttribute('data-src');
+      v.preload = 'auto';
+      v.load();
+    }
+  });
+}, 500);
 
 /* ========== TWEAKABLE DEFAULTS ========== */
 const TWEAKS = /*EDITMODE-BEGIN*/{
@@ -8395,17 +8412,107 @@ try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e)
   });
 })();
 
-/* ========== SOUND TOGGLE ========== */
+/* ========== PER-VIDEO SOUND BUTTONS ========== */
 (function(){
-  const btn = document.getElementById('soundToggle');
-  if(!btn) return;
-  let muted = true;
-  btn.addEventListener('click', () => {
-    muted = !muted;
-    btn.classList.toggle('muted', muted);
-    btn.setAttribute('aria-label', muted ? 'Activer le son' : 'Couper le son');
-    document.querySelectorAll('video').forEach(v => { v.muted = muted; });
+  const svgOn = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>';
+  const svgOff = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>';
+
+  // Track which carousel has sound on (null = none)
+  var activeCard = null; // the .proj-preview-card or .prj-swipe-slide parent
+
+  function updateBtnStates(){
+    document.querySelectorAll('.video-sound-btn').forEach(function(b){
+      var v = b._video;
+      if(!v) return;
+      var isOn = !v.muted;
+      b.classList.toggle('is-on', isOn);
+    });
+  }
+
+  function muteAll(){
+    document.querySelectorAll('video').forEach(function(v){ v.muted = true; });
+    activeCard = null;
+    updateBtnStates();
+  }
+
+  function activateSound(video){
+    // Mute everything first
+    document.querySelectorAll('video').forEach(function(v){ v.muted = true; });
+    // Unmute this one
+    video.muted = false;
+    // Track the card this video belongs to
+    activeCard = video.closest('.proj-preview-card, .prj-swipe-slide, .prj-swipe-drawer-item');
+    updateBtnStates();
+  }
+
+  function addSoundBtn(video){
+    if(video._hasSoundBtn) return;
+    video._hasSoundBtn = true;
+    var wrap = video.closest('.proj-preview-slide, .prj-swipe-media, .prj-swipe-drawer-item');
+    if(!wrap) return;
+    if(getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
+    var btn = document.createElement('button');
+    btn.className = 'video-sound-btn';
+    btn.setAttribute('type','button');
+    btn.setAttribute('aria-label','Activer le son');
+    btn.innerHTML = '<span class="icon-off">'+svgOff+'</span><span class="icon-on">'+svgOn+'</span>';
+    btn._video = video;
+    btn.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      if(!video.muted){
+        muteAll();
+      } else {
+        activateSound(video);
+      }
+    });
+    wrap.appendChild(btn);
+  }
+
+  // When carousel slides change, transfer sound to the new active slide's video
+  // Listen for the setActive calls in the carousel code via a MutationObserver on data-active
+  function transferSoundInCarousel(card){
+    if(!activeCard) return;
+    // Check if this card is the one with active sound
+    var isThisCard = activeCard === card || card.contains(activeCard);
+    if(!isThisCard) return;
+    // Find the currently visible slide
+    var activeIdx = parseInt(card.dataset.active || '0');
+    var slides = card.querySelectorAll('.proj-preview-slide');
+    if(!slides[activeIdx]) return;
+    var newVideo = slides[activeIdx].querySelector('video');
+    if(newVideo && newVideo.muted){
+      // Mute all, then unmute the new active
+      document.querySelectorAll('video').forEach(function(v){ v.muted = true; });
+      newVideo.muted = false;
+      activeCard = card;
+      updateBtnStates();
+    }
+  }
+
+  // Watch for data-active changes on carousel cards
+  var cardObs = new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      if(m.attributeName === 'data-active'){
+        transferSoundInCarousel(m.target);
+      }
+    });
   });
+  document.querySelectorAll('.proj-preview-card').forEach(function(card){
+    cardObs.observe(card, {attributes: true, attributeFilter: ['data-active']});
+  });
+
+  // Add buttons to all videos
+  document.querySelectorAll('video').forEach(addSoundBtn);
+  // Handle dynamically loaded videos
+  var domObs = new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      m.addedNodes.forEach(function(n){
+        if(n.tagName === 'VIDEO') addSoundBtn(n);
+        if(n.querySelectorAll) n.querySelectorAll('video').forEach(addSoundBtn);
+      });
+    });
+  });
+  domObs.observe(document.body, {childList:true, subtree:true});
 })();
 </script>
 

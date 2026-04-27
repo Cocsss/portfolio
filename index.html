@@ -6599,6 +6599,46 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
   .sound-toggle { width:38px; height:38px; bottom:16px; right:16px; }
 }
 @media(pointer:coarse){ .cur-dot,.cur-ring { display:none!important; } }
+
+/* ═══════════════════════════════════════════════════════════════
+   TACTILE — applique d'office les états visuels "hover" desktop
+   (ombres + couleurs renforcées). Sur tel, sans souris on peut
+   pas hover → cards paraissent plates. Ce bloc rend l'expérience
+   tactile aussi "lumineuse" que desktop par défaut, sans nécessiter
+   de tap. Pas de translateY (éviterait l'effet "flottant").
+   ═══════════════════════════════════════════════════════════════ */
+@media (hover:none){
+  /* Preview cards Wenda + Bebooth : ombre forte + ring accent */
+  .proj-preview-media{
+    box-shadow:
+      0 36px 70px -22px rgba(26,26,26,.42),
+      0 14px 28px -10px rgba(26,26,26,.28),
+      0 0 0 1px rgba(255,79,0,.22) !important;
+  }
+  /* Reel cards : ombre + opacité pleine */
+  .reel-card.pos1, .reel-card.pos2{
+    opacity:1 !important;
+    box-shadow:
+      0 32px 60px -22px rgba(26,26,26,.4),
+      0 6px 16px -6px rgba(255,79,0,.16) !important;
+  }
+  /* Chapitres (dossiers) : léger relief permanent */
+  .chap{ filter: drop-shadow(0 8px 18px rgba(0,0,0,.12)); }
+  /* "More cards" (autres projets) : ombre permanente */
+  .more-card{
+    box-shadow:
+      0 18px 40px -16px rgba(26,26,26,.32),
+      0 6px 14px -6px rgba(26,26,26,.18);
+  }
+  /* Fold cards (cartes services) : ombre subtile */
+  .fold-card{
+    box-shadow: 0 14px 32px -14px rgba(0,0,0,.22);
+  }
+  /* Eye bubble : box-shadow renforcée */
+  .eye-bubble{
+    box-shadow: 0 14px 44px -8px rgba(26,26,26,.35);
+  }
+}
 </style>
 </head>
 <body data-mode="glass" data-theme="dark">
@@ -6656,8 +6696,14 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
 <!-- TOP BAR -->
 <header class="topbar">
   <a href="#top" class="brand brand-logo" aria-label="Corentin Devillé — Vidéaste monteur Brabant wallon">
-    <svg class="eye-mono" viewBox="0 0 166.06 126.14" fill="currentColor" aria-hidden="true">
-      <path d="M83,0C37.17,0,0,28.24,0,63.07s37.17,63.07,83,63.07,83-28.24,83-63.07S128.89,0,83,0ZM42.59,63.07c0-12.59,10-23.41,24.27-28.15v56.3C52.58,86.48,42.59,75.66,42.59,63.07ZM99.21,91.22V34.92c14.28,4.74,24.26,15.56,24.26,28.15S113.49,86.48,99.21,91.22Z"/>
+    <svg class="cd-mono" viewBox="0 0 181 136.23" fill="currentColor" aria-hidden="true">
+      <!-- C officiel -->
+      <path class="cd-c" d="M68.13,118.42c0,5.13,0,10.26,0,15.39,0,2.17,0,2.29-2.15,2.19-11.8-.54-22.93-3.51-33-9.75-17.26-10.68-28.3-25.93-31.78-46C-3,56.18,3.91,35.33,21.6,18.35,32.44,7.94,45.6,2.19,60.5.41c2.07-.24,4.16.1,6.23-.36,1-.21,1.42.22,1.42,1.29q0,16.23,0,32.47c0,1.25-.7,1.31-1.62,1.34A31,31,0,0,0,44.17,45.24c-9,9.65-11.63,21-7.3,33.5C41.15,91.05,50.15,98.25,63,100.52a17.43,17.43,0,0,0,3.53.31c1.28,0,1.63.47,1.62,1.7C68.1,107.83,68.13,113.13,68.13,118.42Z"/>
+      <!-- D officiel : barre verticale + courbe (glisse vers le C au hover) -->
+      <g class="cd-d">
+        <rect width="32.35" height="136.23"/>
+        <path d="M29.43,17.81c0-5.13,0-10.26,0-15.39,0-2.17,0-2.29,2.15-2.19,11.8.54,22.93,3.52,33,9.75,17.26,10.68,28.3,25.93,31.78,46,4.19,24.1-2.72,45-20.41,61.93C65.12,128.3,52,134,37.06,135.82c-2.07.25-4.16-.1-6.23.36-.95.21-1.42-.22-1.42-1.29q0-16.23,0-32.47c0-1.25.7-1.3,1.62-1.34A31,31,0,0,0,53.39,91c9-9.65,11.63-21,7.3-33.49S47.41,38,34.55,35.71A18.17,18.17,0,0,0,31,35.4c-1.28,0-1.63-.47-1.62-1.7C29.46,28.4,29.43,23.11,29.43,17.81Z"/>
+      </g>
     </svg>
     <span class="brand-wordmark">
       <span class="brand-wordmark-top">Corentin Devillé</span>

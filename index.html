@@ -5739,16 +5739,6 @@ body:has(.mob-menu.open) .brand-wordmark-sub{
   overflow:visible;
 }
 .brand-logo:hover .eye-mono{ transform:scale(1.06); }
-.eye-mono .eye-pupil-move rect{
-  transform-origin:83px 63px;
-  animation: eyeMonoScan 5.5s cubic-bezier(.6,.05,.4,.95) 2s infinite;
-}
-@keyframes eyeMonoScan{
-  0%,18%   { transform:translateX(0); }
-  28%,42%  { transform:translateX(-32px); }
-  52%,68%  { transform:translateX(28px); }
-  78%,100% { transform:translateX(0); }
-}
 body[data-theme="dark"] .eye-mono{ color:var(--cream); }
 @media(max-width:720px){ .eye-mono{ height:22px; } }
 /* Le D est positionné à droite du C au repos, et glisse vers lui au hover */
@@ -6667,8 +6657,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
 <header class="topbar">
   <a href="#top" class="brand brand-logo" aria-label="Corentin Devillé — Vidéaste monteur Brabant wallon">
     <svg class="eye-mono" viewBox="0 0 166.06 126.14" fill="currentColor" aria-hidden="true">
-      <path class="eye-body" d="M83,0C37.17,0,0,28.24,0,63.07s37.17,63.07,83,63.07,83-28.24,83-63.07S128.89,0,83,0ZM99.21,91.22v-.17a52,52,0,0,1-32.35,0v.17C52.58,86.48,42.59,75.66,42.59,63.07s10-23.41,24.27-28.15v.17a52,52,0,0,1,32.35,0v-.17c14.28,4.74,24.26,15.56,24.26,28.15S113.49,86.48,99.21,91.22Z"/>
-      <g class="eye-pupil-move"><rect x="75" y="47" width="16" height="32" rx="3"/></g>
+      <path d="M83,0C37.17,0,0,28.24,0,63.07s37.17,63.07,83,63.07,83-28.24,83-63.07S128.89,0,83,0ZM42.59,63.07c0-12.59,10-23.41,24.27-28.15v56.3C52.58,86.48,42.59,75.66,42.59,63.07ZM99.21,91.22V34.92c14.28,4.74,24.26,15.56,24.26,28.15S113.49,86.48,99.21,91.22Z"/>
     </svg>
     <span class="brand-wordmark">
       <span class="brand-wordmark-top">Corentin Devillé</span>

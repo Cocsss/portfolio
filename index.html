@@ -4319,12 +4319,25 @@ body[data-theme="dark"] .fold-card.is-open{
   position:relative;z-index:3;
   width:100%;height:100%;display:block;
   object-fit:contain;object-position:center top;
-  filter:contrast(1.04) saturate(1.08) drop-shadow(0 6px 10px rgba(0,0,0,.18));
+  /* Triple drop-shadow → ombre dramatique multi-couches qui décolle
+     la photo du fond crème (proche, médium, lointain diffuse) */
+  filter:
+    contrast(1.04) saturate(1.08)
+    drop-shadow(0 4px 6px rgba(0,0,0,.22))
+    drop-shadow(0 14px 20px rgba(0,0,0,.28))
+    drop-shadow(0 32px 48px rgba(0,0,0,.20));
   transform:scale(1.02);
   transform-origin:center top;
   transition:transform .8s cubic-bezier(.22,1,.36,1), filter .6s;
 }
-.mag:hover .mag-portrait img{ transform:scale(1.05); filter:contrast(1.1) saturate(1.15) drop-shadow(0 10px 14px rgba(0,0,0,.22)); }
+.mag:hover .mag-portrait img{
+  transform:scale(1.05);
+  filter:
+    contrast(1.1) saturate(1.15)
+    drop-shadow(0 6px 10px rgba(0,0,0,.28))
+    drop-shadow(0 18px 28px rgba(0,0,0,.32))
+    drop-shadow(0 40px 60px rgba(0,0,0,.24));
+}
 
 /* Registration marks (marques d'imprimerie aux coins de la carte crème) */
 .mag-regmark{

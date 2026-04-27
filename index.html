@@ -6865,7 +6865,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
                   <div class="prj-swipe-media" data-ratio="9x16">
                     <video class="prj-swipe-video"
                            data-src="https://videos.corentindeville.com/lucid-clip-1.mp4"
-                           muted loop playsinline preload="none" aria-hidden="true"></video>
+                           muted loop playsinline preload="metadata" aria-hidden="true"></video>
                     <span class="prj-swipe-live" aria-hidden="true">4K · 60 FPS</span>
                   </div>
                   <div class="prj-swipe-cap">
@@ -6883,7 +6883,7 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
                   <div class="prj-swipe-media" data-ratio="9x16">
                     <video class="prj-swipe-video"
                            data-src="https://videos.corentindeville.com/reel_scout1d.mp4"
-                           muted loop playsinline preload="none" aria-hidden="true"></video>
+                           muted loop playsinline preload="metadata" aria-hidden="true"></video>
                     <span class="prj-swipe-live" aria-hidden="true">4K · 30 FPS</span>
                   </div>
                   <div class="prj-swipe-cap">
@@ -6945,16 +6945,20 @@ body[data-theme="dark"] .mob-menu { background:rgba(14,14,16,.95)!important; }
               </div>
             </div>
 
-            <!-- Drawer Scout-reels — autres reels événementiels -->
-            <div class="prj-swipe-drawer" id="prjSwipeDrawerScout" data-drawer-id="scout-reels" aria-hidden="true" role="dialog" aria-label="Plus de reels Scout">
+            <!-- Drawer Scout-reels — TOUS les reels (principal + supplémentaires) -->
+            <div class="prj-swipe-drawer" id="prjSwipeDrawerScout" data-drawer-id="scout-reels" aria-hidden="true" role="dialog" aria-label="Tous les reels Scout">
               <div class="prj-swipe-drawer-backdrop" data-drawer-close></div>
               <div class="prj-swipe-drawer-panel">
                 <button class="prj-swipe-drawer-close" type="button" data-drawer-close aria-label="Fermer">×</button>
-                <span class="prj-swipe-k">Reel Scout · autres reels</span>
+                <span class="prj-swipe-k">Reel Scout · tous les reels</span>
                 <div class="prj-swipe-drawer-list">
                   <div class="prj-swipe-drawer-item" data-ratio="9x16" data-clip-num="01">
-                    <video data-src="https://videos.corentindeville.com/scout-reel.mp4" muted loop playsinline preload="none"></video>
+                    <video data-src="https://videos.corentindeville.com/reel_scout1d.mp4" muted loop playsinline preload="none"></video>
                     <span class="prj-swipe-drawer-idx">01</span>
+                  </div>
+                  <div class="prj-swipe-drawer-item" data-ratio="9x16" data-clip-num="02">
+                    <video data-src="https://videos.corentindeville.com/scout-reel.mp4" muted loop playsinline preload="none"></video>
+                    <span class="prj-swipe-drawer-idx">02</span>
                   </div>
                 </div>
               </div>

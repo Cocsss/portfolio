@@ -7497,19 +7497,35 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
     const total   = slides.length;
     if(totEl) totEl.textContent = String(total).padStart(2,'0');
 
-    // Lazy-load vidéos : marque le media comme loaded (retire le skeleton)
-    const loadVideo = (v) => {
-      if(!v || v.dataset.loaded === '1') return;
-      const src = v.getAttribute('data-src');
-      if(!src) return;
-      v.src = src;
-      v.dataset.loaded = '1';
-      v.addEventListener('loadeddata', () => {
-        const media = v.closest('.prj-swipe-media');
-        if(media) media.classList.add('is-loaded');
-      }, { once: true });
+    // Lazy-load vidéos : marque le media comme loaded + play() blindé
+    // (iOS Safari rejette parfois play() avant que la vidéo soit prête)
+    const tryPlay = (v) => {
+      // Force les attributs critiques pour iOS (muted + playsInline)
+      v.muted = true;
+      v.playsInline = true;
+      v.setAttribute('playsinline','');
+      v.setAttribute('webkit-playsinline','');
       const p = v.play();
       if(p && typeof p.catch === 'function') p.catch(()=>{});
+    };
+    const loadVideo = (v) => {
+      if(!v) return;
+      const media = v.closest('.prj-swipe-media');
+      if(v.dataset.loaded !== '1'){
+        const src = v.getAttribute('data-src');
+        if(!src) return;
+        v.src = src;
+        v.dataset.loaded = '1';
+        // Multiple events : on play() dès qu'iOS dit que c'est prêt
+        v.addEventListener('loadeddata', () => {
+          if(media) media.classList.add('is-loaded');
+          tryPlay(v);
+        }, { once: true });
+        v.addEventListener('canplay',     () => tryPlay(v), { once: true });
+        v.addEventListener('canplaythrough', () => tryPlay(v), { once: true });
+      }
+      // Tente play() immédiatement (réussit si déjà en cache)
+      tryPlay(v);
     };
     const pauseVideo = (v) => { if(v && !v.paused) try{ v.pause(); }catch(_){} };
 

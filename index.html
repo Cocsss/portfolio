@@ -6504,7 +6504,13 @@ body[data-theme="dark"] .gridbg {
   .hero-name {
     font-size: clamp(36px, 12vw, 64px) !important;
   }
-  .section { padding: 32px 20px 28px !important; }
+  .hero-morph {
+    font-size: 16px !important;
+  }
+  .section { padding: 32px 16px 28px !important; }
+  .section-head h2 {
+    font-size: clamp(26px, 8vw, 40px) !important;
+  }
   .proj-preview {
     flex-direction: column !important;
     gap: 16px !important;
@@ -6512,6 +6518,77 @@ body[data-theme="dark"] .gridbg {
   .proj-preview-card {
     width: 100% !important;
     max-width: 100% !important;
+  }
+  .proj-preview-title {
+    font-size: 16px !important;
+    padding: 12px 14px !important;
+  }
+  /* Services grid: single column on mobile */
+  .menu-list {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .menu-item--feature { grid-column: auto !important; }
+  .menu-head {
+    padding: 14px 16px !important;
+  }
+  .menu-title {
+    font-size: 15px !important;
+  }
+  .menu-meta {
+    font-size: 10px !important;
+    display: none !important;
+  }
+  .menu-body {
+    padding: 0 16px 14px !important;
+  }
+  .menu-desc {
+    font-size: 13px !important;
+  }
+  .menu-tags li {
+    font-size: 9px !important;
+    padding: 3px 8px !important;
+  }
+  /* Contact compact */
+  .ctk--simple {
+    max-width: 100% !important;
+    padding: 0 4px !important;
+  }
+  .ctk-simple-links a {
+    padding: 14px 12px !important;
+    font-size: 13px !important;
+  }
+  /* Studio compact */
+  .studio-services-h {
+    font-size: clamp(20px, 6vw, 28px) !important;
+  }
+  .studio-services-lede {
+    font-size: 14px !important;
+  }
+  /* Chap accordion mobile */
+  .chap-head {
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+  .chap-num {
+    font-size: clamp(28px, 8vw, 48px) !important;
+  }
+  .chap-title {
+    font-size: clamp(18px, 5vw, 28px) !important;
+  }
+  /* Body text readability */
+  body {
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+  }
+  /* Topbar compact */
+  .topbar {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  /* Colophon */
+  .colophon {
+    padding: 24px 16px 20px !important;
   }
 }
 
@@ -6890,31 +6967,6 @@ video, .proj-preview-media, .prj-swipe-media {
 <svg id="film-grain" xmlns="http://www.w3.org/2000/svg"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
 
 
- <div class="eye-inner">
-  <!-- Rest state: œil unifié avec scan de pupille -->
-  <svg class="eye-unified" viewBox="0 0 166.06 126.14" xmlns="http://www.w3.org/2000/svg">
-    <path class="eye-body" d="M83,0C37.17,0,0,28.24,0,63.07s37.17,63.07,83,63.07,83-28.24,83-63.07S128.89,0,83,0ZM99.21,91.22v-.17a52,52,0,0,1-32.35,0v.17C52.58,86.48,42.59,75.66,42.59,63.07s10-23.41,24.27-28.15v.17a52,52,0,0,1,32.35,0v-.17c14.28,4.74,24.26,15.56,24.26,28.15S113.49,86.48,99.21,91.22Z"/>
-    <g class="bubble-pupil">
-      <rect x="75" y="47" width="16" height="32" rx="3"/>
-    </g>
-  </svg>
-  <!-- Hover state: C + D, split apart -->
-  <div class="eye-cd" aria-hidden="true">
-    <svg class="split-c" viewBox="0 0 68.16 136.02" xmlns="http://www.w3.org/2000/svg">
-      <path d="M68.13,118.42c0,5.13,0,10.26,0,15.39,0,2.17,0,2.29-2.15,2.19-11.8-.54-22.93-3.51-33-9.75-17.26-10.68-28.3-25.93-31.78-46C-3,56.18,3.91,35.33,21.6,18.35,32.44,7.94,45.6,2.19,60.5.41c2.07-.24,4.16.1,6.23-.36,1-.21,1.42.22,1.42,1.29q0,16.23,0,32.47c0,1.25-.7,1.31-1.62,1.34A31,31,0,0,0,44.17,45.24c-9,9.65-11.63,21-7.3,33.5C41.15,91.05,50.15,98.25,63,100.52a17.43,17.43,0,0,0,3.53.31c1.28,0,1.63.47,1.62,1.7C68.1,107.83,68.13,113.13,68.13,118.42Z"/>
-    </svg>
-    <svg class="split-d" viewBox="0 0 97.56 136.23" xmlns="http://www.w3.org/2000/svg">
-      <path d="M29.43,17.81c0-5.13,0-10.26,0-15.39,0-2.17,0-2.29,2.15-2.19,11.8.54,22.93,3.52,33,9.75,17.26,10.68,28.3,25.93,31.78,46,4.19,24.1-2.72,45-20.41,61.93C65.12,128.3,52,134,37.06,135.82c-2.07.25-4.16-.1-6.23.36-.95.21-1.42-.22-1.42-1.29q0-16.23,0-32.47c0-1.25.7-1.3,1.62-1.34A31,31,0,0,0,53.39,91c9-9.65,11.63-21,7.3-33.49S47.41,38,34.55,35.71A18.17,18.17,0,0,0,31,35.4c-1.28,0-1.63-.47-1.62-1.7C29.46,28.4,29.43,23.11,29.43,17.81Z"/>
-      <rect width="32.35" height="136.23" transform="translate(32.35 136.23) rotate(180)"/>
-    </svg>
-  </div>
-  <!-- Flip state: WhatsApp (apparaît en cycle périodique) -->
-  <div class="eye-wa" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-  </div>
- </div>
-</button>
-
 <div class="scroll-bar" id="scrollBar"></div>
 
 <div class="cdv-egg" id="cdvEgg" onclick="this.classList.remove('on')"><div class="cdv-egg-text">Corentin<br/>Devillé</div></div>
@@ -7221,7 +7273,7 @@ video, .proj-preview-media, .prj-swipe-media {
 
         <div class="ctk-simple-links">
           <a href="tel:+32495924295" class="ctk-primary-link"><span class="cs-k">Téléphone</span><span class="cs-v">+32 495 92 42 95</span><span class="cs-a">↗</span></a>
-          <a href="/cdn-cgi/l/email-protection#bed6dbd2d2d1feddd1ccdbd0cad7d0dadbc8d7d2d2db90ddd1d3" class="ctk-primary-link"><span class="cs-k">Email</span><span class="cs-v"><span class="__cf_email__" data-cfemail="a2cac7cececde2c1cdd0c7ccd6cbccc6c7d4cbcecec78cc1cdcf">[email&#160;protected]</span></span><span class="cs-a">↗</span></a>
+          <a href="/cdn-cgi/l/email-protection#a6cec3cacac9e6c5c9d4c3c8d2cfc8c2c3d0cfcacac388c5c9cb" class="ctk-primary-link"><span class="cs-k">Email</span><span class="cs-v"><span class="__cf_email__" data-cfemail="0169646d6d6e41626e73646f75686f656477686d6d642f626e6c">[email&#160;protected]</span></span><span class="cs-a">↗</span></a>
         </div>
       </div>
     </div>
@@ -7275,54 +7327,6 @@ video, .proj-preview-media, .prj-swipe-media {
             <p class="menu-desc">Tournage terrain — caméra 4K 60 fps pour l'intention, drone pour les vues aériennes. Multi-cam si besoin, éclairage maîtrisé, repérages inclus. De la prod légère au dispositif plus costaud.</p>
             <ul class="menu-tags" role="list">
               <li>Caméra 4K 60 fps</li><li>Drone</li><li>Multi-cam</li><li>Éclairage</li><li>Repérages</li>
-            </ul>
-          </div></div>
-        </li>
-
-        <!-- § 02.1.3 — Aftermovies -->
-        <li class="menu-item" data-key="after" data-svc-more>
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 02.1.3</span>
-            <span class="menu-title">Aftermovies</span>
-            <span class="menu-meta">Festivals &amp; événements</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Capter l'énergie d'un événement — de la captation live au montage final. Drone, grand angle, proximité. Livrables teaser + full.</p>
-            <ul class="menu-tags" role="list">
-              <li>Festivals</li><li>Events</li><li>Drone</li><li>Live</li>
-            </ul>
-          </div></div>
-        </li>
-
-        <!-- § 02.1.4 — Brand films & Clips -->
-        <li class="menu-item" data-key="brandclips" data-svc-more>
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 02.1.4</span>
-            <span class="menu-title">Brand films &amp; Clips</span>
-            <span class="menu-meta">Films de marque · reels · clips</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Films de marque, capsules sociales, clips musicaux, reels — écriture, direction artistique, tournage 4K, drone si besoin. Identité forte, narration ciblée, rythme pensé pour le format.</p>
-            <ul class="menu-tags" role="list">
-              <li>Brand films</li><li>Clips</li><li>Reels</li><li>DA</li><li>Social</li>
-            </ul>
-          </div></div>
-        </li>
-
-        <!-- § 02.1.5 — Formation Premiere Pro -->
-        <li class="menu-item" data-key="formation" data-svc-more>
-          <button class="menu-head" type="button" aria-expanded="false">
-            <span class="menu-num">§ 02.1.6</span>
-            <span class="menu-title">Formation Premiere Pro</span>
-            <span class="menu-meta">Cours particuliers · remote / BW</span>
-            <span class="menu-chev" aria-hidden="true">+</span>
-          </button>
-          <div class="menu-body"><div class="menu-body-inner">
-            <p class="menu-desc">Initiation ou perfectionnement — particulier ou petit groupe, en ligne ou à BW. Projet réel comme support pédagogique.</p>
-            <ul class="menu-tags" role="list">
-              <li>Premiere Pro</li><li>Initiation</li><li>Perfectionnement</li><li>Remote</li>
             </ul>
           </div></div>
         </li>

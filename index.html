@@ -7519,18 +7519,23 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
       if(v) loadVideo(v);
     });
 
+    // ► Toutes les vidéos du carousel tournent en boucle dès qu'elles
+    //   sont au moins partiellement visibles. On NE met PAS en pause
+    //   les slides "à côté" — c'est explicitement demandé : les 3
+    //   tournent en parallèle quand le dossier est ouvert.
     if('IntersectionObserver' in window){
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const v = entry.target.querySelector('video.prj-swipe-video');
           if(!v) return;
-          if(entry.isIntersecting && entry.intersectionRatio > 0.4){
+          if(entry.isIntersecting){
             loadVideo(v);
-          } else {
+          } else if(entry.intersectionRatio === 0){
+            // Pause SEULEMENT si totalement hors viewport
             pauseVideo(v);
           }
         });
-      }, { root: null, threshold: [0, 0.4, 1] });
+      }, { root: null, threshold: [0, 0.01, 1] });
       slides.forEach(s => io.observe(s));
     } else {
       // Fallback : hydrate tout
@@ -7539,6 +7544,15 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
         if(v) loadVideo(v);
       });
     }
+    // Sécurité : si une vidéo se termine sans que `loop` la relance
+    // (cas iOS/safari), on la redémarre manuellement.
+    slides.forEach(s => {
+      const v = s.querySelector('video.prj-swipe-video');
+      if(!v) return;
+      v.addEventListener('ended', () => {
+        try{ v.currentTime = 0; v.play().catch(()=>{}); }catch(_){}
+      });
+    });
 
     // Indicator : compteur + barre (suit le slide le plus centré)
     const updateIndicator = () => {

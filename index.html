@@ -73,7 +73,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://videos.corentindeville.com">
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Dela+Gothic+One&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Dela+Gothic+One&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -87,7 +87,8 @@
   --muted: #55514A;          /* darkened for WCAG AA (≥4.5:1) on --bg */
 
   --font-display: "Dela Gothic One", "Impact", "Arial Black", sans-serif;
-  --font-body: "Inter", -apple-system, Helvetica, Arial, sans-serif;
+  --font-heading: "Syne", "Inter", sans-serif;
+  --font-body: "Outfit", -apple-system, Helvetica, Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
   --font-hand: "Caveat", "Bradley Hand", cursive;
 
@@ -265,46 +266,16 @@ body[data-mode="glass"] .gridbg::before{
 }
 body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
 
-.film-loader{
-  /* iOS Safari : on utilise inset:0 classique pour que clip-path
-     fonctionne proprement à la fin, ET on ajoute un background noir
-     sur <html> pendant la phase preloading pour masquer tout gap
-     éventuel en bas (URL bar toggle). */
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  height:100svh;
-  height:100dvh;
-  height:100lvh;
-  height:-webkit-fill-available;
-  z-index:6000;pointer-events:none;
-  /* Base SMPTE — voilée par ::before jusqu'à l'arrivée à la barre */
-  background:linear-gradient(90deg,
-    #c0c0c0 0%, #c0c0c0 14.28%,
-    #c0c000 14.28%, #c0c000 28.57%,
-    #00c0c0 28.57%, #00c0c0 42.86%,
-    #00c000 42.86%, #00c000 57.14%,
-    #c000c0 57.14%, #c000c0 71.43%,
-    #c00000 71.43%, #c00000 85.71%,
-    #0000c0 85.71%, #0000c0 100%);
-  /* clip-path au lieu de height : GPU-accelerated, zéro reflow → smooth */
-  clip-path:inset(0 0 0 0);
-  will-change:clip-path;
-  animation:
-    filmCurtainClose .75s cubic-bezier(.72,.02,.22,1) 3.25s forwards;
+/* Film loader — disabled, animation happens in topbar */
+.film-loader{ display:none !important; }
 }
-/* Voile noir — reste opaque tout le long de la descente.
-   Ne se retire qu'au moment où le rideau atteint la barre. */
 .film-loader::before{
   content:"";
   position:absolute;inset:0;
   background:#0a0a09;
-  animation: curtainColorIn .22s cubic-bezier(.2,.8,.2,1) 3.98s forwards;
+  animation: curtainColorIn .2s cubic-bezier(.2,.8,.2,1) 2.1s forwards;
   z-index:1;
 }
-/* Scanline lumineuse horizontale qui traverse la barre au moment du swap couleur.
-   Simule l'allumage d'un moniteur / mire vidéo qui s'active. */
 .film-loader::after{
   content:"";
   position:absolute;top:0;left:0;bottom:0;
@@ -318,7 +289,7 @@ body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
   opacity:0;
   transform:translateX(-100%);
   mix-blend-mode:screen;
-  animation: curtainSweep .6s cubic-bezier(.3,.7,.25,1) 3.98s forwards;
+  animation: curtainSweep .4s cubic-bezier(.3,.7,.25,1) 2.1s forwards;
   z-index:2;
   pointer-events:none;
 }
@@ -338,16 +309,19 @@ body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
   display:flex;align-items:center;justify-content:center;gap:0;
   height:clamp(120px, 22vw, 200px);
   transform-origin:50% 50%;
-  z-index:3; /* au-dessus du voile noir et du flash blanc */
-  /* One blink masks the swap from C+D → eye,
-     then fade out before the curtain compacts into the horizontal bar */
+  z-index:3;
+  /* C meets D → blink → eye → brand text → hold → lift */
   animation:
-    stageBlinkSwap .45s cubic-bezier(.4,0,.3,1) 1.15s forwards,
-    stageFadeOut .28s cubic-bezier(.4,0,.2,1) 3.0s forwards;
+    stageBlinkSwap .3s cubic-bezier(.4,0,.3,1) .5s forwards,
+    stageLiftOut .5s cubic-bezier(.22,1,.36,1) 1.6s forwards;
 }
 @keyframes stageBlinkSwap{
   0%,100% { transform:translate(-50%,-50%) scaleY(1); }
   45%,55% { transform:translate(-50%,-50%) scaleY(.04); }
+}
+@keyframes stageLiftOut{
+  0%   { opacity:1; transform:translate(-50%,-50%) translateY(0); }
+  100% { opacity:0; transform:translate(-50%,-50%) translateY(-30vh); }
 }
 
 /* C + D letters fade out during the closed phase of the blink */
@@ -355,36 +329,73 @@ body[data-theme="dark"] .grain{opacity:.5;mix-blend-mode:screen}
 .fl-c{
   transform:translateX(-55vw);
   animation:
-    slideC .9s cubic-bezier(.22,1,.36,1) .15s forwards,
-    fadeIn .3s ease .15s forwards,
-    lettersOut .08s linear 1.33s forwards;
+    slideC .5s cubic-bezier(.22,1,.36,1) .05s forwards,
+    fadeIn .2s ease .05s forwards,
+    lettersOut .06s linear .65s forwards;
 }
 .fl-d{
   transform:translateX(55vw);
   animation:
-    slideD .9s cubic-bezier(.22,1,.36,1) .15s forwards,
-    fadeIn .3s ease .15s forwards,
-    lettersOut .08s linear 1.33s forwards;
+    slideD .5s cubic-bezier(.22,1,.36,1) .05s forwards,
+    fadeIn .2s ease .05s forwards,
+    lettersOut .06s linear .65s forwards;
 }
 @keyframes lettersOut{ to{ opacity:0; } }
 
 /* Final combined eye logo (Fichier 4 + pupil bar Fichier 5) — same light color, no invert */
+/* Eye logo appears after blink */
 .fl-eye-full{
   position:absolute;top:50%;left:50%;
   height:100%;width:auto;
   opacity:0;
   transform:translate(-50%,-50%);
-  transform-origin:50% 50%;transform-box:fill-box;
-  animation:
-    eyeFullIn .08s linear 1.33s forwards,
-    finalBlink 1s ease-in-out 2.2s 1;
+  animation: eyeFullIn .06s linear .65s forwards;
 }
 .fl-eye-full path, .fl-eye-full rect{
   fill:#F0EEE9;
 }
 .fl-eye-full .eye-pupil-move rect{
   transform-origin:50% 50%;transform-box:fill-box;
-  animation: pupilScan 1.5s cubic-bezier(.5,0,.2,1) 1.6s 1 forwards;
+  fill:#F0EEE9;
+}
+
+/* Branded text — horizontal layout like logo: CD [Studio / Corentin Devillé] */
+.fl-brand{
+  position:absolute;
+  top:calc(50% + clamp(65px, 12vw, 110px));
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  opacity:0;
+  animation: flBrandIn .5s cubic-bezier(.22,1,.36,1) .9s forwards;
+  white-space:nowrap;
+  pointer-events:none;
+}
+  white-space:nowrap;
+  pointer-events:none;
+}
+.fl-brand-studio{
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:clamp(20px, 3.5vw, 36px);
+  letter-spacing:.01em;
+  color:#F0EEE9;
+}
+.fl-brand-name{
+  font-family:var(--font-mono);
+  font-weight:400;
+  font-size:clamp(9px, 1.3vw, 13px);
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:rgba(240,238,233,.5);
+  margin-top:3px;
+}
+.fl-brand-right{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+@keyframes flBrandIn{
+  0%  { opacity:0; transform:translateX(-50%) translateY(10px); }
+  100%{ opacity:1; transform:translateX(-50%) translateY(0); }
 }
 @keyframes eyeFullIn{
   0%  { opacity:0; }
@@ -1331,16 +1342,16 @@ body[data-mode="glass"] .topbar{
 .chap{
   position:relative;
   /* Couleurs — basculent via .is-open */
-  --chap-cover: #0F0F0E;            /* couverture noire */
-  --chap-page: #F5F0E0;             /* page crème ouverte */
-  --chap-grid-cover: rgba(240,238,233,.16);
-  --chap-grid-cover-sub: rgba(240,238,233,.07);
-  --chap-grid-page: rgba(26,26,26,.12);
-  --chap-grid-page-sub: rgba(26,26,26,.05);
-  --chap-ink-cover: #F0EEE9;        /* texte sur couverture */
-  --chap-ink-page: #1A1A1A;         /* texte sur page */
-  --chap-dim-cover: rgba(240,238,233,.55);
-  --chap-dim-page: rgba(26,26,26,.55);
+  --chap-cover: var(--bg);
+  --chap-page: var(--bg);
+  --chap-ink-cover: var(--ink);
+  --chap-ink-page: var(--ink);
+  --chap-dim-cover: var(--muted);
+  --chap-dim-page: var(--muted);
+  --chap-grid-cover: rgba(240,238,233,.08);
+  --chap-grid-cover-sub: rgba(240,238,233,.04);
+  --chap-grid-page: rgba(26,26,26,.06);
+  --chap-grid-page-sub: rgba(26,26,26,.03);
 
   background:var(--chap-cover);
   color:var(--chap-ink-cover);
@@ -2996,7 +3007,7 @@ body[data-theme="dark"] #services,
 body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
 
 /* ===== Ink full-bleed Contact section — editorial point d'arrivée ===== */
-#contact{ position:relative; color:var(--bg); }
+#contact{ position:relative; color:#F0EEE9; }
 #contact::before{
   content:"";
   position:absolute;
@@ -3005,14 +3016,16 @@ body[data-theme="dark"] #apropos{ background:rgba(255,255,255,.025); }
   transform:translateX(-50%);
   z-index:-1;
   pointer-events:none;
-  background:var(--ink);
+  background:#1A1A1A;
 }
+body[data-theme="dark"] #contact::before{ background:#1A1A1A; }
+body[data-theme="light"] #contact::before{ background:#1A1A1A; }
 #contact .section-head{ border-bottom-color:rgba(240,238,233,.28); }
-#contact .section-head h2{ color:var(--bg); }
+#contact .section-head h2{ color:#F0EEE9; }
 #contact .section-head .idx{
-  background:rgba(240,238,233,.12); color:var(--bg);
+  background:rgba(240,238,233,.12); color:#F0EEE9;
 }
-#contact .section-head .idx::before{ color:var(--bg); }
+#contact .section-head .idx::before{ color:#F0EEE9; }
 #contact .section-head .sub{
   color:rgba(240,238,233,.7); border-top-color:rgba(240,238,233,.22);
 }
@@ -5702,29 +5715,48 @@ body:has(.mob-menu.open) .brand-wordmark-sub{
   transition:transform .55s cubic-bezier(.55,1.4,.35,1); /* petit rebond élastique */
 }
 .brand-logo:hover .cd-mono .cd-d{
-  transform:translateX(68px); /* D se colle au C */
+  transform:translateX(64px); /* D se colle au C */
 }
 /* Micro-mouvement du C à l'inverse pour un effet "rencontre" */
 .cd-mono .cd-c{
   transition:transform .55s cubic-bezier(.55,1.4,.35,1);
 }
 .brand-logo:hover .cd-mono .cd-c{
-  transform:translateX(-2px);
+  transform:translateX(3px);
 }
 /* Clin d'œil — le D se recolle au C périodiquement pour former un œil,
    puis revient. Cycle : repos 5.2s → close 0.55s → hold 1.4s → open 0.55s. */
 @keyframes cdBlink{
   0%, 70%   { transform: translateX(83px); }
-  78%, 90%  { transform: translateX(68px); }
+  78%, 90%  { transform: translateX(64px); }
   98%, 100% { transform: translateX(83px); }
 }
 @keyframes cdBlinkC{
   0%, 70%   { transform: translateX(0); }
-  78%, 90%  { transform: translateX(-2px); }
+  78%, 90%  { transform: translateX(3px); }
   98%, 100% { transform: translateX(0); }
 }
-.cd-mono .cd-d{ animation: cdBlink 7.6s cubic-bezier(.55,1.4,.35,1) 4.5s infinite; }
-.cd-mono .cd-c{ animation: cdBlinkC 7.6s cubic-bezier(.55,1.4,.35,1) 4.5s infinite; }
+/* Topbar CD intro: C+D start touching, then separate */
+/* CD mono starts invisible, fades in as eye fades out */
+.cd-mono{
+  opacity:1;
+}
+.cd-mono .cd-d{
+  transform:translateX(64px);
+  animation: cdIntroD .7s cubic-bezier(.22,1,.36,1) .5s forwards, cdBlink 7.6s cubic-bezier(.55,1.4,.35,1) 5s infinite;
+}
+.cd-mono .cd-c{
+  transform:translateX(3px);
+  animation: cdIntroC .7s cubic-bezier(.22,1,.36,1) .5s forwards, cdBlinkC 7.6s cubic-bezier(.55,1.4,.35,1) 5s infinite;
+}
+@keyframes cdIntroD{
+  0%   { transform:translateX(64px); }
+  100% { transform:translateX(83px); }
+}
+@keyframes cdIntroC{
+  0%   { transform:translateX(3px); }
+  100% { transform:translateX(0); }
+}
 /* Le hover prend le pas sur l'animation */
 .brand-logo:hover .cd-mono .cd-d,
 .brand-logo:hover .cd-mono .cd-c{ animation: none; }
@@ -6044,9 +6076,685 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   .colo-wordmark{font-size:15px}
   .colo-copy{font-size:11px}
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   GLASSMORPHISM OVERRIDES — modern tech, blur, fluid
+   ═══════════════════════════════════════════════════════════════ */
+
+/* --- Global glass tokens --- */
+:root {
+  --glass-bg: rgba(240,238,233,.06);
+  --glass-border: rgba(240,238,233,.1);
+  --glass-blur: 20px;
+  --glass-radius: 16px;
+  --glass-shadow: 0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
+}
+body[data-theme="dark"] {
+  --glass-bg: rgba(255,255,255,.04);
+  --glass-border: rgba(255,255,255,.08);
+}
+body[data-theme="light"] {
+  --glass-bg: rgba(255,255,255,.55);
+  --glass-border: rgba(0,0,0,.1);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
+}
+
+/* Light mode readability fixes */
+body[data-theme="light"] .section-head .idx {
+  background: var(--ink) !important;
+  color: var(--bg) !important;
+  backdrop-filter: none;
+}
+body[data-theme="light"] #contact .section-head .idx {
+  background: rgba(240,238,233,.12) !important;
+  color: #F0EEE9 !important;
+}
+body[data-theme="light"] .proj-preview-card {
+  background: rgba(255,255,255,.7) !important;
+}
+body[data-theme="light"] .chap {
+  background: rgba(255,255,255,.65) !important;
+}
+body[data-theme="light"] .contact-wa-btn,
+body[data-theme="light"] .ctk-wa {
+  background: rgba(255,255,255,.7) !important;
+}
+body[data-theme="light"] .ctk-primary-link,
+body[data-theme="light"] .ctk-simple-links a {
+  background: rgba(255,255,255,.6);
+}
+body[data-theme="light"] .mob-menu {
+  background: rgba(240,238,233,.85) !important;
+}
+body[data-theme="light"] .tweaks {
+  background: rgba(240,238,233,.88) !important;
+}
+body[data-theme="light"] .topbar {
+  background: rgba(240,238,233,.7) !important;
+}
+body[data-theme="light"] .proj-preview-dossier {
+  background: rgba(255,255,255,.65) !important;
+}
+body[data-theme="light"] .prj-swipe-slide:not(.prj-swipe-slide--ghost) {
+  background: rgba(255,255,255,.6);
+}
+body[data-theme="light"] dialog.proj-drawer {
+  background: rgba(240,238,233,.9) !important;
+}
+body[data-theme="light"] .receipt-head {
+  background: rgba(255,255,255,.7) !important;
+}
+body[data-theme="light"] .colophon {
+  background: rgba(240,238,233,.6);
+}
+
+/* --- Topbar glass (always) --- */
+.topbar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(24px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  box-shadow: 0 1px 24px rgba(0,0,0,.08) !important;
+}
+
+/* --- Section heads: lighter, more open --- */
+.section-head {
+  border-bottom: 1px solid var(--glass-border) !important;
+}
+.section-head .idx {
+  background: var(--glass-bg) !important;
+  color: var(--ink) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px !important;
+}
+
+/* --- Project preview cards: glass panels --- */
+.proj-preview-card {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.3);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.3);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+  padding: 12px !important;
+  box-shadow: var(--glass-shadow) !important;
+  transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s cubic-bezier(.22,1,.36,1) !important;
+}
+.proj-preview-card:hover {
+  box-shadow: 0 16px 48px rgba(0,0,0,.18), 0 4px 12px rgba(0,0,0,.1) !important;
+}
+.proj-preview-media {
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+/* --- Dossier dropdown glass --- */
+.proj-preview-dossier {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px !important;
+  margin-top: 12px;
+}
+
+/* --- Chapter accordion: glass --- */
+.chap {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+  box-shadow: var(--glass-shadow);
+}
+.chap::before {
+  border-radius: var(--glass-radius) !important;
+  opacity: .3 !important;
+}
+.chap.is-open {
+  background: var(--glass-bg) !important;
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--glass-border)) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,.15), 0 0 0 1px color-mix(in srgb, var(--accent) 15%, transparent) !important;
+}
+.chap-tab {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 8px 8px 0 0 !important;
+}
+
+/* --- Studio services: glass menu items --- */
+.menu-item {
+  border-radius: 12px !important;
+  overflow: hidden;
+  transition: background .3s, box-shadow .3s;
+}
+.menu-item:hover,
+.menu-item.is-open {
+  background: var(--glass-bg);
+  box-shadow: var(--glass-shadow);
+}
+.menu-head {
+  border-radius: 12px !important;
+}
+
+/* --- Receipt (Tarifs) glass --- */
+.receipt {
+  border-radius: var(--glass-radius) !important;
+  overflow: hidden;
+}
+.receipt-head {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+}
+
+/* --- Magazine cover (Bio) glass --- */
+.mag {
+  border-radius: var(--glass-radius) !important;
+  overflow: hidden;
+}
+.mag-cover {
+  border-radius: var(--glass-radius) !important;
+  border: 1px solid var(--glass-border) !important;
+}
+
+/* --- Contact section: glass CTA --- */
+.contact-wa-btn, .ctk-wa {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--glass-shadow);
+  transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s !important;
+}
+.contact-wa-btn:hover, .ctk-wa:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 36px rgba(0,0,0,.15) !important;
+}
+.ctk-primary-link, .ctk-simple-links a {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px !important;
+  transition: background .3s, transform .3s cubic-bezier(.22,1,.36,1);
+}
+.ctk-primary-link:hover, .ctk-simple-links a:hover {
+  background: color-mix(in srgb, var(--accent) 8%, var(--glass-bg));
+  transform: translateY(-1px);
+}
+
+/* --- Mobile menu glass --- */
+.mob-menu {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(32px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(1.5) !important;
+}
+
+/* --- Tweaks panel glass --- */
+.tweaks {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(24px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+/* --- Colophon glass --- */
+.colophon {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--glass-border);
+}
+
+/* --- Eye bubble glass --- */
+.eye-bubble {
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+}
+
+/* --- Scroll bar: accent glow --- */
+.scroll-bar {
+  background: color-mix(in srgb, var(--accent) 60%, transparent) !important;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* --- PRJ Swipe slides glass --- */
+.prj-swipe-slide:not(.prj-swipe-slide--ghost) {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+}
+
+/* --- Drawer dialog glass --- */
+dialog.proj-drawer {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(32px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(1.5) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+}
+
+/* --- General smoothing --- */
+* { transition-timing-function: cubic-bezier(.22,1,.36,1); }
+
+/* --- Softer grid in glass mode --- */
+body[data-mode="glass"] .gridbg {
+  opacity: .5 !important;
+}
+body[data-mode="glass"][data-theme="dark"] .gridbg {
+  opacity: .35 !important;
+}
+
+/* --- Blobs: enable in glass mode with soft accent tones --- */
+body[data-mode="glass"] .blobs {
+  display: block !important;
+  opacity: .4;
+}
+body[data-mode="glass"][data-theme="dark"] .blobs {
+  opacity: .25;
+}
+
+/* --- Typography: Space Grotesk for headings (keep Dela Gothic for hero name) --- */
+.section-head h2,
+.chap-title,
+.studio-services-h,
+.mag-title-h,
+.receipt-title-h,
+.drawer-title,
+.prj-swipe-title,
+.proj-preview-title,
+.ctk-lede,
+.hero-morph {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  letter-spacing: -.03em !important;
+}
+.section-head h2 {
+  font-weight: 600 !important;
+}
+.chap-num {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   V4 REFRESH — compact, mobile-first, stylish
+   ═══════════════════════════════════════════════════════════════ */
+
+/* --- Hero: compact, centered --- */
+.hero {
+  min-height: 60vh !important;
+  max-height: 70vh !important;
+  padding-top: 80px !important;
+  padding-bottom: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.hero > div { text-align: center; width: 100%; }
+.hero-eyebrow { display: none !important; }
+.hero-name {
+  justify-content: center !important;
+  font-size: clamp(48px, 10vw, 140px) !important;
+}
+.hero-morph { justify-content: center !important; }
+
+/* --- Hide scroll arrow --- */
+.hero-scroll { display: none !important; }
+
+/* --- Hide eye bubble --- */
+.eye-bubble, .eye-label { display: none !important; }
+
+/* --- Grid: hidden in dark (replaced by texture) --- */
+body[data-theme="dark"] .gridbg {
+  display: none !important;
+}
+
+/* --- Nav: more discreet --- */
+.topbar {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+.section-nav { display: none !important; }
+@media(min-width: 900px) {
+  .section-nav { display: flex !important; }
+}
+
+/* --- Projects: compact, no section head decorations --- */
+.section { padding: 48px var(--page-pad) 40px !important; }
+.section-head {
+  margin-bottom: 32px !important;
+  padding-bottom: 16px !important;
+}
+.section-head .idx { display: none !important; }
+.section-head .sub { display: none !important; }
+.section-head h2 {
+  font-size: clamp(28px, 5vw, 56px) !important;
+}
+
+/* --- Project cards: simpler --- */
+.proj-preview {
+  gap: 20px !important;
+}
+.proj-preview-dossier { display: none !important; }
+.proj-preview-lbl { display: none !important; }
+.proj-preview-card {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+.proj-preview-media {
+  border-radius: 12px 12px 0 0 !important;
+}
+.proj-preview-title {
+  padding: 14px 16px !important;
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+}
+.proj-preview-sub { display: none !important; }
+
+/* --- Contact: compact --- */
+#contact .section-head h2 {
+  font-size: clamp(24px, 4vw, 44px) !important;
+}
+
+/* --- Studio section: footer-like, very compact --- */
+.section--studio {
+  padding-top: 32px !important;
+  padding-bottom: 32px !important;
+  border-top: 1px solid var(--glass-border);
+}
+.studio-kicker { display: none !important; }
+.studio-services-head { margin-bottom: 16px !important; }
+.studio-services-h {
+  font-size: clamp(20px, 3vw, 32px) !important;
+}
+.svc-more { display: none !important; }
+.menu-list { gap: 4px !important; }
+.menu-item[data-svc-more] { display: block !important; }
+.menu-list.is-expanded .menu-item[data-svc-more] { display: block !important; }
+
+/* --- Colophon: minimal --- */
+.colophon { margin-top: 32px !important; }
+
+/* --- Scroll bar: thinner --- */
+.scroll-bar { width: 2px !important; }
+
+/* --- Mobile optimizations --- */
+@media (max-width: 720px) {
+  .hero {
+    min-height: 50vh !important;
+    max-height: 60vh !important;
+    padding-top: 70px !important;
+  }
+  .hero-name {
+    font-size: clamp(36px, 12vw, 64px) !important;
+  }
+  .section { padding: 32px 20px 28px !important; }
+  .proj-preview {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+  .proj-preview-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* --- Remove custom cursor on mobile --- */
+@media (pointer: coarse) {
+  .cur-dot, .cur-ring { display: none !important; }
+}
+
+/* --- Force dark mode only --- */
+#themePills { display: none !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE — premium, lisible, classe
+   Principes :
+   - Fond légèrement chaud (pas noir pur → fatigue oculaire)
+   - Texte off-white doux (pas blanc pur → moins agressif)
+   - Hiérarchie claire : titres lumineux, body doux, muted discret
+   - Surfaces avec subtiles élévations (pas de bordures dures)
+   - Accent utilisé avec parcimonie pour guider l'œil
+   ═══════════════════════════════════════════════════════════════ */
+
+body[data-theme="dark"] {
+  --bg: #0E0E10;
+  --ink: #E0DDD6;
+  --grid: #1A1918;
+  --rule: #222120;
+  --muted: #8A8680;
+  --surface-1: rgba(255,255,255,.03);
+  --surface-2: rgba(255,255,255,.055);
+  --surface-3: rgba(255,255,255,.08);
+  --border-subtle: rgba(255,255,255,.07);
+  --border-accent: color-mix(in srgb, var(--accent) 25%, rgba(255,255,255,.1));
+}
+
+/* --- Global dark refinements --- */
+body[data-theme="dark"] {
+  font-weight: 300;
+  letter-spacing: .005em;
+}
+body[data-theme="dark"] h1,
+body[data-theme="dark"] h2,
+body[data-theme="dark"] h3,
+body[data-theme="dark"] .hero-name,
+body[data-theme="dark"] .section-head h2,
+body[data-theme="dark"] .chap-title,
+body[data-theme="dark"] .proj-preview-title {
+  color: #F5F2EC !important;
+  font-weight: 400;
+}
+
+/* --- Topbar: subtle glass, thinner --- */
+body[data-theme="dark"] .topbar {
+  background: rgba(16,16,16,.75) !important;
+  border-bottom-color: var(--border-subtle) !important;
+  box-shadow: 0 1px 32px rgba(0,0,0,.3) !important;
+}
+body[data-theme="dark"] .brand-logo {
+  background: var(--surface-1) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+/* --- Hero: elegant spacing, subtle morph text --- */
+body[data-theme="dark"] .hero-morph {
+  color: var(--muted);
+  font-weight: 400;
+}
+body[data-theme="dark"] .hero-morph .morph-word {
+  color: var(--accent) !important;
+}
+
+/* --- Scroll arrow: accent glow --- */
+body[data-theme="dark"] .hero-scroll-line {
+  background: var(--accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+/* --- Section heads: clean, no box around idx --- */
+body[data-theme="dark"] .section-head {
+  border-bottom-color: var(--border-subtle) !important;
+}
+body[data-theme="dark"] .section-head h2 {
+  font-size: clamp(32px, 5vw, 64px) !important;
+  letter-spacing: -.04em !important;
+}
+
+/* --- Project cards: elevated surfaces --- */
+body[data-theme="dark"] .proj-preview-card {
+  background: var(--surface-1) !important;
+  border-color: var(--border-subtle) !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,.2), 0 1px 4px rgba(0,0,0,.15) !important;
+  transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s, border-color .4s !important;
+}
+body[data-theme="dark"] .proj-preview-card:hover {
+  border-color: var(--border-accent) !important;
+  box-shadow: 0 12px 48px rgba(0,0,0,.3), 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent) !important;
+}
+body[data-theme="dark"] .proj-preview-title {
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  letter-spacing: -.01em;
+}
+
+/* --- Chap accordion: seamless dark --- */
+body[data-theme="dark"] .chap {
+  background: var(--surface-1) !important;
+  border-color: var(--border-subtle) !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.15);
+}
+body[data-theme="dark"] .chap:hover {
+  border-color: var(--border-accent) !important;
+}
+body[data-theme="dark"] .chap.is-open {
+  background: var(--surface-2) !important;
+  border-color: var(--border-accent) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25), 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent) !important;
+}
+body[data-theme="dark"] .chap-num { color: var(--muted) !important; }
+body[data-theme="dark"] .chap.is-open .chap-num { color: var(--accent) !important; }
+body[data-theme="dark"] .chap-meta { color: var(--muted) !important; }
+
+/* --- Prj-swipe slides dark --- */
+body[data-theme="dark"] .prj-swipe-slide:not(.prj-swipe-slide--ghost) {
+  background: var(--surface-1) !important;
+  border-color: var(--border-subtle) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,.2);
+}
+
+/* --- Contact: warm dark, CTA prominence --- */
+#contact::before {
+  background: #0C0C0B !important;
+}
+body[data-theme="dark"] .ctk-wa {
+  background: var(--surface-2) !important;
+  border-color: var(--border-accent) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3) !important;
+}
+body[data-theme="dark"] .ctk-wa:hover {
+  background: var(--surface-3) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,.4), 0 0 0 1px var(--accent) !important;
+}
+body[data-theme="dark"] .ctk-simple-links a {
+  background: var(--surface-1) !important;
+  border-color: var(--border-subtle) !important;
+}
+body[data-theme="dark"] .ctk-simple-links a:hover {
+  background: var(--surface-2) !important;
+  border-color: var(--border-accent) !important;
+}
+body[data-theme="dark"] .ctk-primary-link {
+  background: var(--surface-2) !important;
+  border-color: var(--accent) !important;
+}
+
+/* --- Portrait/Bio: blend into dark --- */
+body[data-theme="dark"] .mag-portrait {
+  background: transparent !important;
+}
+body[data-theme="dark"] .mag-cover {
+  background: var(--surface-1) !important;
+  border-color: var(--border-subtle) !important;
+}
+body[data-theme="dark"] .mag-portrait img {
+  border-radius: 8px;
+  filter: contrast(1.05) brightness(.95);
+}
+
+/* --- Receipt/Tarifs dark --- */
+body[data-theme="dark"] .receipt-head {
+  background: var(--surface-1) !important;
+  border-color: var(--border-subtle) !important;
+}
+body[data-theme="dark"] .receipt.is-open .receipt-body {
+  background: var(--surface-1);
+  border-color: var(--border-subtle);
+}
+
+/* --- Tweaks panel dark --- */
+body[data-theme="dark"] .tweaks {
+  background: rgba(16,16,16,.9) !important;
+  border-color: var(--border-subtle) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,.5) !important;
+}
+
+/* --- Mobile menu dark --- */
+body[data-theme="dark"] .mob-menu {
+  background: rgba(12,12,11,.95) !important;
+}
+
+/* --- Colophon --- */
+body[data-theme="dark"] .colophon {
+  background: var(--surface-1);
+  border-top-color: var(--border-subtle) !important;
+}
+
+/* --- Scroll bar: thin accent --- */
+body[data-theme="dark"] .scroll-bar {
+  background: color-mix(in srgb, var(--accent) 50%, transparent) !important;
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* --- Premium dark background: ambient light + depth --- */
+body[data-theme="dark"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 80% at 15% 5%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 70% at 90% 85%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 50% 30%, rgba(255,255,255,.02) 0%, transparent 50%),
+    radial-gradient(ellipse 140% 100% at 50% 100%, rgba(0,0,0,.3) 0%, transparent 60%),
+    linear-gradient(165deg, #121214 0%, #0E0E10 40%, #10100E 100%);
+}
+/* Subtle noise — very light */
+body[data-theme="dark"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .12;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+/* Isolate videos from grain overlay */
+video, .proj-preview-media, .prj-swipe-media {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+}
+
+/* --- Services hidden, accordion clean --- */
+.studio-services { display: none !important; }
+.svc-more { display: none !important; }
+.chap::before { display: none !important; }
+.chap-tab { display: none !important; }
+.chap-ghost { display: none !important; }
+
 </style>
 </head>
-<body data-mode="classic">
+<body data-mode="glass" data-theme="dark">
 <div class="film-loader" id="filmLoader">
   <div class="fl-stage">
     <!-- C (Fichier 1) -->
@@ -6058,12 +6766,10 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       <path d="M29.43,17.81c0-5.13,0-10.26,0-15.39,0-2.17,0-2.29,2.15-2.19,11.8.54,22.93,3.52,33,9.75,17.26,10.68,28.3,25.93,31.78,46,4.19,24.1-2.72,45-20.41,61.93C65.12,128.3,52,134,37.06,135.82c-2.07.25-4.16-.1-6.23.36-.95.21-1.42-.22-1.42-1.29q0-16.23,0-32.47c0-1.25.7-1.3,1.62-1.34A31,31,0,0,0,53.39,91c9-9.65,11.63-21,7.3-33.49S47.41,38,34.55,35.71A18.17,18.17,0,0,0,31,35.4c-1.28,0-1.63-.47-1.62-1.7C29.46,28.4,29.43,23.11,29.43,17.81Z"/>
       <rect width="32.35" height="136.23" transform="translate(32.35 136.23) rotate(180)"/>
     </svg>
-    <!-- Final eye (Fichier 4) + pupil bar (Fichier 5) with stylish movement -->
+    <!-- Eye logo (appears after blink) -->
     <svg class="fl-eye-full" viewBox="0 0 166.06 126.14" xmlns="http://www.w3.org/2000/svg">
       <path class="eye-body" d="M83,0C37.17,0,0,28.24,0,63.07s37.17,63.07,83,63.07,83-28.24,83-63.07S128.89,0,83,0ZM99.21,91.22v-.17a52,52,0,0,1-32.35,0v.17C52.58,86.48,42.59,75.66,42.59,63.07s10-23.41,24.27-28.15v.17a52,52,0,0,1,32.35,0v-.17c14.28,4.74,24.26,15.56,24.26,28.15S113.49,86.48,99.21,91.22Z"/>
-      <g class="eye-pupil-move">
-        <rect x="75" y="47" width="16" height="32" rx="3"/>
-      </g>
+      <g class="eye-pupil-move"><rect x="75" y="47" width="16" height="32" rx="3"/></g>
     </svg>
   </div>
 </div>
@@ -6072,9 +6778,9 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <button class="mm-close" id="mmClose">Fermer ×</button>
   <nav>
     <a href="#projets" class="mm-link" data-n="01" data-target="projets">Projets</a>
-    <a href="#tarifs" class="mm-link" data-n="02" data-target="tarifs">Tarifs</a>
-    <a href="#apropos" class="mm-link" data-n="02" data-target="apropos">À propos</a>
-    <a href="#contact" class="mm-link" data-n="03" data-target="contact">Contact</a>
+    <a href="#contact" class="mm-link" data-n="02" data-target="contact">Contact</a>
+    <a href="#tarifs" class="mm-link" data-n="03" data-target="tarifs">Tarifs</a>
+    <a href="#apropos" class="mm-link" data-n="03" data-target="apropos">À propos</a>
   </nav>
   <div class="mm-foot">
     <span>CD Studio</span>
@@ -6086,8 +6792,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 <!-- Film grain overlay -->
 <svg id="film-grain" xmlns="http://www.w3.org/2000/svg"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
 
-<div class="eye-label">Contacte-moi</div>
-<button class="eye-bubble" id="eyeBubble" aria-label="Contact — scroll vers la section">
+
  <div class="eye-inner">
   <!-- Rest state: œil unifié avec scan de pupille -->
   <svg class="eye-unified" viewBox="0 0 166.06 126.14" xmlns="http://www.w3.org/2000/svg">
@@ -6146,9 +6851,9 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
     <span class="nav-indicator" aria-hidden="true"></span>
     <a href="#top" data-target="top" data-num="§ 00">Accueil</a>
     <a href="#projets" data-target="projets" data-num="§ 01">Projets</a>
-    <a href="#tarifs" data-target="tarifs" data-num="§ 02">Tarifs</a>
-    <a href="#apropos" data-target="apropos" data-num="§ 02">À propos</a>
-    <a href="#contact" data-target="contact" data-num="§ 03">Contact</a>
+    <a href="#contact" data-target="contact" data-num="§ 02">Contact</a>
+    <a href="#tarifs" data-target="tarifs" data-num="§ 03">Tarifs</a>
+    <a href="#apropos" data-target="apropos" data-num="§ 03">À propos</a>
   </nav>
   <button class="menu-btn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobMenu"><span></span><span></span></button>
 </header>
@@ -6158,14 +6863,13 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <!-- HERO -->
   <section class="hero wrap" id="top">
     <div>
-      <div class="hero-eyebrow">Portfolio / 2026 — Éd. 01</div>
       <h1 class="hero-name" id="heroName" aria-label="Corentin Devillé">
         <span class="word" data-word="Corentin">Corentin</span>
         <span class="word" data-word="Devillé">Devillé</span><span class="hero-star" aria-hidden="true"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,0 C50,0 53,35 64,50 C53,65 50,100 50,100 C50,100 47,65 36,50 C47,35 50,0 50,0 Z M0,50 C0,50 35,47 50,36 C65,47 100,50 100,50 C100,50 65,53 50,64 C35,53 0,50 0,50 Z" fill="var(--accent)"/></svg></span>
       </h1>
       <div class="hero-morph"><span>Je suis —</span><span class="morph-word" id="morphWord">Vidéaste</span></div>
-
     </div>
+    <a href="#projets" class="hero-scroll" aria-label="Voir les projets"><span class="hero-scroll-line"></span></a>
   </section>
 
   <!-- PROJECTS -->
@@ -6185,18 +6889,12 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
       <!-- 2 cartes preview avec dropdown inline (dossier complet sous la vidéo) -->
       <div class="proj-preview reveal">
 
-        <!-- ============ WENDA ============ -->
-        <details class="proj-preview-card proj-preview-vert proj-preview-details" data-preview-target="wenda">
-          <summary class="proj-preview-summary" aria-label="Les filles de Wenda — ouvre le dossier">
-            <span class="proj-preview-lbl">
-              <span class="proj-preview-lbl-num">N°01</span>
-              <span class="proj-preview-lbl-cat">Fashion</span>
-            </span>
+        <!-- WENDA -->
+        <div class="proj-preview-card proj-preview-vert" data-preview-target="wenda">
             <div class="proj-preview-media proj-preview-carousel" data-format="9x16">
               <div class="proj-preview-rail" data-rail>
                 <div class="proj-preview-slide">
                   <video data-src="https://videos.corentindeville.com/wenda-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-                  <span class="proj-preview-live" aria-hidden="true">4K · 60 FPS</span>
                 </div>
                 <div class="proj-preview-slide">
                   <video data-src="https://videos.corentindeville.com/wenda-reel-2.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
@@ -6213,41 +6911,16 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                 <button class="ppd-dot" type="button" aria-label="Reel 3"></button>
               </div>
             </div>
-            <span class="proj-preview-title">Les filles de Wenda<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
-          </summary>
-          <div class="proj-preview-dossier">
-            <p class="dossier-lede">Une maison belge, trois générations, une image qui devait respirer la transmission sans sentir le vieux.</p>
-            <dl class="dossier-meta">
-              <div><dt>Client</dt><dd>Les filles de Wenda</dd></div>
-              <div><dt>Catégorie</dt><dd>Fashion · Social content</dd></div>
-              <div><dt>Lieu</dt><dd>Waterloo · Brussels</dd></div>
-              <div><dt>Années</dt><dd>2024 — 2026</dd></div>
-              <div><dt>Format</dt><dd>9:16 vertical</dd></div>
-              <div><dt>Livraison</dt><dd>~40 reels / an</dd></div>
-            </dl>
-            <div class="dossier-text">
-              <p>Je réalise les vidéos et contenus visuels pour <strong>Les Filles de Wenda</strong>, maison de mode belge fondée en 1972 par Wenda d'Ursel et Pierre Marinof, aujourd'hui reprise par leurs filles Lara et Marina Marinof. Une histoire de famille, de transmission et de style.</p>
-              <p>Mon travail : capturer l'élégance intemporelle et la modernité des collections à travers des reels dynamiques pour Instagram — mises en scène des nouvelles pièces, ambiances boutique, moments de shooting. Le ton doit rester doux, féminin, un peu retenu — on montre sans crier.</p>
-            </div>
-            <div class="dossier-credits">
-              <span class="dossier-credits-lbl">Crédits</span>
-              <span class="dossier-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
-            </div>
-          </div>
-        </details>
+            <span class="proj-preview-title">Les filles de Wenda</span>
+        </div>
 
         <!-- ============ BEBOOTH ============ -->
-        <details class="proj-preview-card proj-preview-horiz proj-preview-details" data-preview-target="bebooth">
-          <summary class="proj-preview-summary" aria-label="Bebooth — ouvre le dossier">
-            <span class="proj-preview-lbl">
-              <span class="proj-preview-lbl-num">N°02</span>
-              <span class="proj-preview-lbl-cat">Événementiel</span>
-            </span>
+        <!-- BEBOOTH -->
+        <div class="proj-preview-card proj-preview-horiz" data-preview-target="bebooth">
             <div class="proj-preview-media proj-preview-carousel" data-format="16x9">
               <div class="proj-preview-rail" data-rail>
                 <div class="proj-preview-slide">
                   <video data-src="https://videos.corentindeville.com/bebooth-reel-1.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-                  <span class="proj-preview-live" aria-hidden="true">4K · 30 FPS</span>
                 </div>
                 <div class="proj-preview-slide">
                   <video data-src="https://videos.corentindeville.com/bebooth-reel-2.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
@@ -6264,29 +6937,8 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                 <button class="ppd-dot" type="button" aria-label="Capsule 3"></button>
               </div>
             </div>
-            <span class="proj-preview-title">Bebooth<span class="proj-preview-arr" aria-hidden="true">↘</span></span>
-            <p class="proj-preview-sub">Photobooth événementiel · 2025. Retour d'image + capsules éditoriales.</p>
-          </summary>
-          <div class="proj-preview-dossier">
-            <p class="dossier-lede">Un photobooth nouvelle génération à documenter comme un produit — rapide, fun, parfaitement lisible en 10 secondes.</p>
-            <dl class="dossier-meta">
-              <div><dt>Client</dt><dd>Bebooth</dd></div>
-              <div><dt>Catégorie</dt><dd>Événementiel · Photobooth</dd></div>
-              <div><dt>Lieu</dt><dd>Brussels</dd></div>
-              <div><dt>Année</dt><dd>2025</dd></div>
-              <div><dt>Format</dt><dd>16:9 horizontal</dd></div>
-              <div><dt>Livraison</dt><dd>Capsules produit + social cuts</dd></div>
-            </dl>
-            <div class="dossier-text">
-              <p><strong>Bebooth</strong> propose un photobooth connecté pour mariages, événements corporate et fêtes privées. L'enjeu : montrer le produit en action, l'ambiance qu'il crée, la simplicité d'usage — tout ça en quelques secondes, pour des posts, des landing pages et des pitchs commerciaux.</p>
-              <p>Série de capsules 16:9 à cuts serrés, alternant plans produits et moments vécus. Chaque séquence est pensée comme un teaser autonome, déclinable en reels 9:16 pour Instagram et TikTok sans retournage.</p>
-            </div>
-            <div class="dossier-credits">
-              <span class="dossier-credits-lbl">Crédits</span>
-              <span class="dossier-credits-val">Réalisation, tournage &amp; montage — Corentin Devillé</span>
-            </div>
-          </div>
-        </details>
+            <span class="proj-preview-title">Bebooth</span>
+        </div>
 
       </div>
 
@@ -6318,7 +6970,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
             <span class="chap-ghost" aria-hidden="true">03</span>
 
             <!-- PRJ-SWIPE : gallery swipeable mobile (scroll-snap natif) / grid 3 cols desktop -->
-            <div class="prj-swipe" id="prjSwipe" data-count="6">
+            <div class="prj-swipe" id="prjSwipe" data-count="3">
 
               <div class="prj-swipe-rail" role="list">
 
@@ -6344,7 +6996,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
                 <article class="prj-swipe-slide" role="listitem" data-slug="scout-reel" data-format="9x16">
                   <div class="prj-swipe-media" data-ratio="9x16">
                     <video class="prj-swipe-video"
-                           data-src="https://videos.corentindeville.com/scout-reel-1.mp4"
+                           data-src="https://videos.corentindeville.com/scout-reel.mp4"
                            muted loop playsinline preload="none" aria-hidden="true"></video>
                     <span class="prj-swipe-live" aria-hidden="true">4K · 30 FPS</span>
                   </div>
@@ -6446,14 +7098,47 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   <!-- ============================================================
        Planche contact + Services : retirés — site plus concis.
        ============================================================ -->
+  <!-- ═══ § 03 — CONTACT — direct, éditorial, pas d'accordéon ═══ -->
+  <section class="section wrap" id="contact" data-section-label="§ 02 — Contact">
+    <div class="section-head reveal">
+      <div class="idx">§ 02 / Contact</div>
+      <h2>Un projet en tête&nbsp;?</h2>
+      <div class="sub">Réponse sous 24 h · BW</div>
+    </div>
+
+    <div class="section-body">
+      <div class="ctk ctk--simple reveal" data-auto-reveal>
+        <p class="ctk-lede">Réponse sous 24 h — basé dans le Brabant wallon, Bruxelles &amp; Europe.</p>
+
+        <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o."
+           target="_blank" rel="noopener" class="contact-wa-btn ctk-wa">
+          <span class="contact-wa-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </span>
+          <span class="contact-wa-label">
+            <span class="contact-wa-top">WhatsApp</span>
+            <span class="contact-wa-sub">+32 495 92 42 95</span>
+          </span>
+          <span class="contact-wa-arrow">→</span>
+        </a>
+
+        <div class="ctk-simple-links">
+          <a href="tel:+32495924295" class="ctk-primary-link"><span class="cs-k">Téléphone</span><span class="cs-v">+32 495 92 42 95</span><span class="cs-a">↗</span></a>
+          <a href="/cdn-cgi/l/email-protection#264e434a4a49664549544348524f484243504f4a4a430845494b" class="ctk-primary-link"><span class="cs-k">Email</span><span class="cs-v"><span class="__cf_email__" data-cfemail="78101d141417381b170a1d160c11161c1d0e1114141d561b1715">[email&#160;protected]</span></span><span class="cs-a">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
   <!-- =============================================================
        § 02 — STUDIO — 2 mini-fiches pelliculées côte à côte
        Tarifs + À propos compressés en fiches format 35mm : numéro de
        pose, titre, teaser, bord perforé. Clic = la fiche se "développe"
        vers le bas pour révéler le contenu. Ultra-compact, dossier-esque.
        ============================================================= -->
-  <section class="section wrap section--studio" id="studio" data-section-label="§ 02 — Studio">
-    <div class="studio-kicker reveal"><span>§ 02</span><span class="studio-kicker-sep" aria-hidden="true">/</span><span>Studio · Services · Tarifs · Bio</span></div>
+  <section class="section wrap section--studio" id="studio" data-section-label="§ 03 — Studio">
+    <div class="studio-kicker reveal"><span>§ 03</span><span class="studio-kicker-sep" aria-hidden="true">/</span><span>Studio · Services · Tarifs · Bio</span></div>
 
     <!-- ─────────── § 02.1 — Services (en premier, grille éditoriale principale) ─────────── -->
     <div class="studio-services reveal" data-auto-reveal>
@@ -6609,7 +7294,7 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
         <span class="mag-flip">
         <button class="mag-cover" type="button" aria-expanded="false" aria-controls="mag-body-apropos">
           <span class="mag-portrait">
-            <img src="assets/portrait.png" width="800" height="1000"
+            <img src="https://videos.corentindeville.com/portrait.png" width="800" height="1000"
                  loading="lazy" decoding="async"
                  alt="Corentin Devillé, vidéaste, portrait en lumière naturelle." />
           </span>
@@ -6649,40 +7334,6 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
 
     </ul>
     </div><!-- /.studio-meta -->
-  </section>
-
-  <!-- ═══ § 03 — CONTACT — direct, éditorial, pas d'accordéon ═══ -->
-  <section class="section wrap" id="contact" data-section-label="§ 03 — Contact">
-    <div class="section-head reveal">
-      <div class="idx">§ 03 / Contact</div>
-      <h2>Un projet en tête&nbsp;?</h2>
-      <div class="sub">Réponse sous 24 h · BW</div>
-    </div>
-
-    <div class="section-body">
-      <div class="ctk ctk--simple reveal" data-auto-reveal>
-        <p class="ctk-lede">Réponse sous 24 h — basé dans le Brabant wallon, Bruxelles &amp; Europe.</p>
-
-        <a href="https://wa.me/32495924295?text=Bonjour%20Corentin%2C%20je%20voudrais%20discuter%20d%27un%20projet%20vid%C3%A9o."
-           target="_blank" rel="noopener" class="contact-wa-btn ctk-wa">
-          <span class="contact-wa-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          </span>
-          <span class="contact-wa-label">
-            <span class="contact-wa-top">WhatsApp</span>
-            <span class="contact-wa-sub">+32 495 92 42 95</span>
-          </span>
-          <span class="contact-wa-arrow">→</span>
-        </a>
-
-        <div class="ctk-simple-links">
-          <a href="tel:+32495924295" class="ctk-primary-link"><span class="cs-k">Téléphone</span><span class="cs-v">+32 495 92 42 95</span><span class="cs-a">↗</span></a>
-          <a href="mailto:hello@corentindeville.com" class="ctk-primary-link"><span class="cs-k">Email</span><span class="cs-v">hello@corentindeville.com</span><span class="cs-a">↗</span></a>
-          <a href="https://www.instagram.com/corentin.deville" target="_blank" rel="noopener"><span class="cs-k">Instagram</span><span class="cs-v">@corentin.deville</span><span class="cs-a">↗</span></a>
-          <a href="https://www.youtube.com/@corentindeville2797" target="_blank" rel="noopener"><span class="cs-k">YouTube</span><span class="cs-v">@corentindeville2797</span><span class="cs-a">↗</span></a>
-        </div>
-      </div>
-    </div>
   </section>
 
   <!-- COLOPHON — signature minimaliste -->
@@ -6743,15 +7394,19 @@ body[data-theme="dark"] .colo-eye{fill:var(--ink)}
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ========== ALWAYS START AT TOP ========== */
+if(history.replaceState) history.replaceState(null, '', window.location.pathname);
+window.scrollTo(0, 0);
+
 /* ========== TWEAKABLE DEFAULTS ========== */
 const TWEAKS = /*EDITMODE-BEGIN*/{
   "mode": "classic",
   "accent": "#2A7F5C",
   "grid": true,
-  "blobs": false,
+  "blobs": true,
   "gridSize": "64px",
-  "theme": "light"
+  "theme": "dark"
 }/*EDITMODE-END*/;
 
 /* ========== HERO NAME REVEAL ========== */
@@ -6763,7 +7418,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
      Le haut de viewport (hero) n'est pleinement dévoilé qu'à ~4.0s.
      Démarre les mots 100 ms avant pour qu'ils apparaissent en même temps
      que la barre s'allume → sensation de synchro visuelle. */
-  let delay = 3900;
+  let delay = 200;
   words.forEach((w, wi) => {
     const text = w.dataset.word;
     w.textContent = ''; /* clear the static fallback text before injecting animated chars */
@@ -7831,7 +8486,7 @@ document.getElementById('blobsSw').onclick = () => save({blobs: !(TWEAKS.blobs !
   const _lbl2 = document.querySelector('.eye-label');
   if(_lbl2){
     /* Label "Contacte-moi" affiché en permanence après le loader */
-    setTimeout(()=>_lbl2.classList.add('show'), 4200);
+    setTimeout(()=>_lbl2.classList.add('show'), 800);
   }
   if(!btn) return;
   const label = document.querySelector('.eye-label');
@@ -7928,7 +8583,7 @@ try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e)
       /* nettoie la classe is-out après transition */
       setTimeout(()=>{ cur.classList.remove('is-out'); }, 700);
     }, 4200);
-  }, 7600);
+  }, 2000);
 })();
 
 /* ========== MORPHING TEXT ========== */

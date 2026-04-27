@@ -7314,6 +7314,98 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   else v.addEventListener('loadeddata', tryPlay, { once: true });
 })();
 
+/* ========== GLOBAL VIDEO AUTOPLAY MANAGER — bulletproof mobile ==========
+   Force autoplay + loop sur TOUTES les vidéos du site, sans qu'il faille
+   taper sur play. Stratégie :
+   1. Hard-set muted+playsinline+loop (iOS perd parfois ces attrs)
+   2. Hydrate data-src au plus tôt (rootMargin 50% → préchargement avant
+      que la vidéo soit visible)
+   3. Premier touch/click = "unlock media" → reflush play() sur toutes
+   4. Listener "ended" qui force le restart si loop fail (iOS)
+   ====================================================================== */
+(function videoAutoplayManager(){
+  const allVideos = () => document.querySelectorAll('video');
+  const enforceAttrs = (v) => {
+    v.muted = true;
+    v.playsInline = true;
+    v.loop = true;
+    v.setAttribute('muted','');
+    v.setAttribute('playsinline','');
+    v.setAttribute('webkit-playsinline','');
+    v.setAttribute('loop','');
+  };
+  const tryPlay = (v) => {
+    enforceAttrs(v);
+    const p = v.play();
+    if(p && p.catch) p.catch(()=>{});
+  };
+  const hydrate = (v) => {
+    if(v.dataset.hydrated === '1') return;
+    const src = v.getAttribute('data-src');
+    if(src && !v.src){
+      v.src = src;
+      v.load();
+    }
+    v.dataset.hydrated = '1';
+    enforceAttrs(v);
+    v.addEventListener('loadeddata', () => tryPlay(v), { once:true });
+    v.addEventListener('canplay',     () => tryPlay(v), { once:true });
+    v.addEventListener('ended', () => {
+      // Filet de sécurité si l'attribut loop ne déclenche pas
+      try{ v.currentTime = 0; tryPlay(v); }catch(_){}
+    });
+    tryPlay(v);
+  };
+
+  // Hydratation lazy via IO (rootMargin généreux pour précharger avant scroll)
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        hydrate(e.target);
+        tryPlay(e.target);
+      }
+    });
+  }, { rootMargin: '50% 0px', threshold: 0.01 });
+
+  // Setup au DOMContentLoaded
+  const setup = () => {
+    allVideos().forEach(v => {
+      enforceAttrs(v);
+      // Vidéos sans data-src (src inline) : just play
+      if(!v.dataset.src && v.src){ tryPlay(v); }
+      // Vidéos avec data-src : observe pour lazy hydrate
+      if(v.dataset.src){ io.observe(v); }
+    });
+  };
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', setup);
+  } else { setup(); }
+
+  // Premier touch/click = unlock iOS → on retente play() sur toutes
+  const unlock = () => {
+    allVideos().forEach(v => {
+      if(v.paused) tryPlay(v);
+    });
+    document.removeEventListener('touchstart', unlock, true);
+    document.removeEventListener('click',      unlock, true);
+  };
+  document.addEventListener('touchstart', unlock, { capture:true, passive:true });
+  document.addEventListener('click',      unlock, { capture:true });
+
+  // Quand la page redevient visible (retour onglet), relance les vidéos
+  document.addEventListener('visibilitychange', () => {
+    if(!document.hidden){
+      allVideos().forEach(v => {
+        if(v.dataset.hydrated === '1' && v.paused){
+          // Ne relance que celles qui sont visibles
+          const r = v.getBoundingClientRect();
+          if(r.top < window.innerHeight && r.bottom > 0){ tryPlay(v); }
+        }
+      });
+    }
+  });
+})();
+
 /* ========== Hide mobile WA FAB when contact is in view ========== */
 (function(){
   const contact = document.getElementById('contact');
